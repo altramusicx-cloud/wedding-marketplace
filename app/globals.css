@@ -1,0 +1,57 @@
+@import "tailwindcss";
+
+@theme {
+  --color-blush: #F7CAC9;
+  --color-blush-light: #FCE4E3;
+  --color-sage: #9DC183;
+  --color-sage-light: #C5E0B4;
+  --color-ivory: #FFF8F0;
+  --color-charcoal: #2C2C2C;
+  --color-whatsapp: #25D366;
+  --color-whatsapp-dark: #128C7E;
+  
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+  
+  --font-body: ui-sans-serif, system-ui, sans-serif, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  --font-heading: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+}
+
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added this section to revert it to the previous behavior.
+*/
+@layer base {
+  :root {
+    --color-border: var(--color-gray-200, #e5e5e5);
+  }
+
+  * {
+    border-color: var(--color-border);
+  }
+}
+
+@layer base {
+  body {
+    @apply bg-white text-gray-900;
+    font-family: var(--font-body);
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    @apply font-bold;
+  }
+}
+
+@layer utilities {
+  .container-custom {
+    @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+  
+  .btn-whatsapp {
+    @apply bg-[#25D366] hover:bg-[#128C7E] text-white font-medium;
+  }
+}
