@@ -21,6 +21,7 @@ interface ProductCardProps {
         review_count?: number
         is_featured?: boolean
         vendor_name?: string
+        price_unit?: string
     }
     variant?: 'default' | 'compact' | 'featured'
     showFavorite?: boolean

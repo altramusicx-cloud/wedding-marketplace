@@ -16,25 +16,38 @@ export default async function AdminLayout({
     const supabase = await createClient()
 
     // 1. Cek user login
-    const { data: { user } } = await supabase.auth.getUser()
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+
+    console.log('=== ADMIN LAYOUT DEBUG ===')
+    console.log('1. Auth getUser - User:', user?.id, user?.email)
+    console.log('2. Auth getUser - Error:', authError)
 
     if (!user) {
+        console.log('3. No user found, redirecting to login')
         redirect('/login')
     }
 
     // 2. Cek apakah admin
-    const { data: profile } = await supabase
+    const { data: profile, error: profileError } = await supabase
         .from('profiles')
-        .select('is_admin')
+        .select('is_admin, is_vendor, email, full_name')
         .eq('id', user.id)
-        .single()
+        .maybeSingle() // pakai maybeSingle, bukan single
+
+    console.log('4. Profile query - Data:', profile)
+    console.log('5. Profile query - Error:', profileError)
+    console.log('6. Is admin?', profile?.is_admin)
+    console.log('7. Is vendor?', profile?.is_vendor)
+    console.log('=== END DEBUG ===')
 
     // 3. Jika bukan admin, redirect
     if (!profile?.is_admin) {
+        console.log('8. NOT ADMIN, redirecting to dashboard')
         redirect('/dashboard')
     }
 
     // 4. Jika sampai sini, user adalah admin
+    console.log('9. ADMIN ACCESS GRANTED')
     return (
         <div className="min-h-screen bg-gray-50">
             <div className="flex">
