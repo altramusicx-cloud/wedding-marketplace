@@ -1,3 +1,5 @@
+// components\layout\header.tsx
+
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { ShoppingBag, User, Menu } from 'lucide-react'
