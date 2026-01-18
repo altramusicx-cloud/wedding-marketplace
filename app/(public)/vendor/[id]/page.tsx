@@ -262,18 +262,17 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
                         </Card>
 
                         {/* Contact Button - Sticky on mobile */}
+                        {/* Contact Button - Sticky on mobile */}
                         <div className="sticky bottom-0 lg:static bg-white lg:bg-transparent border-t lg:border-0 p-4 lg:p-0">
                             <ContactButton
+                                vendorId="temp-vendor-id-123"
                                 vendorWhatsApp="+6281234567890"
-                                productName={product.name}
                                 productId={product.id}
+                                productName={product.name}
+                                vendorName={product.vendor_name || "Vendor"}
                                 variant="large"
                                 className="w-full"
                             />
-                            <Button variant="outline" className="w-full mt-3">
-                                <Share2 className="mr-2 h-4 w-4" />
-                                Bagikan
-                            </Button>
                         </div>
                     </div>
                 </div>
