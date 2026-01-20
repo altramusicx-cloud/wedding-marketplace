@@ -50,6 +50,7 @@ export default function CreateProductPage() {
 
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [uploadedImages, setUploadedImages] = useState<File[]>([])
+    const [priceError, setPriceError] = useState<string | null>(null)
 
     // Form state
     const [formData, setFormData] = useState({
@@ -70,22 +71,26 @@ export default function CreateProductPage() {
     const [selectedDistrict, setSelectedDistrict] = useState("")
     const [isLoadingLocations, setIsLoadingLocations] = useState(true)
 
-    // Load provinces on mount
-    useEffect(() => {
-        loadProvinces()
-    }, [])
-
+    // ✅ BUG 1: DEBUG PROVINCES LOADING
     const loadProvinces = async () => {
         try {
             setIsLoadingLocations(true)
+            console.log('🔄 Loading provinces from EMSIFA...')
             const data = await getKalimantanProvinces()
+            console.log('✅ Provinces loaded:', data)
             setProvinces(data)
         } catch (error) {
-            console.error('Failed to load provinces:', error)
+            console.error('❌ Failed to load provinces:', error)
+            setProvinces([]) // atau tampilkan toast error
         } finally {
             setIsLoadingLocations(false)
         }
     }
+
+    // Load provinces on mount
+    useEffect(() => {
+        loadProvinces()
+    }, [])
 
     // Load regencies when province changes
     useEffect(() => {
@@ -103,6 +108,8 @@ export default function CreateProductPage() {
             setDistricts([])
         } catch (error) {
             console.error('Failed to load regencies:', error)
+            // Clear regencies if error
+            setRegencies([])
         }
     }
 
@@ -120,6 +127,8 @@ export default function CreateProductPage() {
             setDistricts(data)
         } catch (error) {
             console.error('Failed to load districts:', error)
+            // Clear districts if error
+            setDistricts([])
         }
     }
 
@@ -132,7 +141,46 @@ export default function CreateProductPage() {
         setFormData(prev => ({ ...prev, [name]: value }))
     }
 
-    // Di app/dashboard/vendor/products/new/page.tsx line ~100:
+    // ✅ BUG 2: FIX PRICE PARSING LOGIC
+    const parseFormattedNumber = (formattedValue: string): number => {
+        if (!formattedValue) return 0
+        // Hapus semua titik, lalu parse
+        const clean = formattedValue.replace(/\./g, '')
+        return parseInt(clean, 10) || 0
+    }
+
+    const validatePrices = (priceFrom: string, priceTo: string): string | null => {
+        const fromNum = parseFormattedNumber(priceFrom)
+        const toNum = parseFormattedNumber(priceTo)
+
+        if (fromNum > 0 && toNum > 0 && fromNum > toNum) {
+            return "Harga mulai tidak boleh lebih besar dari harga sampai"
+        }
+
+        return null
+    }
+
+    // ✅ SIMPLIFIED HANDLE PRICE CHANGE - VALIDATION ONLY (NO AUTO-SWAP)
+    const handlePriceChange = (name: 'priceFrom' | 'priceTo', value: string) => {
+        // Hanya allow angka
+        const numericValue = value.replace(/\D/g, '')
+        const formatted = numericValue ? parseInt(numericValue, 10).toLocaleString('id-ID') : ''
+
+        const newFormData = { ...formData, [name]: formatted }
+
+        // Show error jika invalid, tapi tetap biarkan user input
+        const fromNum = parseFormattedNumber(newFormData.priceFrom)
+        const toNum = parseFormattedNumber(newFormData.priceTo)
+
+        if (fromNum > 0 && toNum > 0 && fromNum > toNum) {
+            setPriceError("⚠️ Harga mulai lebih besar dari harga sampai")
+        } else {
+            setPriceError(null)
+        }
+
+        setFormData(newFormData)
+    }
+
     const handleImagesChange = (files: File[]) => {
         console.log('📦 [PRODUCT FORM] Images changed:', files.length, 'files')
         console.log('📦 [PRODUCT FORM] Files:', files)
@@ -141,6 +189,19 @@ export default function CreateProductPage() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
+
+        // ✅ VALIDASI HARGA DI SUBMIT DENGAN PARSING YANG BENAR
+        const priceError = validatePrices(formData.priceFrom, formData.priceTo)
+        if (priceError) {
+            alert(priceError)
+            return
+        }
+
+        // Parse currency values dengan parsing yang benar
+        const priceFromNum = parseFormattedNumber(formData.priceFrom) || null
+        const priceToNum = parseFormattedNumber(formData.priceTo) || null
+
+        console.log('Parsed prices:', { priceFromNum, priceToNum })
 
         // Validasi dasar
         if (!formData.name || !formData.category || !formData.description) {
@@ -198,8 +259,8 @@ export default function CreateProductPage() {
                     description: formData.description,
                     category: formData.category.toLowerCase(),
                     location: fullLocation,
-                    price_from: formData.priceFrom ? parseFloat(formData.priceFrom) : null,
-                    price_to: formData.priceTo ? parseFloat(formData.priceTo) : null,
+                    price_from: priceFromNum,
+                    price_to: priceToNum,
                     price_unit: formData.priceUnit,
                     thumbnail_url: thumbnailUrl,
                     status: 'pending'
@@ -304,7 +365,7 @@ export default function CreateProductPage() {
                                             <SelectTrigger>
                                                 <SelectValue placeholder="Pilih kategori" />
                                             </SelectTrigger>
-                                            <SelectContent>
+                                            <SelectContent className="bg-white">
                                                 {CATEGORIES.map((category) => (
                                                     <SelectItem key={category} value={category.toLowerCase()}>
                                                         {category}
@@ -338,7 +399,7 @@ export default function CreateProductPage() {
                                                         <SelectValue placeholder="Provinsi" />
                                                     )}
                                                 </SelectTrigger>
-                                                <SelectContent>
+                                                <SelectContent className="bg-white">
                                                     {provinces.map((province) => (
                                                         <SelectItem key={province.id} value={province.id}>
                                                             {province.name}
@@ -362,7 +423,7 @@ export default function CreateProductPage() {
                                                         <SelectValue placeholder="Kabupaten/Kota" />
                                                     )}
                                                 </SelectTrigger>
-                                                <SelectContent>
+                                                <SelectContent className="bg-white">
                                                     {regencies.map((regency) => (
                                                         <SelectItem key={regency.id} value={regency.id}>
                                                             {regency.name}
@@ -386,7 +447,7 @@ export default function CreateProductPage() {
                                                         <SelectValue placeholder="Kecamatan" />
                                                     )}
                                                 </SelectTrigger>
-                                                <SelectContent>
+                                                <SelectContent className="bg-white">
                                                     {districts.map((district) => (
                                                         <SelectItem key={district.id} value={district.id}>
                                                             {district.name}
@@ -428,6 +489,7 @@ export default function CreateProductPage() {
                             </CardHeader>
                             <CardContent className="space-y-4">
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    {/* Harga Mulai Dari */}
                                     <div>
                                         <label className="block text-sm font-medium mb-2">
                                             Harga Mulai Dari
@@ -437,16 +499,18 @@ export default function CreateProductPage() {
                                                 Rp
                                             </span>
                                             <Input
-                                                name="priceFrom"
                                                 value={formData.priceFrom}
-                                                onChange={handleInputChange}
+                                                onChange={(e) => handlePriceChange('priceFrom', e.target.value)}
                                                 placeholder="0"
                                                 className="pl-10"
-                                                type="number"
+                                                inputMode="numeric"
+                                                pattern="[0-9]*"
+                                                enterKeyHint="done"
                                             />
                                         </div>
                                     </div>
 
+                                    {/* Harga Sampai */}
                                     <div>
                                         <label className="block text-sm font-medium mb-2">
                                             Harga Sampai
@@ -456,12 +520,13 @@ export default function CreateProductPage() {
                                                 Rp
                                             </span>
                                             <Input
-                                                name="priceTo"
                                                 value={formData.priceTo}
-                                                onChange={handleInputChange}
+                                                onChange={(e) => handlePriceChange('priceTo', e.target.value)}
                                                 placeholder="0"
                                                 className="pl-10"
-                                                type="number"
+                                                inputMode="numeric"
+                                                pattern="[0-9]*"
+                                                enterKeyHint="done"
                                             />
                                         </div>
                                     </div>
@@ -487,6 +552,13 @@ export default function CreateProductPage() {
                                         </Select>
                                     </div>
                                 </div>
+
+                                {/* ✅ TAMPILKAN ERROR MESSAGE JIKA ADA */}
+                                {priceError && (
+                                    <div className="text-red-600 text-sm mt-1">
+                                        {priceError}
+                                    </div>
+                                )}
 
                                 <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
                                     <p className="text-sm text-amber-800">
