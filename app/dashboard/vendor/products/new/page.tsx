@@ -1,4 +1,4 @@
-// File: app/dashboard/vendor/products/new/page.tsx (VERSI BARU DENGAN LOCATION API)
+// File: app/dashboard/vendor/products/new/page.tsx
 "use client"
 
 import { useState, useEffect } from "react"
@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { ArrowLeft, Upload, X, Loader2 } from "lucide-react"
+import { ArrowLeft, Loader2 } from "lucide-react"
 import Link from "next/link"
 import {
     getKalimantanProvinces,
@@ -18,6 +18,9 @@ import {
     type Regency,
     type District
 } from "@/lib/utils/location-api"
+import { ImageUpload } from "@/components/shared/image-upload"
+import { uploadImages } from "@/utils/upload-image"
+import { createClient } from "@/lib/supabase/client"
 
 // Mock data untuk dropdown (selain location)
 const CATEGORIES = [
@@ -43,8 +46,10 @@ const PRICE_UNITS = [
 
 export default function CreateProductPage() {
     const router = useRouter()
+    const supabase = createClient()
+
     const [isSubmitting, setIsSubmitting] = useState(false)
-    const [images, setImages] = useState<File[]>([])
+    const [uploadedImages, setUploadedImages] = useState<File[]>([])
 
     // Form state
     const [formData, setFormData] = useState({
@@ -127,20 +132,21 @@ export default function CreateProductPage() {
         setFormData(prev => ({ ...prev, [name]: value }))
     }
 
-    const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const files = e.target.files
-        if (files) {
-            const newImages = Array.from(files).slice(0, 10 - images.length)
-            setImages(prev => [...prev, ...newImages])
-        }
-    }
-
-    const removeImage = (index: number) => {
-        setImages(prev => prev.filter((_, i) => i !== index))
+    // Di app/dashboard/vendor/products/new/page.tsx line ~100:
+    const handleImagesChange = (files: File[]) => {
+        console.log('📦 [PRODUCT FORM] Images changed:', files.length, 'files')
+        console.log('📦 [PRODUCT FORM] Files:', files)
+        setUploadedImages(files)
     }
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
+
+        // Validasi dasar
+        if (!formData.name || !formData.category || !formData.description) {
+            alert("Harap isi semua field yang wajib diisi")
+            return
+        }
 
         // Validasi location
         if (!selectedProvince || !selectedRegency || !selectedDistrict) {
@@ -148,33 +154,104 @@ export default function CreateProductPage() {
             return
         }
 
-        setIsSubmitting(true)
-
-        // Dapatkan nama location dari state
-        const provinceName = provinces.find(p => p.id === selectedProvince)?.name || ""
-        const regencyName = regencies.find(r => r.id === selectedRegency)?.name || ""
-        const districtName = districts.find(d => d.id === selectedDistrict)?.name || ""
-
-        const locationData = {
-            provinceId: selectedProvince,
-            province: provinceName,
-            regencyId: selectedRegency,
-            regency: regencyName,
-            districtId: selectedDistrict,
-            district: districtName,
-            fullLocation: `${districtName}, ${regencyName}, ${provinceName}`
+        // Validasi images
+        if (uploadedImages.length < 1) {
+            alert("Harap upload minimal 1 gambar produk")
+            return
         }
 
-        console.log("Form data:", formData)
-        console.log("Location data:", locationData)
-        console.log("Images:", images)
+        setIsSubmitting(true)
 
-        // Simulasi API call
-        await new Promise(resolve => setTimeout(resolve, 1500))
+        try {
+            // Dapatkan nama location dari state
+            const provinceName = provinces.find(p => p.id === selectedProvince)?.name || ""
+            const regencyName = regencies.find(r => r.id === selectedRegency)?.name || ""
+            const districtName = districts.find(d => d.id === selectedDistrict)?.name || ""
+            const fullLocation = `${districtName}, ${regencyName}, ${provinceName}`
 
-        // Redirect ke product list setelah berhasil
-        router.push("/dashboard/vendor/products")
-        setIsSubmitting(false)
+            // 1. Upload images ke Supabase Storage
+            console.log('Uploading images to Supabase...')
+            const imageResults = await uploadImages(uploadedImages, {
+                bucket: 'product-images',
+                folder: 'temp',
+                productId: 'temp-' + Date.now()
+            })
+
+            const imageUrls = imageResults.map(result => result.url)
+            const thumbnailUrl = imageUrls[0] // Gunakan gambar pertama sebagai thumbnail
+
+            // 2. Get current user
+            const { data: { user } } = await supabase.auth.getUser()
+            if (!user) {
+                alert("Sesi telah berakhir. Silakan login kembali.")
+                router.push("/login")
+                return
+            }
+
+            // 3. Create product di database
+            const { data: product, error: productError } = await supabase
+                .from('products')
+                .insert({
+                    vendor_id: user.id,
+                    name: formData.name,
+                    slug: generateSlug(formData.name),
+                    description: formData.description,
+                    category: formData.category.toLowerCase(),
+                    location: fullLocation,
+                    price_from: formData.priceFrom ? parseFloat(formData.priceFrom) : null,
+                    price_to: formData.priceTo ? parseFloat(formData.priceTo) : null,
+                    price_unit: formData.priceUnit,
+                    thumbnail_url: thumbnailUrl,
+                    status: 'pending'
+                })
+                .select()
+                .single()
+
+            if (productError) {
+                console.error('Product creation error:', productError)
+                throw new Error('Gagal membuat produk')
+            }
+
+            // 4. Save product images ke database
+            if (product && imageUrls.length > 0) {
+                const productImages = imageUrls.map((url, index) => ({
+                    product_id: product.id,
+                    url,
+                    alt_text: `${formData.name} - gambar ${index + 1}`,
+                    order_index: index
+                }))
+
+                const { error: imagesError } = await supabase
+                    .from('product_images')
+                    .insert(productImages)
+
+                if (imagesError) {
+                    console.error('Images save error:', imagesError)
+                    // Continue anyway, product already created
+                }
+            }
+
+            console.log('Product created successfully!', product)
+
+            // Redirect ke product list setelah berhasil
+            router.push("/dashboard/vendor/products")
+
+        } catch (error) {
+            console.error('Error creating product:', error)
+            alert("Terjadi kesalahan. Silakan coba lagi.")
+        } finally {
+            setIsSubmitting(false)
+        }
+    }
+
+    // Helper function untuk generate slug
+    const generateSlug = (name: string) => {
+        return name
+            .toLowerCase()
+            .replace(/[^\w\s-]/g, '')
+            .replace(/\s+/g, '-')
+            .replace(/--+/g, '-')
+            .trim()
     }
 
     return (
@@ -429,55 +506,18 @@ export default function CreateProductPage() {
                                 <CardTitle>Gambar Produk</CardTitle>
                                 <CardDescription>Upload foto produk Anda</CardDescription>
                             </CardHeader>
-                            <CardContent className="space-y-4">
-                                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
-                                    <Upload className="h-10 w-10 text-gray-400 mx-auto mb-3" />
-                                    <p className="text-sm text-gray-600 mb-2">
-                                        Drag & drop gambar atau klik untuk upload
-                                    </p>
-                                    <p className="text-xs text-gray-500 mb-4">
-                                        Max 10 gambar, setiap gambar max 2MB
-                                    </p>
-                                    <Button type="button" variant="outline" className="relative">
-                                        Pilih Gambar
-                                        <input
-                                            type="file"
-                                            multiple
-                                            accept="image/*"
-                                            onChange={handleImageUpload}
-                                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                                        />
-                                    </Button>
-                                </div>
-
-                                {/* Preview Images */}
-                                {images.length > 0 && (
-                                    <div className="space-y-3">
-                                        <p className="text-sm font-medium">
-                                            {images.length} gambar dipilih
-                                        </p>
-                                        <div className="grid grid-cols-3 gap-2">
-                                            {images.map((image, index) => (
-                                                <div key={index} className="relative group">
-                                                    <div className="aspect-square rounded-lg overflow-hidden bg-gray-100">
-                                                        <img
-                                                            src={URL.createObjectURL(image)}
-                                                            alt={`Preview ${index + 1}`}
-                                                            className="w-full h-full object-cover"
-                                                        />
-                                                    </div>
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => removeImage(index)}
-                                                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
-                                                    >
-                                                        <X className="h-4 w-4" />
-                                                    </button>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
+                            <CardContent>
+                                <ImageUpload
+                                    maxFiles={10}
+                                    maxSizeMB={8}
+                                    maxSizeKB={120}
+                                    onFilesChange={handleImagesChange}
+                                    compressToWebP={true}
+                                />
+                                <p className="text-xs text-gray-500 mt-3">
+                                    <strong>Note:</strong> Gambar akan dikompresi otomatis ke format WebP (≤120KB).
+                                    Gambar pertama akan menjadi thumbnail.
+                                </p>
                             </CardContent>
                         </Card>
 

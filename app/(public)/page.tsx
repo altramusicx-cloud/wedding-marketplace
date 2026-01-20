@@ -36,6 +36,16 @@ export default async function HomePage() {
             .order('created_at', { ascending: false })
             .limit(8)
 
+        console.log('=== HOMEPAGE DEBUG DETAIL ===')
+        featuredProducts?.forEach((p: any, i: number) => {
+            console.log(`Product ${i}:`, {
+                id: p.id,
+                name: p.name,
+                thumbnail_url: p.thumbnail_url,
+                thumbnail_url_short: p.thumbnail_url?.substring(0, 50) + '...'
+            })
+        })
+
         if (featuredError) {
             console.error('Error fetching featured products:', featuredError)
         }

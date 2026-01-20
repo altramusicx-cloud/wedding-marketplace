@@ -1,3 +1,5 @@
+// components\providers\auth-provider.tsx
+
 'use client'
 
 import { createClient } from '@/lib/supabase/client'

@@ -1,4 +1,5 @@
 // components/home/featured-products.tsx
+'use client'
 import { ProductCard } from '@/components/product/product-card'
 import { Button } from '@/components/ui/button'
 import { ArrowRight } from 'lucide-react'
@@ -35,6 +36,12 @@ export function FeaturedProducts({
     variant = 'carousel',
     showViewAll = true
 }: FeaturedProductsProps) {
+
+    console.log('🔄 FeaturedProducts rendering:', products.length, 'products')
+    products.forEach((p: any, i: number) => {
+        console.log(`  ${i}: ${p.id} - ${p.name}`)
+    })
+
     if (!products || products.length === 0) {
         return (
             <div className="text-center py-12">
@@ -64,7 +71,7 @@ export function FeaturedProducts({
                 <div className="relative">
                     <div className="flex overflow-x-auto pb-4 gap-6 scrollbar-hide">
                         {products.map((product) => (
-                            <div key={product.id} className="min-w-[280px] max-w-[280px]">
+                            <div key={`card-${product.id}-${product.thumbnail_url}`} className="min-w-[280px] max-w-[280px]">
                                 <ProductCard product={{
                                     id: product.id,
                                     name: product.name,
@@ -83,7 +90,7 @@ export function FeaturedProducts({
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     {products.map((product) => (
                         <ProductCard
-                            key={product.id}
+                            key={`${product.id}-${product.thumbnail_url}`}
                             product={{
                                 id: product.id,
                                 name: product.name,

@@ -1,336 +1,351 @@
 // File: components/shared/image-upload.tsx
 "use client"
 
-import { useState, useCallback } from "react"
-import { Upload, X, Check, AlertCircle, Loader2 } from "lucide-react"
+import { useState, useRef } from "react"
+import { Upload, X, Loader2, Image as ImageIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Progress } from "@/components/ui/progress"
 import { cn } from "@/lib/utils"
-import { compressImages, blobToFile, getCompressionRatio } from "@/lib/utils/image-compressor"
+import { compressImage, validateImageFile } from "@/lib/utils/image-compressor"
+
+export interface UploadedImage {
+    file: File
+    previewUrl: string
+    compressedBlob?: Blob
+    isCompressing?: boolean
+    error?: string
+}
 
 interface ImageUploadProps {
-    maxFiles?: number           // Default: 10
-    minFiles?: number           // Default: 2
-    maxSizeMB?: number          // Default: 2 (before compression)
-    maxSizeKB?: number          // Default: 120 (after compression)
+    maxFiles?: number
+    maxSizeMB?: number
+    maxSizeKB?: number
     onFilesChange: (files: File[]) => void
     existingImages?: Array<{ url: string; id?: string }>
-    compressToWebP?: boolean    // Default: true
+    compressToWebP?: boolean
     className?: string
 }
 
 export function ImageUpload({
     maxFiles = 10,
-    minFiles = 2,
-    maxSizeMB = 2,
+    maxSizeMB = 8,
     maxSizeKB = 120,
     onFilesChange,
     existingImages = [],
     compressToWebP = true,
     className
 }: ImageUploadProps) {
-    const [files, setFiles] = useState<File[]>([])
-    const [previews, setPreviews] = useState<string[]>([])
-    const [isCompressing, setIsCompressing] = useState(false)
-    const [compressionProgress, setCompressionProgress] = useState(0)
-    const [errors, setErrors] = useState<string[]>([])
+    const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([])
+    const [isDragging, setIsDragging] = useState(false)
+    const [isProcessing, setIsProcessing] = useState(false)
+    const fileInputRef = useRef<HTMLInputElement>(null)
+    const hasCalledParentRef = useRef(false)
 
-    const totalImages = existingImages.length + files.length
+    // Convert existing images to UploadedImage format
+    const existingUploadedImages = existingImages.map(img => ({
+        file: new File([], "existing-image"),
+        previewUrl: img.url,
+        isCompressing: false,
+        error: undefined,
+        compressedBlob: undefined
+    }))
 
-    // Generate preview URL
-    const createPreview = (file: File): Promise<string> => {
-        return new Promise((resolve) => {
-            const reader = new FileReader()
-            reader.onload = (e) => resolve(e.target?.result as string)
-            reader.readAsDataURL(file)
-        })
-    }
+    const allImages = [...existingUploadedImages, ...uploadedImages]
 
-    // Handle file selection
-    const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
-        const selectedFiles = Array.from(event.target.files || [])
-        setErrors([])
+    const handleFileSelect = async (files: FileList | null) => {
+        if (!files || files.length === 0) return
 
-        // Validate file count
-        if (totalImages + selectedFiles.length > maxFiles) {
-            setErrors([`Maksimal ${maxFiles} gambar. Anda sudah memiliki ${totalImages} gambar.`])
+        const fileArray = Array.from(files)
+        console.log('🟡 [DEBUG 1] New files selected:', fileArray.length, 'files')
+
+        const remainingSlots = maxFiles - allImages.length
+
+        if (fileArray.length > remainingSlots) {
+            alert(`Maksimal ${maxFiles} gambar. Anda sudah memilih ${allImages.length} gambar.`)
             return
         }
 
-        // Validate file size before compression
-        const oversizedFiles = selectedFiles.filter(file => file.size > maxSizeMB * 1024 * 1024)
-        if (oversizedFiles.length > 0) {
-            setErrors([`Beberapa file melebihi ${maxSizeMB}MB. Silakan pilih file yang lebih kecil.`])
-            return
-        }
+        const newUploadedImages: UploadedImage[] = []
 
-        setIsCompressing(true)
-        setCompressionProgress(0)
+        // Validate and create preview
+        for (const file of fileArray.slice(0, remainingSlots)) {
+            const validationError = validateImageFile(file, maxSizeMB)
 
-        try {
-            // Compress images
-            const compressionResults = await compressImages(selectedFiles, {
-                maxSizeKB,
-                format: compressToWebP ? 'webp' : 'jpeg'
-            })
-
-            setCompressionProgress(50)
-
-            // Convert compressed blobs to files
-            const compressedFiles = compressionResults.map((result, index) => {
-                const originalName = selectedFiles[index].name
-                const extension = compressToWebP ? 'webp' : originalName.split('.').pop() || 'jpg'
-                const newName = originalName.replace(/\.[^/.]+$/, '') + `.${extension}`
-
-                return blobToFile(result.blob, newName)
-            })
-
-            setCompressionProgress(75)
-
-            // Create previews
-            const newPreviews = await Promise.all(
-                compressedFiles.map(file => createPreview(file))
-            )
-
-            // Update state
-            const updatedFiles = [...files, ...compressedFiles]
-            const updatedPreviews = [...previews, ...newPreviews]
-
-            setFiles(updatedFiles)
-            setPreviews(updatedPreviews)
-            onFilesChange(updatedFiles)
-
-            // Show compression stats
-            if (compressionResults.length > 0) {
-                const firstResult = compressionResults[0]
-                const ratio = getCompressionRatio(firstResult.originalSize, firstResult.compressedSize)
-                if (ratio > 0) {
-                    console.log(`Gambar dikompresi: ${ratio}% lebih kecil`)
-                }
+            if (validationError) {
+                alert(`${file.name}: ${validationError}`)
+                continue
             }
 
+            const uploadedImage: UploadedImage = {
+                file,
+                previewUrl: URL.createObjectURL(file),
+                isCompressing: true,
+                error: undefined,
+                compressedBlob: undefined
+            }
+
+            newUploadedImages.push(uploadedImage)
+        }
+
+        console.log('🟡 [DEBUG 2] Starting compression for:', newUploadedImages.length, 'images')
+
+        // Update state with new images (showing preview immediately)
+        setUploadedImages(prev => [...prev, ...newUploadedImages])
+
+        // Process compression for new images
+        setIsProcessing(true)
+        try {
+            const compressedResults = await Promise.allSettled(
+                newUploadedImages.map(async (uploadedImage) => {
+                    if (compressToWebP) {
+                        const result = await compressImage(uploadedImage.file, {
+                            maxSizeKB,
+                            format: 'webp'
+                        })
+                        return result.blob
+                    }
+                    return uploadedImage.file
+                })
+            )
+
+            console.log('🟡 [DEBUG 3] Compression results:', compressedResults)
+
+            // Update state dengan compressed blobs
+            setUploadedImages(prev => {
+                const updated = [...prev]
+
+                compressedResults.forEach((result, index) => {
+                    const targetIndex = prev.length - newUploadedImages.length + index
+
+                    if (result.status === 'fulfilled') {
+                        updated[targetIndex] = {
+                            ...updated[targetIndex],
+                            compressedBlob: result.value,
+                            isCompressing: false
+                        }
+                    } else {
+                        updated[targetIndex] = {
+                            ...updated[targetIndex],
+                            error: 'Gagal mengompresi gambar',
+                            isCompressing: false
+                        }
+                    }
+                })
+
+                const compressedFiles = updated
+                    .filter(img => img.compressedBlob)
+                    .map(img => new File([img.compressedBlob!], img.file.name, {
+                        type: compressToWebP ? 'image/webp' : img.file.type
+                    }))
+
+                console.log('🟡 [DEBUG 4] Compressed files to send:', compressedFiles.length)
+
+                // 🔧 FIX: Cegah double call dengan ref check
+                if (compressedFiles.length > 0) {
+                    setTimeout(() => {
+                        onFilesChange(compressedFiles)
+                    }, 0)
+                }
+
+                return updated
+            })
+
         } catch (error) {
-            console.error('Compression failed:', error)
-            setErrors(['Gagal mengkompresi gambar. Silakan coba lagi.'])
+            console.error('Error processing images:', error)
         } finally {
-            setIsCompressing(false)
-            setCompressionProgress(0)
-            event.target.value = '' // Reset input
+            setIsProcessing(false)
         }
     }
 
-    const removeFile = (index: number) => {
-        const updatedFiles = files.filter((_, i) => i !== index)
-        const updatedPreviews = previews.filter((_, i) => i !== index)
-
-        setFiles(updatedFiles)
-        setPreviews(updatedPreviews)
-        onFilesChange(updatedFiles)
-    }
-
-    const removeExistingImage = (index: number) => {
-        // Note: In a real app, you'd make an API call to delete from server
-        console.log('Remove existing image:', existingImages[index])
-    }
-
-    const handleDrop = useCallback((e: React.DragEvent) => {
+    const handleDragOver = (e: React.DragEvent) => {
         e.preventDefault()
-        const droppedFiles = Array.from(e.dataTransfer.files).filter(file =>
-            file.type.startsWith('image/')
-        )
+        setIsDragging(true)
+    }
 
-        if (droppedFiles.length > 0) {
-            const inputEvent = {
-                target: { files: e.dataTransfer.files }
-            } as React.ChangeEvent<HTMLInputElement>
-            handleFileSelect(inputEvent)
+    const handleDragLeave = (e: React.DragEvent) => {
+        e.preventDefault()
+        setIsDragging(false)
+    }
+
+    const handleDrop = (e: React.DragEvent) => {
+        e.preventDefault()
+        setIsDragging(false)
+        handleFileSelect(e.dataTransfer.files)
+    }
+
+    const removeImage = (index: number) => {
+        const imageToRemove = uploadedImages[index]
+
+        // Revoke object URL
+        if (imageToRemove.previewUrl.startsWith('blob:')) {
+            URL.revokeObjectURL(imageToRemove.previewUrl)
         }
-    }, [])
 
-    const handleDragOver = useCallback((e: React.DragEvent) => {
-        e.preventDefault()
-    }, [])
+        const newImages = uploadedImages.filter((_, i) => i !== index)
+        setUploadedImages(newImages)
 
+        // Update parent with remaining files
+        const remainingFiles = newImages
+            .filter(img => img.compressedBlob)
+            .map(img => new File([img.compressedBlob!], img.file.name, {
+                type: compressToWebP ? 'image/webp' : img.file.type
+            }))
+
+        setTimeout(() => {
+            onFilesChange(remainingFiles)
+        }, 0)
+    }
+
+    const handleClickUpload = () => {
+        fileInputRef.current?.click()
+    }
+
+    // 🔥 INI RETURN STATEMENT YANG BENAR
     return (
         <div className={className}>
+            {/* File Input (hidden) */}
+            <input
+                ref={fileInputRef}
+                type="file"
+                multiple
+                accept="image/*"
+                onChange={(e) => handleFileSelect(e.target.files)}
+                className="hidden"
+            />
+
             {/* Upload Area */}
-            <div
-                className={cn(
-                    "border-2 border-dashed rounded-lg p-8 text-center transition-colors",
-                    "border-gray-300 hover:border-blush bg-gray-50/50 hover:bg-blush/5",
-                    isCompressing && "opacity-50 cursor-not-allowed"
-                )}
-                onDrop={handleDrop}
-                onDragOver={handleDragOver}
-            >
-                <Upload className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-
-                <div className="space-y-2 mb-4">
-                    <p className="text-lg font-medium">Upload Gambar Produk</p>
-                    <p className="text-sm text-gray-600">
-                        Tarik & drop gambar atau klik untuk memilih
-                    </p>
-                    <p className="text-xs text-gray-500">
-                        Maksimal {maxFiles} gambar • Setiap gambar maksimal {maxSizeMB}MB •
-                        Akan dikompresi menjadi {maxSizeKB}KB WebP
-                    </p>
-                </div>
-
-                {/* Compression Progress */}
-                {isCompressing && (
-                    <div className="space-y-2 mb-4">
-                        <div className="flex items-center justify-center gap-2 text-sm text-gray-600">
-                            <Loader2 className="h-4 w-4 animate-spin" />
-                            Mengkompresi gambar...
-                        </div>
-                        <Progress value={compressionProgress} className="h-2" />
-                    </div>
-                )}
-
-                {/* Upload Button */}
-                <Button
-                    type="button"
-                    variant="outline"
-                    className="relative"
-                    disabled={isCompressing || totalImages >= maxFiles}
-                >
-                    {isCompressing ? (
-                        <>
-                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            Memproses...
-                        </>
-                    ) : (
-                        'Pilih Gambar'
+            {allImages.length < maxFiles && (
+                <div
+                    className={cn(
+                        "border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors",
+                        isDragging
+                            ? "border-blush bg-blush/10"
+                            : "border-gray-300 hover:border-blush hover:bg-gray-50"
                     )}
-                    <input
-                        type="file"
-                        multiple
-                        accept="image/*"
-                        onChange={handleFileSelect}
-                        disabled={isCompressing || totalImages >= maxFiles}
-                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                    />
-                </Button>
-
-                {/* Error Messages */}
-                {errors.length > 0 && (
-                    <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-                        {errors.map((error, index) => (
-                            <div key={index} className="flex items-center gap-2 text-sm text-red-600">
-                                <AlertCircle className="h-4 w-4" />
-                                {error}
-                            </div>
-                        ))}
-                    </div>
-                )}
-            </div>
-
-            {/* Existing Images */}
-            {existingImages.length > 0 && (
-                <div className="mt-6">
-                    <h4 className="font-medium mb-3">Gambar yang sudah ada ({existingImages.length})</h4>
-                    <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3">
-                        {existingImages.map((image, index) => (
-                            <div key={image.id || index} className="relative group">
-                                <div className="aspect-square rounded-lg overflow-hidden bg-gray-100">
-                                    <img
-                                        src={image.url}
-                                        alt={`Existing ${index + 1}`}
-                                        className="w-full h-full object-cover"
-                                    />
-                                </div>
-                                <button
-                                    type="button"
-                                    onClick={() => removeExistingImage(index)}
-                                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
-                                >
-                                    <X className="h-3 w-3" />
-                                </button>
-                            </div>
-                        ))}
+                    onClick={handleClickUpload}
+                    onDragOver={handleDragOver}
+                    onDragLeave={handleDragLeave}
+                    onDrop={handleDrop}
+                >
+                    <div className="space-y-3">
+                        <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gray-100">
+                            {isProcessing ? (
+                                <Loader2 className="h-6 w-6 text-gray-400 animate-spin" />
+                            ) : (
+                                <Upload className="h-6 w-6 text-gray-400" />
+                            )}
+                        </div>
+                        <div>
+                            <p className="text-sm font-medium text-gray-700">
+                                {isProcessing ? "Mengompresi gambar..." : "Drag & drop gambar atau klik untuk upload"}
+                            </p>
+                            <p className="text-xs text-gray-500 mt-1">
+                                Maksimal {maxFiles} gambar, masing-masing maksimal {maxSizeMB}MB
+                                {compressToWebP && `, akan dikompresi ke ≤${maxSizeKB}KB format WebP`}
+                            </p>
+                        </div>
+                        <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            disabled={isProcessing}
+                        >
+                            Pilih Gambar
+                        </Button>
                     </div>
                 </div>
             )}
 
-            {/* New Images Preview */}
-            {files.length > 0 && (
+            {/* Image Preview Grid */}
+            {allImages.length > 0 && (
                 <div className="mt-6">
-                    <h4 className="font-medium mb-3">
-                        Gambar baru ({files.length})
-                        {files.length < minFiles && (
-                            <span className="ml-2 text-sm text-amber-600">
-                                • Minimal {minFiles} gambar diperlukan
-                            </span>
+                    <div className="flex items-center justify-between mb-4">
+                        <p className="text-sm font-medium text-gray-700">
+                            {allImages.length} / {maxFiles} gambar
+                            {isProcessing && " (Mengompresi...)"}
+                        </p>
+                        {allImages.length > 0 && (
+                            <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => setUploadedImages([])}
+                                disabled={isProcessing}
+                            >
+                                Hapus Semua
+                            </Button>
                         )}
-                    </h4>
-                    <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3">
-                        {files.map((file, index) => {
-                            const preview = previews[index]
-                            const sizeKB = Math.round(file.size / 1024)
+                    </div>
+
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+                        {allImages.map((image, index) => {
+                            const isExisting = index < existingUploadedImages.length
 
                             return (
-                                <div key={index} className="relative group">
-                                    <div className="aspect-square rounded-lg overflow-hidden bg-gray-100">
-                                        {preview ? (
+                                <div
+                                    key={index}
+                                    className={cn(
+                                        "relative aspect-square rounded-lg overflow-hidden border",
+                                        image.error
+                                            ? "border-red-300 bg-red-50"
+                                            : isExisting
+                                                ? "border-gray-200"
+                                                : "border-gray-300"
+                                    )}
+                                >
+                                    {/* Image Preview */}
+                                    <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+                                        {image.previewUrl ? (
                                             <img
-                                                src={preview}
+                                                src={image.previewUrl}
                                                 alt={`Preview ${index + 1}`}
                                                 className="w-full h-full object-cover"
                                             />
                                         ) : (
-                                            <div className="w-full h-full flex items-center justify-center">
-                                                <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
-                                            </div>
+                                            <ImageIcon className="h-8 w-8 text-gray-400" />
                                         )}
                                     </div>
 
-                                    {/* File Info */}
-                                    <div className="absolute bottom-0 left-0 right-0 bg-black/70 text-white p-2 text-xs opacity-0 group-hover:opacity-100 transition-opacity">
-                                        <div className="truncate">{file.name}</div>
-                                        <div>{sizeKB} KB • WebP</div>
-                                    </div>
-
-                                    {/* Remove Button */}
-                                    <button
-                                        type="button"
-                                        onClick={() => removeFile(index)}
-                                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
-                                    >
-                                        <X className="h-3 w-3" />
-                                    </button>
-
-                                    {/* Compression Badge */}
-                                    {sizeKB <= 120 && (
-                                        <div className="absolute top-2 left-2 bg-green-500 text-white text-xs px-1.5 py-0.5 rounded flex items-center gap-1">
-                                            <Check className="h-3 w-3" />
-                                            {sizeKB}KB
+                                    {/* Overlay */}
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 hover:opacity-100 transition-opacity">
+                                        <div className="absolute top-2 right-2">
+                                            {!isExisting && (
+                                                <button
+                                                    type="button"
+                                                    onClick={(e) => {
+                                                        e.stopPropagation()
+                                                        removeImage(index - existingUploadedImages.length)
+                                                    }}
+                                                    disabled={isProcessing}
+                                                    className="bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors disabled:opacity-50"
+                                                >
+                                                    <X className="h-3 w-3" />
+                                                </button>
+                                            )}
                                         </div>
-                                    )}
+
+                                        {/* Status Indicator */}
+                                        <div className="absolute bottom-2 left-2 right-2">
+                                            {image.isCompressing ? (
+                                                <div className="flex items-center gap-1 text-xs text-white">
+                                                    <Loader2 className="h-3 w-3 animate-spin" />
+                                                    <span>Mengompresi...</span>
+                                                </div>
+                                            ) : image.error ? (
+                                                <p className="text-xs text-red-200 truncate">{image.error}</p>
+                                            ) : isExisting ? (
+                                                <p className="text-xs text-white/80 truncate">Sudah diupload</p>
+                                            ) : (
+                                                <p className="text-xs text-white/80 truncate">
+                                                    {!isExisting && image.compressedBlob
+                                                        ? `${Math.round(image.compressedBlob.size / 1024)}KB`
+                                                        : "Belum dikompresi"}
+                                                </p>
+                                            )}
+                                        </div>
+                                    </div>
                                 </div>
                             )
                         })}
-                    </div>
-
-                    {/* Validation Summary */}
-                    <div className="mt-4 p-3 bg-gray-50 rounded-lg border">
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
-                            <div className="flex items-center gap-2">
-                                <div className={`h-3 w-3 rounded-full ${totalImages >= minFiles ? 'bg-green-500' : 'bg-amber-500'}`} />
-                                <span>
-                                    {totalImages >= minFiles ? '✓' : '⚠'} {totalImages}/{minFiles} gambar minimal
-                                </span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <div className={`h-3 w-3 rounded-full ${totalImages <= maxFiles ? 'bg-green-500' : 'bg-red-500'}`} />
-                                <span>
-                                    {totalImages <= maxFiles ? '✓' : '✗'} {totalImages}/{maxFiles} gambar maksimal
-                                </span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <div className="h-3 w-3 rounded-full bg-green-500" />
-                                <span>Kompresi otomatis ke WebP ≤{maxSizeKB}KB</span>
-                            </div>
-                        </div>
                     </div>
                 </div>
             )}

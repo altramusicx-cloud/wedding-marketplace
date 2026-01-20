@@ -15,7 +15,7 @@ interface UserProfile {
     avatar_url?: string
 }
 
-export function useAuth() {
+export function useAuthState() {
     const [user, setUser] = useState<User | null>(null)
     const [profile, setProfile] = useState<UserProfile | null>(null) // ← INI HARUS ADA
     const [isLoading, setIsLoading] = useState(true)

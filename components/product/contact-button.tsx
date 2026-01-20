@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { formatWhatsAppUrl } from "@/lib/utils/format-whatsapp"
 import { logContact } from "@/lib/actions/contact"
-import { useAuth } from "@/hooks/use-auth"
+import { useAuthState } from "@/hooks/use-auth-state"
 import { useToast } from "@/components/ui/use-toast"
 
 interface ContactButtonProps {
@@ -30,7 +30,7 @@ export function ContactButton({
     className
 }: ContactButtonProps) {
     const [isLoading, setIsLoading] = useState(false)
-    const { user, profile, isLoading: authLoading } = useAuth()
+    const { user, profile } = useAuthState()
     const { toast } = useToast()
 
     const handleContact = async () => {
@@ -60,7 +60,7 @@ export function ContactButton({
                 vendorId,
                 productId,
                 productName,
-                vendorName: vendorName || 'Vendor', // ← PASTIKAN INI STRING
+                vendorName: vendorName || `Vendor ${vendorId.substring(0, 8)}`,
                 userEmail: user.email || '',
                 userName: profile.full_name || 'User',
                 userWhatsApp: profile.whatsapp_number || ''
@@ -115,7 +115,7 @@ export function ContactButton({
     }
 
     // Jika auth masih loading, show disabled button
-    if (authLoading) {
+    if (isLoading) {
         return (
             <Button
                 disabled

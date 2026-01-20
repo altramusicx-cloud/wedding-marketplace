@@ -1,182 +1,166 @@
 // File: lib/utils/image-compressor.ts
 interface CompressionOptions {
-    maxWidth?: number      // Default: 1200px
-    maxHeight?: number     // Default: 1200px  
-    quality?: number       // Default: 0.8 (80%)
-    maxSizeKB?: number     // Default: 120
-    format?: 'webp' | 'jpeg' | 'png' // Default: 'webp'
+    maxWidth?: number
+    maxHeight?: number
+    quality?: number
+    maxSizeKB?: number
+    format?: 'webp' | 'jpeg'
+}
+
+interface CompressionResult {
+    blob: Blob
+    originalSize: number
+    compressedSize: number
+    width: number
+    height: number
+    format: string
 }
 
 export async function compressImage(
     file: File,
     options: CompressionOptions = {}
-): Promise<{
-    blob: Blob
-    originalSize: number
-    compressedSize: number
-    width: number
-    height: number
-    format: string
-}> {
+): Promise<CompressionResult> {
+
+    console.log('🔧 [COMPRESSOR] Starting compression:', file.name, file.size)
     const {
-        maxWidth = 1200,
-        maxHeight = 1200,
-        quality = 0.8,
+        maxWidth = 1200,    // ↑ dari 800 (+50%)
+        maxHeight = 1200,   // ↑ dari 800 (+50%)
+        quality = 0.8,     // ↑ dari 0.6 (+25%)
         maxSizeKB = 120,
         format = 'webp'
     } = options
 
     return new Promise((resolve, reject) => {
-        const reader = new FileReader()
+        // Create image element
+        const img = new Image()
+        const url = URL.createObjectURL(file)
 
-        reader.onload = (e) => {
-            const img = new Image()
+        img.onload = () => {
+            URL.revokeObjectURL(url)
 
-            img.onload = () => {
-                // Calculate new dimensions while maintaining aspect ratio
-                let width = img.width
-                let height = img.height
+            // Calculate new dimensions while maintaining aspect ratio
+            let width = img.width
+            let height = img.height
 
-                if (width > maxWidth || height > maxHeight) {
-                    const ratio = Math.min(maxWidth / width, maxHeight / height)
-                    width = Math.floor(width * ratio)
-                    height = Math.floor(height * ratio)
-                }
+            if (width > maxWidth || height > maxHeight) {
+                const ratio = Math.min(maxWidth / width, maxHeight / height)
+                width = Math.floor(width * ratio)
+                height = Math.floor(height * ratio)
+            }
 
-                // Create canvas for compression
-                const canvas = document.createElement('canvas')
-                canvas.width = width
-                canvas.height = height
+            // Create canvas for compression
+            const canvas = document.createElement('canvas')
+            canvas.width = width
+            canvas.height = height
 
-                const ctx = canvas.getContext('2d')
-                if (!ctx) {
-                    reject(new Error('Canvas context not available'))
-                    return
-                }
+            const ctx = canvas.getContext('2d')
+            if (!ctx) {
+                reject(new Error('Canvas context not available'))
+                return
+            }
 
-                // Draw image on canvas
-                ctx.drawImage(img, 0, 0, width, height)
+            // Draw image to canvas
+            ctx.drawImage(img, 0, 0, width, height)
 
-                // Compress to target format
-                const mimeType = `image/${format}`
+            // Compress to target format
+            canvas.toBlob(
+                async (blob) => {
+                    if (!blob) {
+                        reject(new Error('Failed to compress image'))
+                        return
+                    }
 
-                canvas.toBlob(
-                    async (blob) => {
-                        if (!blob) {
-                            reject(new Error('Failed to compress image'))
-                            return
-                        }
+                    console.log('🔧 [COMPRESSOR] Compression success:', {
+                        original: file.size,
+                        compressed: blob.size,
+                        type: blob.type
+                    })
 
-                        // If still too large, reduce quality further
-                        let finalBlob = blob
-                        let finalSize = blob.size
-                        let finalQuality = quality
+                    // If still too large, reduce quality further
+                    let finalBlob = blob
+                    let finalQuality = quality
 
-                        if (finalSize > maxSizeKB * 1024) {
-                            // Calculate needed quality reduction
-                            const sizeRatio = (maxSizeKB * 1024) / finalSize
-                            finalQuality = Math.max(0.3, quality * Math.sqrt(sizeRatio))
+                    // Convert to KB
+                    const sizeKB = blob.size / 1024
 
-                            canvas.toBlob(
-                                (reducedBlob) => {
-                                    if (!reducedBlob) {
-                                        resolve({
-                                            blob: finalBlob,
-                                            originalSize: file.size,
-                                            compressedSize: finalSize,
-                                            width,
-                                            height,
-                                            format
-                                        })
-                                        return
-                                    }
+                    if (sizeKB > maxSizeKB) {
+                        // Calculate needed quality reduction
+                        const targetRatio = maxSizeKB / sizeKB
+                        finalQuality = Math.max(0.4, quality * targetRatio)
 
+                        // Re-compress with lower quality
+                        canvas.toBlob(
+                            (reducedBlob) => {
+                                if (!reducedBlob) {
                                     resolve({
-                                        blob: reducedBlob,
+                                        blob: blob,
                                         originalSize: file.size,
-                                        compressedSize: reducedBlob.size,
+                                        compressedSize: finalBlob.size,
                                         width,
                                         height,
                                         format
                                     })
-                                },
-                                mimeType,
-                                finalQuality
-                            )
-                        } else {
-                            resolve({
-                                blob: finalBlob,
-                                originalSize: file.size,
-                                compressedSize: finalSize,
-                                width,
-                                height,
-                                format
-                            })
-                        }
-                    },
-                    mimeType,
-                    quality
-                )
-            }
+                                    return
+                                }
 
-            img.onerror = () => reject(new Error('Failed to load image'))
-            img.src = e.target?.result as string
+                                resolve({
+                                    blob: reducedBlob,
+                                    originalSize: file.size,
+                                    compressedSize: reducedBlob.size,
+                                    width,
+                                    height,
+                                    format
+                                })
+                            },
+                            `image/${format}`,
+                            finalQuality
+                        )
+                    } else {
+                        resolve({
+                            blob: finalBlob,
+                            originalSize: file.size,
+                            compressedSize: finalBlob.size,
+                            width,
+                            height,
+                            format
+                        })
+                    }
+                },
+                `image/${format}`,
+                quality
+            )
         }
 
-        reader.onerror = () => reject(new Error('Failed to read file'))
-        reader.readAsDataURL(file)
+        img.onerror = () => {
+            URL.revokeObjectURL(url)
+            reject(new Error('Failed to load image'))
+        }
+
+        img.src = url
     })
 }
 
-// Batch compression for multiple images
-export async function compressImages(
-    files: File[],
-    options: CompressionOptions = {}
-): Promise<Array<{
-    blob: Blob
-    originalSize: number
-    compressedSize: number
-    width: number
-    height: number
-    format: string
-    name: string
-}>> {
-    const results = []
+// Helper function untuk validasi file
+export function validateImageFile(file: File, maxSizeMB: number = 8): string | null {
+    const validTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif']
 
-    for (const file of files) {
-        try {
-            const compressed = await compressImage(file, options)
-            results.push({
-                ...compressed,
-                name: file.name
-            })
-        } catch (error) {
-            console.error(`Failed to compress ${file.name}:`, error)
-            // Return original file as fallback
-            results.push({
-                blob: file,
-                originalSize: file.size,
-                compressedSize: file.size,
-                width: 0,
-                height: 0,
-                format: file.type.split('/')[1] || 'jpeg',
-                name: file.name
-            })
-        }
+    if (!validTypes.includes(file.type)) {
+        return 'Format file tidak didukung. Gunakan JPEG, PNG, atau WebP.'
     }
 
-    return results
+    const maxSizeBytes = maxSizeMB * 1024 * 1024
+    if (file.size > maxSizeBytes) {
+        return `File terlalu besar. Maksimal ${maxSizeMB}MB.`
+    }
+
+    return null
 }
 
-// Utility to convert Blob to File
-export function blobToFile(blob: Blob, fileName: string): File {
-    return new File([blob], fileName, {
-        type: blob.type,
-        lastModified: Date.now()
-    })
-}
-
-// Calculate compression ratio
-export function getCompressionRatio(originalSize: number, compressedSize: number): number {
-    return Math.round((1 - compressedSize / originalSize) * 100)
+// Batch compression untuk multiple images
+export async function compressImages(
+    files: File[],
+    options?: CompressionOptions
+): Promise<CompressionResult[]> {
+    const promises = files.map(file => compressImage(file, options))
+    return Promise.all(promises)
 }

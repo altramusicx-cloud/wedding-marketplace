@@ -14,7 +14,8 @@ import {
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
-import { useAuth } from '@/hooks/use-auth'
+import { useAuthState } from '@/hooks/use-auth-state'
+
 
 const navItems = [
     { href: '/admin', label: 'Overview', icon: LayoutDashboard },
@@ -27,7 +28,7 @@ const navItems = [
 
 export function AdminSidebar() {
     const pathname = usePathname()
-    const { signOut } = useAuth()
+    const { signOut } = useAuthState()
 
     return (
         <aside className="hidden lg:flex lg:w-64 lg:flex-col lg:fixed lg:inset-y-0">

@@ -23,13 +23,13 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { useAuth } from '@/hooks/use-auth'
+import { useAuthState } from '@/hooks/use-auth-state'
 import { cn } from '@/lib/utils'
 
 export function Header() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
     const pathname = usePathname()
-    const { user, profile, isLoading, signOut, isAuthenticated } = useAuth()
+    const { user, profile, signOut, isLoading, isAuthenticated } = useAuthState()
 
     const navItems = [
         { href: '/', label: 'Home', icon: Home },

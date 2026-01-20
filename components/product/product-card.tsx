@@ -7,6 +7,8 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
 import Link from "next/link"
+import { useFavorites } from '@/hooks/use-favorites'
+import { useEffect, useState } from "react"
 
 interface ProductCardProps {
     product: {
@@ -17,11 +19,11 @@ interface ProductCardProps {
         location: string
         price_from?: number
         price_to?: number
+        price_unit?: string
         rating?: number
         review_count?: number
         is_featured?: boolean
         vendor_name?: string
-        price_unit?: string
     }
     variant?: 'default' | 'compact' | 'featured'
     showFavorite?: boolean
@@ -34,15 +36,56 @@ export function ProductCard({
     variant = 'default',
     showFavorite = true,
     onFavoriteToggle,
-    isFavorite = false
+    isFavorite: externalIsFavorite
 }: ProductCardProps) {
-    const formatPrice = () => {
-        if (product.price_from && product.price_to) {
-            return `Rp ${formatNumber(product.price_from)} - Rp ${formatNumber(product.price_to)}`
-        } else if (product.price_from) {
-            return `Rp ${formatNumber(product.price_from)}`
+    const { isFavorited, toggleFavorite } = useFavorites()
+    const [imageUrl, setImageUrl] = useState("")
+
+    // Force image URL update dengan cache busting
+    useEffect(() => {
+        console.log('🔄 Image URL Update:', product.name, product.thumbnail_url)
+        if (product.thumbnail_url) {
+            const url = `${product.thumbnail_url}?auto=format&fit=crop&w=400&h=400&v=${product.id}-${Date.now()}`
+            setImageUrl(url)
+        } else {
+            setImageUrl("https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=400&h=400&fit=crop")
         }
-        return "Hubungi untuk harga"
+    }, [product.thumbnail_url, product.id, product.name])
+
+    // Gunakan external state jika ada, otherwise use hook
+    const isFavorite = externalIsFavorite !== undefined
+        ? externalIsFavorite
+        : isFavorited(product.id)
+
+    const handleFavoriteClick = (e: React.MouseEvent) => {
+        console.log('FAVORITE CLICKED - Product ID:', product.id)
+        e.stopPropagation()
+        e.preventDefault()
+
+        if (onFavoriteToggle) {
+            onFavoriteToggle(product.id)
+        } else {
+            toggleFavorite(product.id)
+        }
+    }
+
+    const formatPrice = () => {
+        let priceText = ""
+
+        if (product.price_from && product.price_to) {
+            priceText = `Rp ${formatNumber(product.price_from)} - Rp ${formatNumber(product.price_to)}`
+        } else if (product.price_from) {
+            priceText = `Rp ${formatNumber(product.price_from)}`
+        } else {
+            priceText = "Hubungi untuk harga"
+        }
+
+        // Tambah price_unit jika ada
+        if (product.price_unit && priceText !== "Hubungi untuk harga") {
+            priceText += `/${product.price_unit}`
+        }
+
+        return priceText
     }
 
     const formatNumber = (num: number) => {
@@ -70,9 +113,15 @@ export function ProductCard({
             {/* Image Section */}
             <div className="relative aspect-square overflow-hidden bg-gray-100">
                 <img
-                    src={product.thumbnail_url || "/placeholder-image.jpg"}
+                    src={imageUrl || "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=400&h=400&fit=crop"}
                     alt={product.name}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    onError={(e) => {
+                        e.currentTarget.src = "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=400&h=400&fit=crop"
+                        e.currentTarget.alt = "Image not available"
+                    }}
+                    decoding="async"
+                    key={`img-${product.id}-${Date.now()}`}
                 />
 
                 {/* Badges */}
@@ -93,7 +142,7 @@ export function ProductCard({
                 {/* Favorite Button */}
                 {showFavorite && (
                     <button
-                        onClick={() => onFavoriteToggle?.(product.id)}
+                        onClick={handleFavoriteClick}
                         className="absolute top-3 right-3 p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-sm hover:bg-white transition-colors"
                         aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
                     >
@@ -161,9 +210,6 @@ export function ProductCard({
                             <p className="font-bold text-lg text-charcoal">
                                 {formatPrice()}
                             </p>
-                            {variant !== 'compact' && (
-                                <p className="text-xs text-gray-500">per paket</p>
-                            )}
                         </div>
                     </div>
                 </div>

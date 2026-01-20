@@ -1,3 +1,6 @@
+// app\dashboard\page.tsx
+
+
 import { requireAuth } from '@/lib/supabase/middleware'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
