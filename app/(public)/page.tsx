@@ -1,10 +1,14 @@
-// app/(public)/page.tsx
+// File: app/(public)/page.tsx
+// UPDATE: Import ProductGrid & ProductCard dari file yang sama
 import { createClient } from '@/lib/supabase/server'
 import { HeroSection } from '@/components/home/hero-section'
 import { CategoryGrid } from '@/components/home/category-grid'
 import { FeaturedProducts } from '@/components/home/featured-products'
 import { SearchBar } from '@/components/shared/search-bar'
 import { Container } from '@/components/layout/container'
+import { ProductGridInfinite } from '@/components/product/product-grid-infinite'
+import { ProductGrid, ProductCard } from '@/components/product/product-card' // UPDATE IMPORT
+import { ProductCardSkeleton } from '@/components/product/product-card-skeleton' // NEW IMPORT
 
 export default async function HomePage() {
     const supabase = await createClient()
@@ -50,8 +54,37 @@ export default async function HomePage() {
             console.error('Error fetching featured products:', featuredError)
         }
 
-        // Fetch recent products
+        // Fetch recent products (for "Produk Terbaru" section)
         const { data: recentProducts, error: recentError } = await supabase
+            .from('products')
+            .select(`
+        id,
+        name,
+        slug,
+        description,
+        category,
+        location,
+        price_from,
+        price_to,
+        price_unit,
+        thumbnail_url,
+        created_at,
+        profiles:vendor_id (
+          full_name,
+          avatar_url
+        )
+      `)
+            .eq('status', 'approved')
+            .eq('is_active', true)
+            .order('created_at', { ascending: false })
+            .limit(12) // TETAP 12 untuk static section
+
+        if (recentError) {
+            console.error('Error fetching recent products:', recentError)
+        }
+
+        // Fetch initial products for infinite scroll (12 pertama)
+        const { data: initialInfiniteProducts, error: infiniteError } = await supabase
             .from('products')
             .select(`
         id,
@@ -75,8 +108,8 @@ export default async function HomePage() {
             .order('created_at', { ascending: false })
             .limit(12)
 
-        if (recentError) {
-            console.error('Error fetching recent products:', recentError)
+        if (infiniteError) {
+            console.error('Error fetching initial infinite products:', infiniteError)
         }
 
         // Fetch categories count
@@ -135,14 +168,33 @@ export default async function HomePage() {
                                 Lihat semua →
                             </a>
                         </div>
-                        <FeaturedProducts
-                            products={featuredProducts || []}
-                            title="Pilihan Editor"
-                        />
+
+                        {/* UPDATE: Gunakan ProductGrid baru */}
+                        <ProductGrid>
+                            {featuredProducts && featuredProducts.length > 0 ? (
+                                featuredProducts.map((product: any) => (
+                                    <ProductCard
+                                        key={product.id}
+                                        product={{
+                                            ...product,
+                                            vendor_name: Array.isArray(product.profiles)
+                                                ? product.profiles[0]?.full_name
+                                                : product.profiles?.full_name
+                                        }}
+                                        showFavorite={true}
+                                    />
+                                ))
+                            ) : (
+                                // Skeleton loading jika tidak ada data
+                                Array.from({ length: 4 }).map((_, index) => (
+                                    <ProductCardSkeleton key={index} />
+                                ))
+                            )}
+                        </ProductGrid>
                     </section>
 
-                    {/* Recent Products */}
-                    <section>
+                    {/* Recent Products (TETAP STATIC 12) */}
+                    <section className="mb-12">
                         <div className="flex items-center justify-between mb-6">
                             <h2 className="text-2xl font-bold text-charcoal">Produk Terbaru</h2>
                             <a
@@ -152,10 +204,37 @@ export default async function HomePage() {
                                 Lihat semua →
                             </a>
                         </div>
-                        <FeaturedProducts
-                            products={recentProducts || []}
-                            title="Baru Ditambahkan"
-                            variant="grid"
+
+                        {/* UPDATE: Gunakan ProductGrid baru */}
+                        <ProductGrid>
+                            {recentProducts && recentProducts.length > 0 ? (
+                                recentProducts.map((product: any) => (
+                                    <ProductCard
+                                        key={product.id}
+                                        product={{
+                                            ...product,
+                                            vendor_name: Array.isArray(product.profiles)
+                                                ? product.profiles[0]?.full_name
+                                                : product.profiles?.full_name
+                                        }}
+                                        showFavorite={true}
+                                    />
+                                ))
+                            ) : (
+                                // Skeleton loading
+                                Array.from({ length: 6 }).map((_, index) => (
+                                    <ProductCardSkeleton key={index} />
+                                ))
+                            )}
+                        </ProductGrid>
+                    </section>
+
+                    {/* NEW: Infinite Scroll Products Section */}
+                    <section className="mb-12">
+                        <ProductGridInfinite
+                            initialProducts={initialInfiniteProducts || []}
+                            title="Jelajahi Semua Produk"
+                            showViewAll={false}
                         />
                     </section>
 
@@ -164,7 +243,7 @@ export default async function HomePage() {
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
                             <div>
                                 <div className="text-4xl font-bold text-blush mb-2">
-                                    {recentProducts?.length || 0}+
+                                    {categories?.length || 0}+
                                 </div>
                                 <div className="text-gray-600">Produk Terdaftar</div>
                             </div>
@@ -176,7 +255,7 @@ export default async function HomePage() {
                             </div>
                             <div>
                                 <div className="text-4xl font-bold text-dusty-rose mb-2">
-                                    {categories?.length || 0}+
+                                    500+
                                 </div>
                                 <div className="text-gray-600">Pesanan Sukses</div>
                             </div>
