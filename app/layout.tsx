@@ -9,7 +9,12 @@ import { ErrorBoundary } from '@/components/shared/error-boundary'
 import { generateMetadata as generateSiteMetadata } from '@/lib/utils/generate-metadata'
 import type { Metadata, Viewport } from 'next'
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  weight: ['400', '500', '600', '700'],
+  adjustFontFallback: true,
+})
 
 // Gunakan utility function untuk metadata default
 export const metadata: Metadata = generateSiteMetadata()

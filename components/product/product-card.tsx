@@ -134,19 +134,17 @@ export function ProductCard({
                     alt={product.name}
                     width={400}
                     height={400}
+                    priority={product.is_featured || variant === 'featured'}
+                    loading={product.is_featured || variant === 'featured' ? "eager" : "lazy"}
+                    sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw"
                     className={cn(
                         "w-full h-full object-cover",
                         !prefersReducedMotion && "transition-transform duration-300 group-hover:scale-105"
                     )}
                     onError={(e) => {
-                        // Fallback jika image error (jarang terjadi dengan URL static)
                         const target = e.target as HTMLImageElement
                         target.src = FALLBACK_IMAGE
                     }}
-                // ✅ Next.js otomatis handle:
-                // - WebP conversion  
-                // - Responsive sizing (srcset)
-                // - Lazy loading
                 />
 
                 {/* Badges */}
