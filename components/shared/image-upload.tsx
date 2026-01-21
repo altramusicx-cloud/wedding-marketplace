@@ -6,6 +6,7 @@ import { Upload, X, Loader2, Image as ImageIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { compressImage, validateImageFile } from "@/lib/utils/image-compressor"
+import Image from 'next/image'
 
 export interface UploadedImage {
     file: File
@@ -295,9 +296,11 @@ export function ImageUpload({
                                     {/* Image Preview */}
                                     <div className="w-full h-full bg-gray-100 flex items-center justify-center">
                                         {image.previewUrl ? (
-                                            <img
+                                            <Image
                                                 src={image.previewUrl}
                                                 alt={`Preview ${index + 1}`}
+                                                width={200}
+                                                height={200}
                                                 className="w-full h-full object-cover"
                                             />
                                         ) : (

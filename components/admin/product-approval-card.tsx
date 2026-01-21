@@ -2,6 +2,7 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
@@ -106,15 +107,19 @@ export function ProductApprovalCard({ product, readonly = false }: ProductApprov
                     <div className="lg:w-1/3">
                         <div className="aspect-square rounded-lg overflow-hidden bg-gray-100">
                             {product.thumbnail_url ? (
-                                <img
+                                <Image
                                     src={product.thumbnail_url}
                                     alt={product.name}
+                                    width={400}
+                                    height={400}
                                     className="w-full h-full object-cover"
                                 />
                             ) : product.product_images?.[0]?.url ? (
-                                <img
+                                <Image
                                     src={product.product_images[0].url}
                                     alt={product.name}
+                                    width={400}
+                                    height={400}
                                     className="w-full h-full object-cover"
                                 />
                             ) : (
@@ -127,9 +132,11 @@ export function ProductApprovalCard({ product, readonly = false }: ProductApprov
                             <div className="flex gap-2 mt-2 overflow-x-auto">
                                 {product.product_images.slice(0, 3).map((image) => (
                                     <div key={image.id} className="w-16 h-16 rounded overflow-hidden flex-shrink-0">
-                                        <img
+                                        <Image
                                             src={image.url}
                                             alt=""
+                                            width={64}
+                                            height={64}
                                             className="w-full h-full object-cover"
                                         />
                                     </div>

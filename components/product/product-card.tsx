@@ -1,4 +1,3 @@
-// File: components/product/product-card.tsx
 "use client"
 
 import { Heart, Star, MapPin } from "lucide-react"
@@ -7,6 +6,7 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
 import Link from "next/link"
+import Image from "next/image"
 import { useFavorites } from '@/hooks/use-favorites'
 import { useMediaQuery } from '@/hooks/use-media-query'
 import { ProductCardSkeleton } from './product-card-skeleton'
@@ -32,6 +32,9 @@ interface ProductCardProps {
     isFavorite?: boolean
     isLoading?: boolean
 }
+
+// ✅ STATIC FALLBACK IMAGE - AMAN untuk Next.js Image
+const FALLBACK_IMAGE = "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=600&h=600&fit=crop&auto=format"
 
 // Format harga
 const formatPrice = (product: ProductCardProps['product']) => {
@@ -93,13 +96,12 @@ export function ProductCard({
         return <ProductCardSkeleton />
     }
 
-    // Image URL dengan static cache busting
+    // ✅ Image URL - Gunakan fallback jika tidak ada thumbnail
     const getImageUrl = () => {
         if (!product.thumbnail_url) {
-            return "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=400&h=400&fit=crop"
+            return FALLBACK_IMAGE
         }
-        // Gunakan ID sebagai cache buster (statis)
-        return `${product.thumbnail_url}?w=400&h=400&v=${product.id}`
+        return product.thumbnail_url
     }
 
     const imageUrl = getImageUrl()
@@ -126,18 +128,25 @@ export function ProductCard({
         )}>
             {/* Image Section */}
             <div className="relative aspect-square overflow-hidden bg-gray-100">
-                <img
+                {/* ✅ Next.js Image dengan fallback aman */}
+                <Image
                     src={imageUrl}
                     alt={product.name}
+                    width={400}
+                    height={400}
                     className={cn(
                         "w-full h-full object-cover",
                         !prefersReducedMotion && "transition-transform duration-300 group-hover:scale-105"
                     )}
                     onError={(e) => {
-                        e.currentTarget.src = "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=400&h=400&fit=crop"
+                        // Fallback jika image error (jarang terjadi dengan URL static)
+                        const target = e.target as HTMLImageElement
+                        target.src = FALLBACK_IMAGE
                     }}
-                    loading="lazy"
-                    decoding="async"
+                // ✅ Next.js otomatis handle:
+                // - WebP conversion  
+                // - Responsive sizing (srcset)
+                // - Lazy loading
                 />
 
                 {/* Badges */}

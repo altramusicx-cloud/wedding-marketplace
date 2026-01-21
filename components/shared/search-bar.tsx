@@ -4,6 +4,7 @@
 import { Search, Filter, X, Clock, TrendingUp, Loader2 } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
+import Image from 'next/image'
 import { useSearch } from '@/hooks/use-search'
 import { useRouter } from 'next/navigation'
 import { useEffect, useRef } from 'react'
@@ -182,9 +183,11 @@ export function SearchBar() {
                                             >
                                                 {product.thumbnail_url ? (
                                                     <div className="h-12 w-12 rounded-lg overflow-hidden bg-gray-100">
-                                                        <img
-                                                            src={`${product.thumbnail_url}?w=48&h=48&fit=crop`}
+                                                        <Image
+                                                            src={product.thumbnail_url || '/placeholder-image.jpg'}
                                                             alt={product.name}
+                                                            width={48}
+                                                            height={48}
                                                             className="h-full w-full object-cover"
                                                         />
                                                     </div>

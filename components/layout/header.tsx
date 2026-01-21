@@ -2,6 +2,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import {
@@ -134,9 +135,11 @@ export function Header() {
                                             <Button variant="ghost" className="h-9 px-2">
                                                 <div className="h-7 w-7 rounded-full bg-gray-100 flex items-center justify-center mr-2">
                                                     {profile?.avatar_url ? (
-                                                        <img
+                                                        <Image
                                                             src={profile.avatar_url}
                                                             alt={profile.full_name}
+                                                            width={28}  // h-7 = 28px
+                                                            height={28} // w-7 = 28px
                                                             className="h-full w-full rounded-full object-cover"
                                                         />
                                                     ) : (
@@ -269,9 +272,11 @@ export function Header() {
                                             <div className="flex items-center gap-3 mb-4">
                                                 <div className="h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center">
                                                     {profile?.avatar_url ? (
-                                                        <img
+                                                        <Image
                                                             src={profile.avatar_url}
                                                             alt={profile.full_name}
+                                                            width={40}  // h-10 = 40px
+                                                            height={40} // w-10 = 40px
                                                             className="h-full w-full rounded-full object-cover"
                                                         />
                                                     ) : (

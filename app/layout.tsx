@@ -6,6 +6,7 @@ import { Header } from '@/components/layout/header'
 import { BottomNav } from '@/components/layout/bottom-nav'
 import { AuthProvider } from '@/components/providers/auth-provider'
 import { Toaster } from '@/components/ui/toaster'
+import { ErrorBoundary } from '@/components/shared/error-boundary'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -22,18 +23,20 @@ export default function RootLayout({
   return (
     <html lang="id">
       <body className={inter.className}>
-        <AuthProvider>
-          <Header />
-          <main className="min-h-screen pb-20 md:pb-0">{children}</main>
-          <footer className="border-t py-8 mt-16">
-            <div className="container-custom text-center text-gray-600">
-              <p>© 2024 WeddingMarket. Semua hak dilindungi.</p>
-              <p className="mt-2 text-sm">Marketplace wedding lokal Kalimantan</p>
-            </div>
-          </footer>
-          <BottomNav />
-          <Toaster />
-        </AuthProvider>
+        <ErrorBoundary>
+          <AuthProvider>
+            <Header />
+            <main className="min-h-screen pb-20 md:pb-0">{children}</main>
+            <footer className="border-t py-8 mt-16">
+              <div className="container-custom text-center text-gray-600">
+                <p>© 2024 WeddingMarket. Semua hak dilindungi.</p>
+                <p className="mt-2 text-sm">Marketplace wedding lokal Kalimantan</p>
+              </div>
+            </footer>
+            <BottomNav />
+            <Toaster />
+          </AuthProvider>
+        </ErrorBoundary>
       </body>
     </html>
   )

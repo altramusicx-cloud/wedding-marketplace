@@ -6,6 +6,7 @@ import { ChevronLeft, ChevronRight, ZoomIn } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { cn } from "@/lib/utils"
+import Image from 'next/image'
 
 interface ProductGalleryProps {
     images: string[]
@@ -30,9 +31,11 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
         <div className="space-y-4">
             {/* Main Image */}
             <div className="relative aspect-square overflow-hidden rounded-xl bg-gray-100 group">
-                <img
+                <Image
                     src={mainImage}
                     alt={`${productName} - Gambar ${selectedIndex + 1}`}
+                    width={800}
+                    height={800}
                     className="w-full h-full object-cover"
                 />
 
@@ -90,9 +93,11 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
                                     : "border-gray-200 hover:border-gray-300"
                             )}
                         >
-                            <img
+                            <Image
                                 src={image}
                                 alt={`Thumbnail ${index + 1}`}
+                                width={80}
+                                height={80}
                                 className="w-full h-full object-cover"
                             />
                         </button>
@@ -104,10 +109,13 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
             <Dialog open={isZoomed} onOpenChange={setIsZoomed}>
                 <DialogContent className="max-w-4xl max-h-[90vh] p-0 overflow-hidden">
                     <div className="relative h-[80vh]">
-                        <img
+                        <Image
                             src={mainImage}
                             alt={`${productName} - Zoom`}
+                            width={1200}
+                            height={1200}
                             className="w-full h-full object-contain"
+                            quality={100} // High quality untuk zoom
                         />
                         <div className="absolute top-4 right-4">
                             <Button

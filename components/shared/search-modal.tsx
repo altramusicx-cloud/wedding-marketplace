@@ -1,6 +1,7 @@
 // File: components/shared/search-modal.tsx (MOBILE VERSION)
 'use client'
 
+import Image from 'next/image'
 import { Search, X, Clock, TrendingUp, Loader2, MapPin } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -194,9 +195,11 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
                                         >
                                             {product.thumbnail_url ? (
                                                 <div className="h-14 w-14 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
-                                                    <img
-                                                        src={`${product.thumbnail_url}?w=56&h=56&fit=crop`}
+                                                    <Image
+                                                        src={product.thumbnail_url || '/placeholder-image.jpg'}
                                                         alt={product.name}
+                                                        width={56}
+                                                        height={56}
                                                         className="h-full w-full object-cover"
                                                     />
                                                 </div>

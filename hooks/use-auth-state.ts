@@ -1,7 +1,6 @@
-// File: hooks/use-auth.ts (FULL FIX)
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import type { User } from '@supabase/supabase-js'
 
@@ -17,50 +16,61 @@ interface UserProfile {
 
 export function useAuthState() {
     const [user, setUser] = useState<User | null>(null)
-    const [profile, setProfile] = useState<UserProfile | null>(null) // ← INI HARUS ADA
+    const [profile, setProfile] = useState<UserProfile | null>(null)
     const [isLoading, setIsLoading] = useState(true)
     const supabase = createClient()
 
+    const fetchProfile = useCallback(async (userId: string) => {
+        try {
+            const { data: profileData } = await supabase
+                .from('profiles')
+                .select('*')
+                .eq('id', userId)
+                .single()
+
+            if (profileData) {
+                setProfile(profileData)
+            }
+        } catch (error) {
+            console.log('Profile fetch skipped:', error)
+            setProfile(null) // Explicitly set to null on error
+        }
+    }, [supabase])
+
     useEffect(() => {
+        let isMounted = true
+
         const initializeAuth = async () => {
-            const { data: { session } } = await supabase.auth.getSession()
+            try {
+                const { data: { session } } = await supabase.auth.getSession()
 
-            if (session?.user) {
-                setUser(session.user)
-                // Fetch profile jika user ada
-                try {
-                    const { data: profileData } = await supabase
-                        .from('profiles')
-                        .select('*')
-                        .eq('id', session.user.id)
-                        .single()
+                if (!isMounted) return
 
-                    setProfile(profileData)
-                } catch (error) {
-                    console.log('Profile fetch skipped')
+                if (session?.user) {
+                    setUser(session.user)
+                    await fetchProfile(session.user.id)
+                } else {
+                    setUser(null)
+                    setProfile(null)
+                }
+            } catch (error) {
+                console.log('Auth init error:', error)
+            } finally {
+                if (isMounted) {
+                    setIsLoading(false)
                 }
             }
-
-            setIsLoading(false)
         }
 
         initializeAuth()
 
         const { data: { subscription } } = supabase.auth.onAuthStateChange(
             async (event, session) => {
+                if (!isMounted) return
+
                 if (session?.user) {
                     setUser(session.user)
-                    try {
-                        const { data: profileData } = await supabase
-                            .from('profiles')
-                            .select('*')
-                            .eq('id', session.user.id)
-                            .single()
-
-                        setProfile(profileData)
-                    } catch (error) {
-                        console.log('Profile fetch skipped on auth change')
-                    }
+                    await fetchProfile(session.user.id)
                 } else {
                     setUser(null)
                     setProfile(null)
@@ -69,8 +79,11 @@ export function useAuthState() {
             }
         )
 
-        return () => subscription.unsubscribe()
-    }, [supabase])
+        return () => {
+            isMounted = false
+            subscription.unsubscribe()
+        }
+    }, [supabase, fetchProfile])
 
     const signOut = async () => {
         await supabase.auth.signOut()
@@ -79,7 +92,7 @@ export function useAuthState() {
 
     return {
         user,
-        profile,
+        profile, // ✅ Always null or UserProfile, never undefined
         isLoading,
         signOut,
         isAuthenticated: !!user,
