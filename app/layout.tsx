@@ -1,5 +1,4 @@
-// app\layout.tsx
-import type { Metadata } from 'next'
+// app/layout.tsx
 import { Inter } from 'next/font/google'
 import './globals.css'
 import { Header } from '@/components/layout/header'
@@ -7,12 +6,20 @@ import { BottomNav } from '@/components/layout/bottom-nav'
 import { AuthProvider } from '@/components/providers/auth-provider'
 import { Toaster } from '@/components/ui/toaster'
 import { ErrorBoundary } from '@/components/shared/error-boundary'
+import { generateMetadata as generateSiteMetadata } from '@/lib/utils/generate-metadata'
+import type { Metadata, Viewport } from 'next'
 
 const inter = Inter({ subsets: ['latin'] })
 
-export const metadata: Metadata = {
-  title: 'WeddingMarket - Marketplace Wedding Kalimantan',
-  description: 'Marketplace wedding lokal pertama di Kalimantan yang elegan dan mudah digunakan',
+// Gunakan utility function untuk metadata default
+export const metadata: Metadata = generateSiteMetadata()
+
+// Tambah viewport export untuk themeColor
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: '#F7CAC9',
 }
 
 export default function RootLayout({
@@ -22,6 +29,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="id">
+      <head>
+        {/* Favicon - placeholder dulu */}
+        <link rel="icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+        {/* Manifes untuk PWA (future) */}
+        <link rel="manifest" href="/manifest.json" />
+      </head>
       <body className={inter.className}>
         <ErrorBoundary>
           <AuthProvider>

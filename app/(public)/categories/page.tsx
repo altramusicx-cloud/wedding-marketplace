@@ -7,6 +7,13 @@ import { SearchBar } from '@/components/shared/search-bar'
 import { CATEGORIES, SORT_OPTIONS } from '@/lib/constants/categories'
 import { categorySearchSchema, type CategorySearchParams } from '@/lib/validation/category-schema'
 import { buildSafeIlikeQuery } from '@/lib/utils/safe-search'
+import { generateMetadata } from '@/lib/utils/generate-metadata'
+
+export const metadata = generateMetadata({
+    title: 'Kategori Vendor Wedding Kalimantan',
+    description: 'Telusuri kategori vendor pernikahan di Kalimantan: fotografer, dekorasi, catering, venue, gaun pengantin, dan masih banyak lagi.',
+    url: '/categories',
+})
 
 interface CategoriesPageProps {
     searchParams: Promise<CategorySearchParams>

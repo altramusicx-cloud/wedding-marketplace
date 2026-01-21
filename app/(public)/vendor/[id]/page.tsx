@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { uploadImage } from '@/utils/upload-image'
 import { ProductCard } from "@/components/product/product-card"
+import { ProductSchema } from '@/components/seo/product-schema'
 import { FavoritesButton } from "@/components/product/favorites-button"
 import {
     ArrowLeft,
@@ -20,6 +21,50 @@ import { ProductGallery } from "@/components/product/product-gallery"
 import { ContactButton } from "@/components/product/contact-button"
 import { Recommendations } from '@/components/product/recommendations'
 import { createClient } from '@/lib/supabase/server'
+import { generateProductMetadata } from '@/lib/utils/generate-metadata'
+
+
+// Dynamic metadata function untuk product detail
+export async function generateMetadata({
+    params,
+}: {
+    params: Promise<{ id: string }>
+}) {
+    const { id } = await params
+    const supabase = await createClient()
+
+    try {
+        // Fetch minimal product data untuk metadata
+        const { data: product } = await supabase
+            .from('products')
+            .select('name, description, thumbnail_url, status, is_active')
+            .eq('id', id)
+            .eq('status', 'approved')
+            .eq('is_active', true)
+            .single()
+
+        // Jika product tidak ditemukan atau tidak approved
+        if (!product) {
+            return {
+                title: 'Produk Tidak Ditemukan',
+                description: 'Produk wedding tidak ditemukan atau tidak tersedia.',
+            }
+        }
+
+        // Generate metadata dengan utility function
+        return generateProductMetadata(
+            product.name,
+            product.description,
+            product.thumbnail_url || undefined
+        )
+    } catch (error) {
+        // Fallback metadata jika error
+        return {
+            title: 'Detail Produk Wedding',
+            description: 'Detail vendor dan produk wedding di Kalimantan.',
+        }
+    }
+}
 
 export default async function ProductDetailPage({
     params
@@ -245,6 +290,25 @@ export default async function ProductDetailPage({
                     />
                 </div>
             </div>
-        </div>
+
+            {/* Structured Data for SEO */}
+            < ProductSchema
+                product={{
+                    name: product.name,
+                    description: product.description,
+                    url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://weddingmarket.com'}/vendor/${product.id}`,
+                    image: galleryImages.length > 0 ? galleryImages : displayImages,
+                    priceFrom: product.price_from || undefined,
+                    priceTo: product.price_to || undefined,
+                    priceUnit: product.price_unit || undefined,
+                    category: product.category,
+                    location: product.location,
+                    vendorName: vendor?.full_name || 'Vendor',
+                    vendorUrl: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://weddingmarket.com'}/vendor/${vendor?.id}`,
+                }
+                }
+            />
+
+        </div >
     )
 }
