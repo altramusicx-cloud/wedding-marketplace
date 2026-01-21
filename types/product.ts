@@ -41,6 +41,15 @@ export interface ProductWithImages extends Product {
     }
 }
 
+// TAMBAHKAN INI di types/product.ts (setelah ProductWithImages)
+export interface ProductWithVendor extends Product {
+    profiles?: {
+        full_name: string
+        avatar_url?: string
+        whatsapp_number?: string
+    }
+}
+
 export interface Vendor {
     id: string
     full_name: string

@@ -1,5 +1,5 @@
-// File: types/index.ts (PERBAIKI)
+// File: types/index.ts
 export * from './product'
 export * from './user'
-// export * from './vendor' ← HAPUS/COMMENT LINE INI
-// export * from './api'    ← HAPUS/COMMENT LINE INI
+export * from './vendor'
+export * from './api'

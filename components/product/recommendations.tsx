@@ -1,6 +1,7 @@
-// components/product/recommendations.tsx
+// File: components/product/recommendations.tsx
 import { ProductCard } from './product-card'
-import { createClient } from '@/lib/supabase/server'
+import { getSimilarProducts, getVendorProducts, getPopularProducts } from '@/lib/actions/products'
+import type { ProductWithVendor } from '@/types'
 
 interface RecommendationsProps {
     currentProductId: string
@@ -17,134 +18,129 @@ export async function Recommendations({
     vendorId,
     limit = 6
 }: RecommendationsProps) {
-    const supabase = await createClient()
+    // Fetch semua recommendations secara parallel
+    const [similarResult, vendorResult, popularResult] = await Promise.all([
+        getSimilarProducts({
+            currentProductId,
+            category: currentCategory,
+            location: currentLocation,
+            limit
+        }),
+        getVendorProducts({
+            vendorId,
+            currentProductId,
+            limit: 4
+        }),
+        getPopularProducts({
+            currentProductId,
+            limit: 4
+        })
+    ])
 
-    try {
-        // 1. Fetch similar products (same category, different location optional)
-        const { data: similarProducts } = await supabase
-            .from('products')
-            .select(`
-        id,
-        name,
-        thumbnail_url,
-        category,
-        location,
-        price_from,
-        price_to,
-        price_unit,
-        created_at,
-        profiles:vendor_id (
-          full_name
-        )
-      `)
-            .eq('status', 'approved')
-            .eq('is_active', true)
-            .eq('category', currentCategory)
-            .neq('id', currentProductId)
-            .order('created_at', { ascending: false })
-            .limit(limit)
+    // Extract data
+    const similarProducts = similarResult.success ? similarResult.data : []
+    const vendorProducts = vendorResult.success ? vendorResult.data : []
+    const popularProducts = popularResult.success ? popularResult.data : []
 
-        // 2. Fetch vendor's other products
-        const { data: vendorProducts } = await supabase
-            .from('products')
-            .select(`
-        id,
-        name,
-        thumbnail_url,
-        category,
-        location,
-        price_from,
-        price_to,
-        price_unit,
-        created_at,
-        profiles:vendor_id (
-          full_name
-        )
-      `)
-            .eq('status', 'approved')
-            .eq('is_active', true)
-            .eq('vendor_id', vendorId)
-            .neq('id', currentProductId)
-            .order('created_at', { ascending: false })
-            .limit(4)
+    // Jika semua section kosong, return empty state
+    const hasAnyRecommendations =
+        similarProducts.length > 0 ||
+        vendorProducts.length > 0 ||
+        popularProducts.length > 0
 
-        // 3. Fetch popular products (based on contact logs)
-        const { data: popularProducts } = await supabase
-            .from('products')
-            .select(`
-        id,
-        name,
-        thumbnail_url,
-        category,
-        location,
-        price_from,
-        price_to,
-        price_unit,
-        created_at,
-        profiles:vendor_id (
-          full_name
-        )
-      `)
-            .eq('status', 'approved')
-            .eq('is_active', true)
-            .neq('id', currentProductId)
-            .order('created_at', { ascending: false })
-            .limit(4)
-
-        const sections = [
-            {
-                title: 'Produk Serupa',
-                products: similarProducts || [],
-                condition: similarProducts && similarProducts.length > 0
-            },
-            {
-                title: 'Produk Lain dari Vendor Ini',
-                products: vendorProducts || [],
-                condition: vendorProducts && vendorProducts.length > 0
-            },
-            {
-                title: 'Produk Populer',
-                products: popularProducts || [],
-                condition: popularProducts && popularProducts.length > 0
-            }
-        ]
-
-        return (
-            <div className="space-y-8">
-                {sections.map((section, index) => (
-                    section.condition ? (
-                        <div key={index} className="space-y-4">
-                            <h3 className="text-xl font-bold text-charcoal">{section.title}</h3>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                                {section.products.map((product: any) => (
-                                    <ProductCard
-                                        key={product.id}
-                                        product={{
-                                            id: product.id,
-                                            name: product.name,
-                                            thumbnail_url: product.thumbnail_url || '',
-                                            category: product.category,
-                                            location: product.location,
-                                            price_from: product.price_from,
-                                            price_to: product.price_to,
-                                            vendor_name: product.profiles?.[0]?.full_name || 'Vendor',
-                                        }}
-                                        variant="compact"
-                                        showFavorite={true}
-                                    />
-                                ))}
-                            </div>
-                        </div>
-                    ) : null
-                ))}
-            </div>
-        )
-    } catch (error) {
-        console.error('Error fetching recommendations:', error)
+    if (!hasAnyRecommendations) {
         return (
             <div className="text-center py-8 text-gray-500">
-                Rekomendasi tidak tersedia saat ini.
+                <p className="text-sm">Belum ada rekomendasi produk saat ini.</p>
             </div>
         )
     }
+
+    // Format product untuk ProductCard
+    const formatProduct = (product: ProductWithVendor) => ({
+        id: product.id,
+        name: product.name,
+        thumbnail_url: product.thumbnail_url ?? undefined,
+        category: product.category,
+        location: product.location,
+        price_from: product.price_from ?? undefined,
+        price_to: product.price_to ?? undefined,
+        price_unit: product.price_unit ?? undefined,
+        vendor_name: product.profiles?.full_name || 'Vendor',
+        is_featured: product.is_featured
+    })
+
+    return (
+        <div className="space-y-12">
+            {/* Section 1: Similar Products */}
+            {similarProducts.length > 0 && (
+                <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                        <h3 className="text-xl font-bold text-charcoal">Produk Serupa</h3>
+                        <span className="text-sm text-gray-500">
+                            {similarProducts.length} produk
+                        </span>
+                    </div>
+
+                    {/* Grid 2 kolom di mobile, 4 di desktop */}
+                    <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        {similarProducts.map((product) => (
+                            <ProductCard
+                                key={product.id}
+                                product={formatProduct(product)}
+                                variant="compact"
+                                showFavorite={true}
+                            />
+                        ))}
+                    </div>
+                </div>
+            )}
+
+            {/* Section 2: Vendor's Other Products */}
+            {vendorProducts.length > 0 && (
+                <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                        <h3 className="text-xl font-bold text-charcoal">Produk Lain dari Vendor Ini</h3>
+                        <span className="text-sm text-gray-500">
+                            {vendorProducts.length} produk
+                        </span>
+                    </div>
+
+                    <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        {vendorProducts.map((product) => (
+                            <ProductCard
+                                key={product.id}
+                                product={formatProduct(product)}
+                                variant="compact"
+                                showFavorite={true}
+                            />
+                        ))}
+                    </div>
+                </div>
+            )}
+
+            {/* Section 3: Popular Products */}
+            {popularProducts.length > 0 && (
+                <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                        <h3 className="text-xl font-bold text-charcoal">Produk Populer</h3>
+                        <span className="text-sm text-gray-500">
+                            Paling banyak dihubungi minggu ini
+                        </span>
+                    </div>
+
+                    <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        {popularProducts.map((product) => (
+                            <ProductCard
+                                key={product.id}
+                                product={formatProduct(product)}
+                                variant="compact"
+                                showFavorite={true}
+                            />
+                        ))}
+                    </div>
+                </div>
+            )}
+        </div>
+    )
 }

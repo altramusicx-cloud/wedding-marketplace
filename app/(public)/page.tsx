@@ -1,5 +1,7 @@
 // File: app/(public)/page.tsx
 // UPDATE: Import ProductGrid & ProductCard dari file yang sama
+
+import { PullToRefreshWrapper } from '@/components/shared/pull-to-refresh-wrapper'
 import { createClient } from '@/lib/supabase/server'
 import { HeroSection } from '@/components/home/hero-section'
 import { CategoryGrid } from '@/components/home/category-grid'
@@ -130,139 +132,141 @@ export default async function HomePage() {
         }, {}) || {}
 
         return (
-            <div className="min-h-screen bg-ivory">
-                {/* Hero Section */}
-                <HeroSection />
+            <PullToRefreshWrapper>
+                <div className="min-h-screen bg-ivory">
+                    {/* Hero Section */}
+                    <HeroSection />
 
-                {/* Search Bar */}
-                <div className="sticky top-0 z-40 bg-white border-b shadow-sm">
-                    <Container className="py-4">
-                        <SearchBar />
+                    {/* Search Bar */}
+                    <div className="sticky top-0 z-40 bg-white border-b shadow-sm">
+                        <Container className="py-4">
+                            <SearchBar />
+                        </Container>
+                    </div>
+
+                    {/* Main Content */}
+                    <Container className="py-8">
+                        {/* Categories */}
+                        <section className="mb-12">
+                            <div className="flex items-center justify-between mb-6">
+                                <h2 className="text-2xl font-bold text-charcoal">Jelajahi Kategori</h2>
+                                <a
+                                    href="/categories"
+                                    className="text-blush hover:text-blush-dark font-medium"
+                                >
+                                    Lihat semua →
+                                </a>
+                            </div>
+                            <CategoryGrid categoryCounts={categoryCounts} />
+                        </section>
+
+                        {/* Featured Products */}
+                        <section className="mb-12">
+                            <div className="flex items-center justify-between mb-6">
+                                <h2 className="text-2xl font-bold text-charcoal">Produk Unggulan</h2>
+                                <a
+                                    href="/categories?sort=featured"
+                                    className="text-blush hover:text-blush-dark font-medium"
+                                >
+                                    Lihat semua →
+                                </a>
+                            </div>
+
+                            {/* UPDATE: Gunakan ProductGrid baru */}
+                            <ProductGrid>
+                                {featuredProducts && featuredProducts.length > 0 ? (
+                                    featuredProducts.map((product: any) => (
+                                        <ProductCard
+                                            key={product.id}
+                                            product={{
+                                                ...product,
+                                                vendor_name: Array.isArray(product.profiles)
+                                                    ? product.profiles[0]?.full_name
+                                                    : product.profiles?.full_name
+                                            }}
+                                            showFavorite={true}
+                                        />
+                                    ))
+                                ) : (
+                                    // Skeleton loading jika tidak ada data
+                                    Array.from({ length: 4 }).map((_, index) => (
+                                        <ProductCardSkeleton key={index} />
+                                    ))
+                                )}
+                            </ProductGrid>
+                        </section>
+
+                        {/* Recent Products (TETAP STATIC 12) */}
+                        <section className="mb-12">
+                            <div className="flex items-center justify-between mb-6">
+                                <h2 className="text-2xl font-bold text-charcoal">Produk Terbaru</h2>
+                                <a
+                                    href="/categories?sort=newest"
+                                    className="text-blush hover:text-blush-dark font-medium"
+                                >
+                                    Lihat semua →
+                                </a>
+                            </div>
+
+                            {/* UPDATE: Gunakan ProductGrid baru */}
+                            <ProductGrid>
+                                {recentProducts && recentProducts.length > 0 ? (
+                                    recentProducts.map((product: any) => (
+                                        <ProductCard
+                                            key={product.id}
+                                            product={{
+                                                ...product,
+                                                vendor_name: Array.isArray(product.profiles)
+                                                    ? product.profiles[0]?.full_name
+                                                    : product.profiles?.full_name
+                                            }}
+                                            showFavorite={true}
+                                        />
+                                    ))
+                                ) : (
+                                    // Skeleton loading
+                                    Array.from({ length: 6 }).map((_, index) => (
+                                        <ProductCardSkeleton key={index} />
+                                    ))
+                                )}
+                            </ProductGrid>
+                        </section>
+
+                        {/* NEW: Infinite Scroll Products Section */}
+                        <section className="mb-12">
+                            <ProductGridInfinite
+                                initialProducts={initialInfiniteProducts || []}
+                                title="Jelajahi Semua Produk"
+                                showViewAll={false}
+                            />
+                        </section>
+
+                        {/* Stats Section */}
+                        <section className="mt-16 bg-white rounded-2xl p-8 shadow-sm">
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                                <div>
+                                    <div className="text-4xl font-bold text-blush mb-2">
+                                        {categories?.length || 0}+
+                                    </div>
+                                    <div className="text-gray-600">Produk Terdaftar</div>
+                                </div>
+                                <div>
+                                    <div className="text-4xl font-bold text-sage mb-2">
+                                        {Object.keys(categoryCounts).length || 0}
+                                    </div>
+                                    <div className="text-gray-600">Kategori</div>
+                                </div>
+                                <div>
+                                    <div className="text-4xl font-bold text-dusty-rose mb-2">
+                                        500+
+                                    </div>
+                                    <div className="text-gray-600">Pesanan Sukses</div>
+                                </div>
+                            </div>
+                        </section>
                     </Container>
                 </div>
-
-                {/* Main Content */}
-                <Container className="py-8">
-                    {/* Categories */}
-                    <section className="mb-12">
-                        <div className="flex items-center justify-between mb-6">
-                            <h2 className="text-2xl font-bold text-charcoal">Jelajahi Kategori</h2>
-                            <a
-                                href="/categories"
-                                className="text-blush hover:text-blush-dark font-medium"
-                            >
-                                Lihat semua →
-                            </a>
-                        </div>
-                        <CategoryGrid categoryCounts={categoryCounts} />
-                    </section>
-
-                    {/* Featured Products */}
-                    <section className="mb-12">
-                        <div className="flex items-center justify-between mb-6">
-                            <h2 className="text-2xl font-bold text-charcoal">Produk Unggulan</h2>
-                            <a
-                                href="/categories?sort=featured"
-                                className="text-blush hover:text-blush-dark font-medium"
-                            >
-                                Lihat semua →
-                            </a>
-                        </div>
-
-                        {/* UPDATE: Gunakan ProductGrid baru */}
-                        <ProductGrid>
-                            {featuredProducts && featuredProducts.length > 0 ? (
-                                featuredProducts.map((product: any) => (
-                                    <ProductCard
-                                        key={product.id}
-                                        product={{
-                                            ...product,
-                                            vendor_name: Array.isArray(product.profiles)
-                                                ? product.profiles[0]?.full_name
-                                                : product.profiles?.full_name
-                                        }}
-                                        showFavorite={true}
-                                    />
-                                ))
-                            ) : (
-                                // Skeleton loading jika tidak ada data
-                                Array.from({ length: 4 }).map((_, index) => (
-                                    <ProductCardSkeleton key={index} />
-                                ))
-                            )}
-                        </ProductGrid>
-                    </section>
-
-                    {/* Recent Products (TETAP STATIC 12) */}
-                    <section className="mb-12">
-                        <div className="flex items-center justify-between mb-6">
-                            <h2 className="text-2xl font-bold text-charcoal">Produk Terbaru</h2>
-                            <a
-                                href="/categories?sort=newest"
-                                className="text-blush hover:text-blush-dark font-medium"
-                            >
-                                Lihat semua →
-                            </a>
-                        </div>
-
-                        {/* UPDATE: Gunakan ProductGrid baru */}
-                        <ProductGrid>
-                            {recentProducts && recentProducts.length > 0 ? (
-                                recentProducts.map((product: any) => (
-                                    <ProductCard
-                                        key={product.id}
-                                        product={{
-                                            ...product,
-                                            vendor_name: Array.isArray(product.profiles)
-                                                ? product.profiles[0]?.full_name
-                                                : product.profiles?.full_name
-                                        }}
-                                        showFavorite={true}
-                                    />
-                                ))
-                            ) : (
-                                // Skeleton loading
-                                Array.from({ length: 6 }).map((_, index) => (
-                                    <ProductCardSkeleton key={index} />
-                                ))
-                            )}
-                        </ProductGrid>
-                    </section>
-
-                    {/* NEW: Infinite Scroll Products Section */}
-                    <section className="mb-12">
-                        <ProductGridInfinite
-                            initialProducts={initialInfiniteProducts || []}
-                            title="Jelajahi Semua Produk"
-                            showViewAll={false}
-                        />
-                    </section>
-
-                    {/* Stats Section */}
-                    <section className="mt-16 bg-white rounded-2xl p-8 shadow-sm">
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-                            <div>
-                                <div className="text-4xl font-bold text-blush mb-2">
-                                    {categories?.length || 0}+
-                                </div>
-                                <div className="text-gray-600">Produk Terdaftar</div>
-                            </div>
-                            <div>
-                                <div className="text-4xl font-bold text-sage mb-2">
-                                    {Object.keys(categoryCounts).length || 0}
-                                </div>
-                                <div className="text-gray-600">Kategori</div>
-                            </div>
-                            <div>
-                                <div className="text-4xl font-bold text-dusty-rose mb-2">
-                                    500+
-                                </div>
-                                <div className="text-gray-600">Pesanan Sukses</div>
-                            </div>
-                        </div>
-                    </section>
-                </Container>
-            </div>
+            </PullToRefreshWrapper >
         )
 
     } catch (error) {

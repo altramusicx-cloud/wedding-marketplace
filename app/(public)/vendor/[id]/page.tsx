@@ -222,29 +222,27 @@ export default async function ProductDetailPage({
                     </div>
                 </div>
 
-                {/* Product Details & Recommendations */}
-                <div className="mt-12 grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    <div className="lg:col-span-2">
-                        <Card>
-                            <CardContent className="p-6">
-                                <h2 className="text-xl font-bold mb-4">Deskripsi Produk</h2>
-                                <div className="prose prose-gray max-w-none">
-                                    <p className="whitespace-pre-line">{product.description}</p>
-                                </div>
-                            </CardContent>
-                        </Card>
-                    </div>
+                {/* Product Description */}
+                <div className="mt-12">
+                    <Card>
+                        <CardContent className="p-6">
+                            <h2 className="text-xl font-bold mb-4">Deskripsi Produk</h2>
+                            <div className="prose prose-gray max-w-none">
+                                <p className="whitespace-pre-line">{product.description}</p>
+                            </div>
+                        </CardContent>
+                    </Card>
+                </div>
 
-                    {/* Recommendations Sidebar */}
-                    <div>
-                        <Recommendations
-                            currentProductId={product.id}
-                            currentCategory={product.category}
-                            currentLocation={product.location}
-                            vendorId={vendor?.id || ''}
-                            limit={4}
-                        />
-                    </div>
+                {/* Recommendations - Full Width */}
+                <div className="mt-12">
+                    <Recommendations
+                        currentProductId={product.id}
+                        currentCategory={product.category}
+                        currentLocation={product.location}
+                        vendorId={vendor?.id || ''}
+                        limit={6}
+                    />
                 </div>
             </div>
         </div>

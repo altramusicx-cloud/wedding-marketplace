@@ -138,7 +138,7 @@ export class ErrorBoundary extends Component<Props, State> {
 
 // Hook untuk error handling yang lebih simple
 export function useAsyncError() {
-    const [, setError] = React.useState() // ✅ SEKARANG PAKAI React.useState()
+    const [, setError] = React.useState()
     return (error: any) => {
         setError(() => {
             throw error

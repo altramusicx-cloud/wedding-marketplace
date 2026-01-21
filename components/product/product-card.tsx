@@ -159,12 +159,12 @@ export function ProductCard({
                 {showFavorite && (
                     <button
                         onClick={handleFavoriteClick}
-                        className="absolute top-2 right-2 p-1.5 bg-white/90 backdrop-blur-sm rounded-full shadow-sm hover:bg-white transition-colors"
+                        className="absolute top-2 right-2 p-2 min-h-[44px] min-w-[44px] bg-white/90 backdrop-blur-sm rounded-full shadow-sm hover:bg-white transition-colors flex items-center justify-center"
                         aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
                     >
                         <Heart
                             className={cn(
-                                "h-4 w-4",
+                                "h-5 w-5",
                                 isFavorite ? "fill-red-500 text-red-500" : "text-gray-400"
                             )}
                         />
