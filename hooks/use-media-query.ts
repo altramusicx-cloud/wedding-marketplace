@@ -13,7 +13,10 @@ export function useMediaQuery(query: string): boolean {
 
         // Initial check
         if (media.matches !== matches) {
-            setMatches(media.matches)
+            // Use requestAnimationFrame to avoid synchronous state update
+            requestAnimationFrame(() => {
+                setMatches(media.matches)
+            })
         }
 
         const handler = (event: MediaQueryListEvent) => {

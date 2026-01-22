@@ -108,8 +108,9 @@ export default async function AdminDashboard() {
                                 View and manage registered vendors
                             </p>
                         </a>
+                        {/* UPDATE INI: dari /admin/contacts ke /admin/logs */}
                         <a
-                            href="/admin/contacts"
+                            href="/admin/logs"
                             className="p-4 border rounded-lg hover:border-blush hover:bg-blush-light/20 transition-colors cursor-pointer"
                         >
                             <h3 className="font-semibold text-gray-900">Contact Logs</h3>

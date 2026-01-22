@@ -100,12 +100,7 @@ export default async function CategoriesPage({
 
     return (
         <div className="min-h-screen bg-ivory">
-            {/* Search Bar Section */}
-            <div className="sticky top-0 z-40 bg-white border-b shadow-sm">
-                <Container className="py-6">
-                    <SearchBar />
-                </Container>
-            </div>
+
 
             <Container className="py-8">
                 <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">

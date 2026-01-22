@@ -21,7 +21,7 @@ export function HeroSection() {
                     <p className="text-lg md:text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
                         Ribuan calon pengantin telah menemukan vendor ideal mereka di WeddingMarket.
                         Dari venue, photographer, hingga catering — semua dalam satu platform.
-                    </p>
+                        baner</p>
 
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <Button asChild size="lg" className="bg-blush hover:bg-blush-dark text-white">

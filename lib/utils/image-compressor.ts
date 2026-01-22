@@ -77,7 +77,7 @@ export async function compressImage(
                     })
 
                     // If still too large, reduce quality further
-                    let finalBlob = blob
+                    const finalBlob = blob
                     let finalQuality = quality
 
                     // Convert to KB
