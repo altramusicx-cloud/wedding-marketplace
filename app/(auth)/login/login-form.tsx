@@ -1,3 +1,4 @@
+// app\(auth)\login\login-form.tsx
 'use client'
 
 import { useState } from 'react'
@@ -5,45 +6,59 @@ import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { createClient } from '@/lib/supabase/client'
+import { loginSchema, type LoginFormData } from '@/lib/validation/auth-schema'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import { AlertCircle } from 'lucide-react'
 
 export function LoginForm() {
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    const [loading, setLoading] = useState(false)
-    const [error, setError] = useState<string | null>(null)
     const router = useRouter()
     const supabase = createClient()
+    const [loading, setLoading] = useState(false)
+    const [formError, setFormError] = useState<string | null>(null)
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault()
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm<LoginFormData>({
+        resolver: zodResolver(loginSchema),
+        defaultValues: {
+            email: '',
+            password: '',
+        },
+    })
+
+    const onSubmit = async (data: LoginFormData) => {
         setLoading(true)
-        setError(null)
+        setFormError(null)
 
         try {
             const { error } = await supabase.auth.signInWithPassword({
-                email,
-                password,
+                email: data.email,
+                password: data.password,
             })
 
             if (error) {
-                setError(error.message)
+                setFormError(error.message)
                 return
             }
 
             router.push('/dashboard')
             router.refresh()
         } catch (err) {
-            setError('Terjadi kesalahan. Silakan coba lagi.')
+            setFormError('Terjadi kesalahan. Silakan coba lagi.')
         } finally {
             setLoading(false)
         }
     }
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-6">
-            {error && (
-                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
-                    {error}
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            {formError && (
+                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm flex items-start gap-2">
+                    <AlertCircle className="h-5 w-5 mt-0.5 flex-shrink-0" />
+                    <span>{formError}</span>
                 </div>
             )}
 
@@ -55,12 +70,13 @@ export function LoginForm() {
                     <Input
                         id="email"
                         type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
                         placeholder="nama@email.com"
-                        required
-                        className="w-full"
+                        className={`w-full ${errors.email ? 'border-red-500 focus-visible:ring-red-500' : ''}`}
+                        {...register('email')}
                     />
+                    {errors.email && (
+                        <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
+                    )}
                 </div>
 
                 <div>
@@ -70,12 +86,13 @@ export function LoginForm() {
                     <Input
                         id="password"
                         type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
                         placeholder="••••••••"
-                        required
-                        className="w-full"
+                        className={`w-full ${errors.password ? 'border-red-500 focus-visible:ring-red-500' : ''}`}
+                        {...register('password')}
                     />
+                    {errors.password && (
+                        <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>
+                    )}
                 </div>
             </div>
 

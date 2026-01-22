@@ -1,3 +1,4 @@
+// app\(auth)\register\register-form.tsx
 'use client'
 
 import { useState } from 'react'
@@ -5,65 +6,56 @@ import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { createClient } from '@/lib/supabase/client'
+import { registerSchema, type RegisterFormData } from '@/lib/validation/auth-schema'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import { AlertCircle } from 'lucide-react'
 
 export default function RegisterForm() {
-    const [formData, setFormData] = useState({
-        email: '',
-        fullName: '',
-        whatsapp: '',
-        password: '',
-        confirmPassword: '',
-    })
-    const [loading, setLoading] = useState(false)
-    const [error, setError] = useState<string | null>(null)
     const router = useRouter()
     const supabase = createClient()
+    const [loading, setLoading] = useState(false)
+    const [formError, setFormError] = useState<string | null>(null)
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value,
-        })
-    }
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm<RegisterFormData>({
+        resolver: zodResolver(registerSchema),
+        defaultValues: {
+            email: '',
+            password: '',
+            confirmPassword: '',
+            full_name: '',
+            whatsapp_number: '',
+        },
+    })
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault()
+    const onSubmit = async (data: RegisterFormData) => {
         setLoading(true)
-        setError(null)
-
-        // Validation
-        if (formData.password !== formData.confirmPassword) {
-            setError('Password dan konfirmasi password tidak cocok')
-            setLoading(false)
-            return
-        }
-
-        if (formData.password.length < 8) {
-            setError('Password minimal 8 karakter')
-            setLoading(false)
-            return
-        }
+        setFormError(null)
 
         try {
             // 1. Sign up dengan Supabase Auth
             const { data: authData, error: authError } = await supabase.auth.signUp({
-                email: formData.email,
-                password: formData.password,
+                email: data.email,
+                password: data.password,
                 options: {
                     data: {
-                        full_name: formData.fullName,
-                        whatsapp_number: formData.whatsapp,
+                        full_name: data.full_name,
+                        whatsapp_number: data.whatsapp_number,
                     }
                 }
             })
 
             if (authError) {
-                setError(authError.message)
+                setFormError(authError.message)
                 return
             }
 
             if (!authData.user) {
-                setError('Gagal membuat akun. Silakan coba lagi.')
+                setFormError('Gagal membuat akun. Silakan coba lagi.')
                 return
             }
 
@@ -72,12 +64,12 @@ export default function RegisterForm() {
 
             // 3. Auto login setelah register
             const { error: loginError } = await supabase.auth.signInWithPassword({
-                email: formData.email,
-                password: formData.password,
+                email: data.email,
+                password: data.password,
             })
 
             if (loginError) {
-                setError(loginError.message)
+                setFormError(loginError.message)
                 return
             }
 
@@ -86,17 +78,18 @@ export default function RegisterForm() {
             router.refresh()
 
         } catch (err) {
-            setError('Terjadi kesalahan. Silakan coba lagi.')
+            setFormError('Terjadi kesalahan. Silakan coba lagi.')
         } finally {
             setLoading(false)
         }
     }
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-6">
-            {error && (
-                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
-                    {error}
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            {formError && (
+                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm flex items-start gap-2">
+                    <AlertCircle className="h-5 w-5 mt-0.5 flex-shrink-0" />
+                    <span>{formError}</span>
                 </div>
             )}
 
@@ -107,46 +100,46 @@ export default function RegisterForm() {
                     </label>
                     <Input
                         id="email"
-                        name="email"
                         type="email"
-                        value={formData.email}
-                        onChange={handleChange}
                         placeholder="nama@email.com"
-                        required
-                        className="w-full"
+                        className={`w-full ${errors.email ? 'border-red-500 focus-visible:ring-red-500' : 'border-gray-300'}`}
+                        {...register('email')}
                     />
+                    {errors.email && (
+                        <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
+                    )}
                 </div>
 
                 <div>
-                    <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-1">
+                    <label htmlFor="full_name" className="block text-sm font-medium text-gray-700 mb-1">
                         Nama Lengkap *
                     </label>
                     <Input
-                        id="fullName"
-                        name="fullName"
+                        id="full_name"
                         type="text"
-                        value={formData.fullName}
-                        onChange={handleChange}
                         placeholder="Nama lengkap Anda"
-                        required
-                        className="w-full"
+                        className={`w-full ${errors.full_name ? 'border-red-500 focus-visible:ring-red-500' : 'border-gray-300'}`}
+                        {...register('full_name')}
                     />
+                    {errors.full_name && (
+                        <p className="mt-1 text-sm text-red-600">{errors.full_name.message}</p>
+                    )}
                 </div>
 
                 <div>
-                    <label htmlFor="whatsapp" className="block text-sm font-medium text-gray-700 mb-1">
+                    <label htmlFor="whatsapp_number" className="block text-sm font-medium text-gray-700 mb-1">
                         Nomor WhatsApp *
                     </label>
                     <Input
-                        id="whatsapp"
-                        name="whatsapp"
+                        id="whatsapp_number"
                         type="tel"
-                        value={formData.whatsapp}
-                        onChange={handleChange}
                         placeholder="6281234567890"
-                        required
-                        className="w-full"
+                        className={`w-full ${errors.whatsapp_number ? 'border-red-500 focus-visible:ring-red-500' : 'border-gray-300'}`}
+                        {...register('whatsapp_number')}
                     />
+                    {errors.whatsapp_number && (
+                        <p className="mt-1 text-sm text-red-600">{errors.whatsapp_number.message}</p>
+                    )}
                     <p className="text-xs text-gray-500 mt-1">
                         Gunakan format: 6281234567890 (tanpa + atau spasi)
                     </p>
@@ -158,14 +151,17 @@ export default function RegisterForm() {
                     </label>
                     <Input
                         id="password"
-                        name="password"
                         type="password"
-                        value={formData.password}
-                        onChange={handleChange}
                         placeholder="Minimal 8 karakter"
-                        required
-                        className="w-full"
+                        className={`w-full ${errors.password ? 'border-red-500 focus-visible:ring-red-500' : 'border-gray-300'}`}
+                        {...register('password')}
                     />
+                    {errors.password && (
+                        <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>
+                    )}
+                    <p className="text-xs text-gray-500 mt-1">
+                        Harus mengandung huruf kecil, huruf besar, dan angka
+                    </p>
                 </div>
 
                 <div>
@@ -174,14 +170,14 @@ export default function RegisterForm() {
                     </label>
                     <Input
                         id="confirmPassword"
-                        name="confirmPassword"
                         type="password"
-                        value={formData.confirmPassword}
-                        onChange={handleChange}
                         placeholder="Ketik ulang password"
-                        required
-                        className="w-full"
+                        className={`w-full ${errors.confirmPassword ? 'border-red-500 focus-visible:ring-red-500' : 'border-gray-300'}`}
+                        {...register('confirmPassword')}
                     />
+                    {errors.confirmPassword && (
+                        <p className="mt-1 text-sm text-red-600">{errors.confirmPassword.message}</p>
+                    )}
                 </div>
             </div>
 
