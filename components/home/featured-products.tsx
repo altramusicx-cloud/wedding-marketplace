@@ -72,16 +72,20 @@ export function FeaturedProducts({
                     <div className="flex overflow-x-auto pb-4 gap-6 scrollbar-hide">
                         {products.map((product) => (
                             <div key={`card-${product.id}-${product.thumbnail_url}`} className="min-w-[280px] max-w-[280px]">
-                                <ProductCard product={{
-                                    id: product.id,
-                                    name: product.name,
-                                    thumbnail_url: product.thumbnail_url || '',
-                                    category: product.category,
-                                    location: product.location,
-                                    price_from: product.price_from,
-                                    price_to: product.price_to,
-                                    vendor_name: product.profiles?.[0]?.full_name || 'Vendor',
-                                }} />
+                                // Line sekitar 83, hapus vendor_name:
+                                <ProductCard
+                                    key={product.id}
+                                    product={{
+                                        id: product.id,
+                                        name: product.name,
+                                        thumbnail_url: product.thumbnail_url || '',
+                                        category: product.category,
+                                        location: product.location,
+                                        price_from: product.price_from,
+                                        price_to: product.price_to,
+                                        // HAPUS: vendor_name: product.profiles?.[0]?.full_name || 'Vendor',
+                                    }}
+                                />
                             </div>
                         ))}
                     </div>
@@ -89,8 +93,9 @@ export function FeaturedProducts({
             ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     {products.map((product) => (
+                        // Line sekitar 83, hapus vendor_name:
                         <ProductCard
-                            key={`${product.id}-${product.thumbnail_url}`}
+                            key={product.id}
                             product={{
                                 id: product.id,
                                 name: product.name,
@@ -99,7 +104,7 @@ export function FeaturedProducts({
                                 location: product.location,
                                 price_from: product.price_from,
                                 price_to: product.price_to,
-                                vendor_name: product.profiles?.[0]?.full_name || 'Vendor',
+                                // HAPUS: vendor_name: product.profiles?.[0]?.full_name || 'Vendor',
                             }}
                         />
                     ))}

@@ -1,7 +1,6 @@
 // app/(public)/page.tsx (SIMPLIFIED VERSION)
 import { createClient } from '@/lib/supabase/server'
 import { HeroSection } from '@/components/home/hero-section'
-import { CategoryGrid } from '@/components/home/category-grid'
 import { SearchBar } from '@/components/shared/search-bar'
 import { Container } from '@/components/layout/container'
 import { ProductGridInfinite } from '@/components/product/product-grid-infinite'
@@ -79,24 +78,8 @@ export default async function HomePage() {
             <div className="min-h-screen bg-ivory">
                 <HeroSection />
 
-                <div className="sticky top-0 z-40 bg-white border-b shadow-sm">
-                    <Container className="py-4">
-                        <SearchBar />
-                    </Container>
-                </div>
 
                 <Container className="py-8">
-                    {/* Categories */}
-                    <section className="mb-12">
-                        <div className="flex items-center justify-between mb-6">
-                            <h2 className="text-2xl font-bold text-charcoal">Jelajahi Kategori</h2>
-                            <a href="/categories" className="text-blush hover:text-blush-dark font-medium">
-                                Lihat semua →
-                            </a>
-                        </div>
-                        <CategoryGrid categoryCounts={categoryCounts} />
-                    </section>
-
                     {/* Featured Products */}
                     <section className="mb-12">
                         <div className="flex items-center justify-between mb-6">
@@ -111,12 +94,19 @@ export default async function HomePage() {
                                     <ProductCard
                                         key={product.id}
                                         product={{
-                                            ...product,
-                                            vendor_name: getVendorName(product),
-                                            is_featured: true
+                                            id: product.id,
+                                            name: product.name,
+                                            thumbnail_url: product.thumbnail_url,
+                                            category: product.category,
+                                            location: product.location,
+                                            price_from: product.price_from,
+                                            price_to: product.price_to,
+                                            price_unit: product.price_unit,
+
                                         }}
-                                        showFavorite={true}
+
                                     />
+
                                 ))
                             ) : (
                                 Array.from({ length: 4 }).map((_, i) => <ProductCardSkeleton key={i} />)
@@ -138,10 +128,17 @@ export default async function HomePage() {
                                     <ProductCard
                                         key={product.id}
                                         product={{
-                                            ...product,
-                                            vendor_name: getVendorName(product)
+                                            id: product.id,
+                                            name: product.name,
+                                            thumbnail_url: product.thumbnail_url,
+                                            category: product.category,
+                                            location: product.location,
+                                            price_from: product.price_from,
+                                            price_to: product.price_to,
+                                            price_unit: product.price_unit,
+
                                         }}
-                                        showFavorite={true}
+
                                     />
                                 ))
                             ) : (

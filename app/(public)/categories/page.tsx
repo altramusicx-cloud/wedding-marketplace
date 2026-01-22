@@ -177,12 +177,17 @@ export default async function CategoriesPage({
                                         <ProductCard
                                             key={product.id}
                                             product={{
-                                                ...product,
-                                                vendor_name: Array.isArray(product.profiles)
-                                                    ? product.profiles[0]?.full_name || 'Vendor'
-                                                    : 'Vendor'
+                                                id: product.id,
+                                                name: product.name,
+                                                thumbnail_url: product.thumbnail_url,
+                                                category: product.category,
+                                                location: product.location,
+                                                price_from: product.price_from,
+                                                price_to: product.price_to,
+                                                price_unit: product.price_unit,
+                                                // HAPUS vendor_name karena tidak ada di interface
+                                                // view_count bisa ditambahkan jika ada di database
                                             }}
-                                            showFavorite={true}
                                         />
                                     ))}
                                 </ProductGrid>

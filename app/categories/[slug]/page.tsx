@@ -326,7 +326,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
                                             key={product.id}
                                             product={product}
                                             variant="default"
-                                            showFavorite={true}
+
                                         />
                                     ))}
                                 </ProductGrid>
@@ -342,7 +342,8 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
                                                 <ProductCard
                                                     key={product.id}
                                                     product={product}
-                                                    variant="featured"
+                                                    variant="default"
+
                                                 />
                                             ))}
                                     </ProductGrid>

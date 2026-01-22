@@ -89,7 +89,7 @@ export async function Recommendations({
                                 key={product.id}
                                 product={formatProduct(product)}
                                 variant="compact"
-                                showFavorite={true}
+
                             />
                         ))}
                     </div>
@@ -112,7 +112,7 @@ export async function Recommendations({
                                 key={product.id}
                                 product={formatProduct(product)}
                                 variant="compact"
-                                showFavorite={true}
+
                             />
                         ))}
                     </div>
@@ -135,7 +135,7 @@ export async function Recommendations({
                                 key={product.id}
                                 product={formatProduct(product)}
                                 variant="compact"
-                                showFavorite={true}
+
                             />
                         ))}
                     </div>

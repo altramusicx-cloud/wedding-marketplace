@@ -108,7 +108,7 @@ export function ProductGridInfinite({
                             ...product,
                             vendor_name: product.profiles?.full_name
                         }}
-                        showFavorite={true}
+
                     />
                 ))}
 
