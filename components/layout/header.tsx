@@ -4,7 +4,7 @@
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import {
     Home,
     Search,
@@ -29,12 +29,18 @@ import {
 import { useAuthState } from '@/hooks/use-auth-state'
 import { cn } from '@/lib/utils'
 import { SearchModal } from '@/components/shared/search-modal'
+import { createClient } from '@/lib/supabase/client'
 
 export function Header() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
     const [isSearchModalOpen, setIsSearchModalOpen] = useState(false)
     const [searchQuery, setSearchQuery] = useState('')
+    const [isLoadingVendor, setIsLoadingVendor] = useState(false)
+
     const pathname = usePathname()
+    const router = useRouter()
+    const supabase = createClient()
+
     const { user, profile, signOut, isLoading, isAuthenticated } = useAuthState()
 
     const navItems = [
@@ -44,6 +50,37 @@ export function Header() {
         { href: '/categories/catering', label: 'Katering' },
         { href: '/categories/decoration', label: 'Dekorasi' },
     ]
+
+    const handleBecomeVendor = async () => {
+        if (!user) {
+            router.push('/login')
+            return
+        }
+
+        setIsLoadingVendor(true)
+        try {
+            const { error } = await supabase
+                .from('profiles')
+                .update({
+                    is_vendor: true,
+                    vendor_since: new Date().toISOString()
+                })
+                .eq('id', user.id)
+
+            if (error) throw error
+
+            // Refresh untuk update auth state
+            router.refresh()
+            // Redirect ke vendor dashboard
+            router.push('/dashboard/vendor')
+
+        } catch (error) {
+            console.error('Failed to become vendor:', error)
+            alert('Gagal menjadi vendor. Silakan coba lagi.')
+        } finally {
+            setIsLoadingVendor(false)
+        }
+    }
 
     const handleLogout = async () => {
         await signOut()
@@ -116,13 +153,12 @@ export function Header() {
                                     <Button
                                         variant="outline"
                                         size="sm"
-                                        asChild
                                         className="hidden lg:flex"
+                                        onClick={handleBecomeVendor}
+                                        disabled={isLoadingVendor}
                                     >
-                                        <Link href="/dashboard/vendor/register">
-                                            <ShoppingBag className="h-3 w-3 mr-2" />
-                                            Jadi Vendor
-                                        </Link>
+                                        <ShoppingBag className="h-3 w-3 mr-2" />
+                                        {isLoadingVendor ? 'Memproses...' : 'Jadi Vendor'}
                                     </Button>
                                 )}
 

@@ -162,15 +162,23 @@ export default function CreateProductPage() {
 
     // ✅ SIMPLIFIED HANDLE PRICE CHANGE - VALIDATION ONLY (NO AUTO-SWAP)
     const handlePriceChange = (name: 'priceFrom' | 'priceTo', value: string) => {
-        // Hanya allow angka
-        const numericValue = value.replace(/\D/g, '')
-        const formatted = numericValue ? parseInt(numericValue, 10).toLocaleString('id-ID') : ''
+        // 1. Hapus semua non-digit termasuk titik
+        const rawNumbers = value.replace(/[^\d]/g, '')
 
-        const newFormData = { ...formData, [name]: formatted }
+        // 2. Simpan raw numbers (tanpa titik) di state
+        const newFormData = { ...formData, [name]: rawNumbers }
 
-        // Show error jika invalid, tapi tetap biarkan user input
-        const fromNum = parseFormattedNumber(newFormData.priceFrom)
-        const toNum = parseFormattedNumber(newFormData.priceTo)
+        // 3. Format untuk display dengan titik
+        const formattedValue = rawNumbers
+            ? parseInt(rawNumbers).toLocaleString('id-ID')
+            : ''
+
+        // 4. Update UI input dengan formatting (akan dilakukan di value prop)
+        // Kita tetap simpan raw numbers di state
+
+        // 5. Validation
+        const fromNum = parseInt(newFormData.priceFrom || '0', 10)
+        const toNum = parseInt(newFormData.priceTo || '0', 10)
 
         if (fromNum > 0 && toNum > 0 && fromNum > toNum) {
             setPriceError("⚠️ Harga mulai lebih besar dari harga sampai")
@@ -490,45 +498,33 @@ export default function CreateProductPage() {
                             <CardContent className="space-y-4">
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                     {/* Harga Mulai Dari */}
-                                    <div>
-                                        <label className="block text-sm font-medium mb-2">
-                                            Harga Mulai Dari
-                                        </label>
-                                        <div className="relative">
-                                            <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
-                                                Rp
-                                            </span>
-                                            <Input
-                                                value={formData.priceFrom}
-                                                onChange={(e) => handlePriceChange('priceFrom', e.target.value)}
-                                                placeholder="0"
-                                                className="pl-10"
-                                                inputMode="numeric"
-                                                pattern="[0-9]*"
-                                                enterKeyHint="done"
-                                            />
-                                        </div>
+                                    <div className="relative">
+                                        <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
+                                            Rp
+                                        </span>
+                                        <Input
+                                            value={formData.priceFrom ? parseInt(formData.priceFrom).toLocaleString('id-ID') : ''}
+                                            onChange={(e) => handlePriceChange('priceFrom', e.target.value)}
+                                            placeholder="0"
+                                            className="pl-10"
+                                            type="text"
+                                            inputMode="numeric"
+                                        />
                                     </div>
 
                                     {/* Harga Sampai */}
-                                    <div>
-                                        <label className="block text-sm font-medium mb-2">
-                                            Harga Sampai
-                                        </label>
-                                        <div className="relative">
-                                            <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
-                                                Rp
-                                            </span>
-                                            <Input
-                                                value={formData.priceTo}
-                                                onChange={(e) => handlePriceChange('priceTo', e.target.value)}
-                                                placeholder="0"
-                                                className="pl-10"
-                                                inputMode="numeric"
-                                                pattern="[0-9]*"
-                                                enterKeyHint="done"
-                                            />
-                                        </div>
+                                    <div className="relative">
+                                        <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
+                                            Rp
+                                        </span>
+                                        <Input
+                                            value={formData.priceTo ? parseInt(formData.priceTo).toLocaleString('id-ID') : ''}
+                                            onChange={(e) => handlePriceChange('priceTo', e.target.value)}
+                                            placeholder="0"
+                                            className="pl-10"
+                                            type="text"
+                                            inputMode="numeric"
+                                        />
                                     </div>
 
                                     <div>
