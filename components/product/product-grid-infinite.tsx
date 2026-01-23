@@ -106,9 +106,8 @@ export function ProductGridInfinite({
                         key={product.id}
                         product={{
                             ...product,
-                            vendor_name: product.profiles?.full_name
+                            // HAPUS: vendor_name: product.profiles?.full_name
                         }}
-
                     />
                 ))}
 

@@ -28,6 +28,7 @@ import { cn } from '@/lib/utils'
 import { FilterModal } from '@/components/shared/filter-modal'
 
 export function Header() {
+
     const [isFilterModalOpen, setIsFilterModalOpen] = useState(false)
     const [searchQuery, setSearchQuery] = useState('')
     const searchRef = useRef<HTMLDivElement>(null)
@@ -113,20 +114,6 @@ export function Header() {
                                     </Link>
                                 </Button>
 
-                                {/* Become Vendor */}
-                                {!profile?.is_vendor && (
-                                    <Button
-                                        variant="outline"
-                                        size="sm"
-                                        asChild
-                                        className="hidden lg:flex"
-                                    >
-                                        <Link href="/dashboard/vendor/register">
-                                            <ShoppingBag className="h-3 w-3 mr-2" />
-                                            Jadi Vendor
-                                        </Link>
-                                    </Button>
-                                )}
 
                                 {/* Auth Section */}
                                 {isLoading ? (
@@ -154,7 +141,7 @@ export function Header() {
                                                 <ChevronDown className="h-3 w-3 ml-1" />
                                             </Button>
                                         </DropdownMenuTrigger>
-                                        <DropdownMenuContent align="end" className="w-56">
+                                        <DropdownMenuContent align="end" className=" w-56 bg-white border border-gray-200 shadow-lg">
                                             <DropdownMenuLabel>
                                                 <div className="flex flex-col space-y-1">
                                                     <p className="text-sm font-medium leading-none">
@@ -174,11 +161,18 @@ export function Header() {
                                                 </Link>
                                             </DropdownMenuItem>
 
-                                            {profile?.is_vendor && (
+                                            {profile?.is_vendor ? (
                                                 <DropdownMenuItem asChild>
                                                     <Link href="/dashboard/vendor" className="w-full cursor-pointer">
                                                         <ShoppingBag className="mr-2 h-4 w-4" />
                                                         Vendor Dashboard
+                                                    </Link>
+                                                </DropdownMenuItem>
+                                            ) : (
+                                                <DropdownMenuItem asChild>
+                                                    <Link href="/dashboard/vendor/register" className="w-full cursor-pointer">
+                                                        <ShoppingBag className="mr-2 h-4 w-4" />
+                                                        Jadi Vendor
                                                     </Link>
                                                 </DropdownMenuItem>
                                             )}
@@ -225,12 +219,13 @@ export function Header() {
                         </div>
                     </div>
                 </div>
-            </header>
+            </header >
 
             {/* Filter Modal */}
-            <FilterModal
+            < FilterModal
                 isOpen={isFilterModalOpen}
-                onClose={() => setIsFilterModalOpen(false)}
+                onClose={() => setIsFilterModalOpen(false)
+                }
             />
         </>
     )

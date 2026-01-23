@@ -2,6 +2,7 @@
 import { ProductCard } from './product-card'
 import { getSimilarProducts, getVendorProducts, getPopularProducts } from '@/lib/actions/products'
 import type { ProductWithVendor } from '@/types'
+import { ProductGrid } from './product-card'
 
 interface RecommendationsProps {
     currentProductId: string
@@ -66,13 +67,11 @@ export async function Recommendations({
         price_from: product.price_from ?? undefined,
         price_to: product.price_to ?? undefined,
         price_unit: product.price_unit ?? undefined,
-        vendor_name: product.profiles?.full_name || 'Vendor',
-        is_featured: product.is_featured
+        // HAPUS: vendor_name, is_featured
     })
 
     return (
         <div className="space-y-12">
-            {/* Section 1: Similar Products */}
             {similarProducts.length > 0 && (
                 <div className="space-y-4">
                     <div className="flex items-center justify-between">
@@ -82,65 +81,32 @@ export async function Recommendations({
                         </span>
                     </div>
 
-                    {/* Grid 2 kolom di mobile, 4 di desktop */}
-                    <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    {/* PAKAI ProductGrid BUKAN custom grid */}
+                    <ProductGrid>
                         {similarProducts.map((product) => (
                             <ProductCard
                                 key={product.id}
                                 product={formatProduct(product)}
-                                variant="compact"
-
+                            // HAPUS: variant="compact"
                             />
                         ))}
-                    </div>
+                    </ProductGrid>
                 </div>
             )}
-
             {/* Section 2: Vendor's Other Products */}
-            {vendorProducts.length > 0 && (
-                <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                        <h3 className="text-xl font-bold text-charcoal">Produk Lain dari Vendor Ini</h3>
-                        <span className="text-sm text-gray-500">
-                            {vendorProducts.length} produk
-                        </span>
-                    </div>
+            <ProductGrid>
+                {vendorProducts.map((product) => (
+                    <ProductCard key={product.id} product={formatProduct(product)} />
+                ))}
+            </ProductGrid>
 
-                    <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                        {vendorProducts.map((product) => (
-                            <ProductCard
-                                key={product.id}
-                                product={formatProduct(product)}
-                                variant="compact"
 
-                            />
-                        ))}
-                    </div>
-                </div>
-            )}
-
-            {/* Section 3: Popular Products */}
-            {popularProducts.length > 0 && (
-                <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                        <h3 className="text-xl font-bold text-charcoal">Produk Populer</h3>
-                        <span className="text-sm text-gray-500">
-                            Paling banyak dihubungi minggu ini
-                        </span>
-                    </div>
-
-                    <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                        {popularProducts.map((product) => (
-                            <ProductCard
-                                key={product.id}
-                                product={formatProduct(product)}
-                                variant="compact"
-
-                            />
-                        ))}
-                    </div>
-                </div>
-            )}
+            {/* GANTI custom grid dengan ProductGrid */}
+            <ProductGrid>
+                {popularProducts.map((product) => (
+                    <ProductCard key={product.id} product={formatProduct(product)} />
+                ))}
+            </ProductGrid>
         </div>
     )
 }
