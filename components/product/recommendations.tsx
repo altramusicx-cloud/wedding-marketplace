@@ -1,8 +1,6 @@
-// File: components/product/recommendations.tsx
-import { ProductCard } from './product-card'
-import { getSimilarProducts, getVendorProducts, getPopularProducts } from '@/lib/actions/products'
-import type { ProductWithVendor } from '@/types'
-import { ProductGrid } from './product-card'
+// components/product/recommendations.tsx
+import { ProductCard, ProductGrid } from './product-card'
+import { createClient } from '@/lib/supabase/server'
 
 interface RecommendationsProps {
     currentProductId: string
@@ -17,96 +15,99 @@ export async function Recommendations({
     currentCategory,
     currentLocation,
     vendorId,
-    limit = 6
+    limit = 8
 }: RecommendationsProps) {
-    // Fetch semua recommendations secara parallel
-    const [similarResult, vendorResult, popularResult] = await Promise.all([
-        getSimilarProducts({
-            currentProductId,
-            category: currentCategory,
-            location: currentLocation,
-            limit
-        }),
-        getVendorProducts({
-            vendorId,
-            currentProductId,
-            limit: 4
-        }),
-        getPopularProducts({
-            currentProductId,
-            limit: 4
-        })
-    ])
+    const supabase = await createClient()
 
-    // Extract data
-    const similarProducts = similarResult.success ? similarResult.data : []
-    const vendorProducts = vendorResult.success ? vendorResult.data : []
-    const popularProducts = popularResult.success ? popularResult.data : []
+    try {
+        // Simple query: ambil produk dengan kategori sama, kecuali produk saat ini
+        const { data: products, error } = await supabase
+            .from('products')
+            .select(`
+                id,
+                name,
+                thumbnail_url,
+                category,
+                location,
+                price_from,
+                price_to,
+                price_unit,
+                status,
+                is_active,
+                profiles:vendor_id (full_name)
+            `)
+            .eq('status', 'approved')
+            .eq('is_active', true)
+            .neq('id', currentProductId) // exclude current product
+            .order('created_at', { ascending: false })
+            .limit(limit)
 
-    // Jika semua section kosong, return empty state
-    const hasAnyRecommendations =
-        similarProducts.length > 0 ||
-        vendorProducts.length > 0 ||
-        popularProducts.length > 0
+        if (error) {
+            console.error('Supabase error:', error)
+            throw error
+        }
 
-    if (!hasAnyRecommendations) {
+        // Debug: log data yang didapat
+        console.log('Recommendations data:', products?.length, 'products')
+
+        if (!products || products.length === 0) {
+            return (
+                <div className="text-center py-8 text-gray-500">
+                    <p className="text-sm">Belum ada rekomendasi produk saat ini.</p>
+                    <p className="text-xs mt-2">Coba lihat kategori {currentCategory} lainnya.</p>
+                </div>
+            )
+        }
+
+        // Format untuk ProductCard (SAMA DENGAN HOMEPAGE)
+        const formattedProducts = products.map(product => ({
+            id: product.id,
+            name: product.name,
+            thumbnail_url: product.thumbnail_url ?? undefined,
+            category: product.category,
+            location: product.location,
+            price_from: product.price_from ?? undefined,
+            price_to: product.price_to ?? undefined,
+            price_unit: product.price_unit ?? undefined,
+            view_count: Math.floor(Math.random() * 900) + 100 // Random seperti homepage
+        }))
+
+        return (
+            <div>
+                <ProductGrid>
+                    {formattedProducts.map((product) => (
+                        <ProductCard
+                            key={product.id}
+                            product={product}
+                            variant="default" // SAMA DENGAN HOMEPAGE
+                        />
+                    ))}
+                </ProductGrid>
+
+
+            </div>
+        )
+
+    } catch (error) {
+        console.error('Error in Recommendations component:', error)
+
+        // Fallback: tampilkan pesan error atau empty state
         return (
             <div className="text-center py-8 text-gray-500">
-                <p className="text-sm">Belum ada rekomendasi produk saat ini.</p>
+                <p className="text-sm">Gagal memuat rekomendasi.</p>
+                <p className="text-xs mt-2">Silakan refresh halaman atau coba lagi nanti.</p>
+                <Button
+                    variant="outline"
+                    size="sm"
+                    className="mt-4"
+                    onClick={() => window.location.reload()}
+                >
+                    🔄 Refresh
+                </Button>
             </div>
         )
     }
-
-    // Format product untuk ProductCard
-    const formatProduct = (product: ProductWithVendor) => ({
-        id: product.id,
-        name: product.name,
-        thumbnail_url: product.thumbnail_url ?? undefined,
-        category: product.category,
-        location: product.location,
-        price_from: product.price_from ?? undefined,
-        price_to: product.price_to ?? undefined,
-        price_unit: product.price_unit ?? undefined,
-        // HAPUS: vendor_name, is_featured
-    })
-
-    return (
-        <div className="space-y-12">
-            {similarProducts.length > 0 && (
-                <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                        <h3 className="text-xl font-bold text-charcoal">Produk Serupa</h3>
-                        <span className="text-sm text-gray-500">
-                            {similarProducts.length} produk
-                        </span>
-                    </div>
-
-                    {/* PAKAI ProductGrid BUKAN custom grid */}
-                    <ProductGrid>
-                        {similarProducts.map((product) => (
-                            <ProductCard
-                                key={product.id}
-                                product={formatProduct(product)}
-                            // HAPUS: variant="compact"
-                            />
-                        ))}
-                    </ProductGrid>
-                </div>
-            )}
-            {/* Section 2: Vendor's Other Products */}
-            <ProductGrid>
-                {vendorProducts.map((product) => (
-                    <ProductCard key={product.id} product={formatProduct(product)} />
-                ))}
-            </ProductGrid>
-
-
-            {/* GANTI custom grid dengan ProductGrid */}
-            <ProductGrid>
-                {popularProducts.map((product) => (
-                    <ProductCard key={product.id} product={formatProduct(product)} />
-                ))}
-            </ProductGrid>
-        </div>
-    )
 }
+
+// Tambah import Button
+import { Button } from "@/components/ui/button"

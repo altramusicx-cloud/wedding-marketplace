@@ -7,10 +7,6 @@ import Link from "next/link"
 import Image from "next/image"
 import { useMediaQuery } from "@/hooks/use-media-query"
 
-
-
-
-
 interface ProductCardProps {
     product: {
         id: string
@@ -127,41 +123,43 @@ export function ProductCard({
                     </div>
                 </div>
 
-                {/* Content Section */}
-                <div className="p-1.5">
-                    <div className="space-y-1"> {/* Kurangi: space-y-0.5 → space-y-1 */}
-                        {/* Title - BIARKAN NATURAL */}
-                        <h3 className="font-normal text-[#212121] text-[11px] leading-tight min-h-[2.5rem] mb-0.5">
-                            {product.name} {/* HAPUS line-clamp-2, biarkan wrap natural */}
-                        </h3>
+                {/* Content Section - FIXED SPACING */}
+                <div className="p-1.5 space-y-1">
+                    {/* Title - FIXED HEIGHT 2 lines max */}
+                    <h3 className="font-normal text-[#212121] text-[11px] leading-tight line-clamp-2 h-8">
+                        {product.name}
+                    </h3>
 
-                        {/* Location - DENGAN ICON, GAP DIKECILKAN */}
-                        <div className="flex items-start gap-0.5 mb-0.5">
-                            <MapPin className="h-2.5 w-2.5 text-[#757575] flex-shrink-0 mt-0.5" />
-                            <div>
-                                <div className="text-[9px] text-[#757575]">{city}</div>
-                                {district !== '-' && (
-                                    <div className="text-[9px] text-[#757575] pl-0.5">{district}</div>
-                                )}
+                    {/* Location - SINGLE LINE */}
+                    <div className="flex items-center gap-1">
+                        <MapPin className="h-2 w-2 text-[#757575] flex-shrink-0" />
+                        <div className="flex-1 min-w-0">
+                            <div className="text-[9px] text-[#757575] truncate">
+                                {city}
                             </div>
-                        </div>
-
-                        {/* Harga Mulai */}
-                        <div className="text-[9px] text-[#757575] mb-0.5">
-                            Harga mulai
-                        </div>
-
-                        {/* Price */}
-                        <div className="flex items-baseline">
-                            <span className="text-[#EE4D2D] font-bold text-[13px] leading-none">
-                                Rp{formatPrice(displayPrice)}
-                            </span>
-                            {product.price_unit && (
-                                <span className="text-[#757575] text-[10px] ml-0.5">
-                                    /{product.price_unit}
-                                </span>
+                            {district !== '-' && (
+                                <div className="text-[8px] text-[#757575] truncate pl-0.5">
+                                    {district}
+                                </div>
                             )}
                         </div>
+                    </div>
+
+                    {/* Price Label */}
+                    <div className="text-[8px] text-[#757575]">
+                        Harga mulai
+                    </div>
+
+                    {/* Price */}
+                    <div className="flex items-baseline">
+                        <span className="text-[#EE4D2D] font-bold text-[13px] leading-none">
+                            Rp{formatPrice(displayPrice)}
+                        </span>
+                        {product.price_unit && (
+                            <span className="text-[#757575] text-[10px] ml-0.5">
+                                /{product.price_unit}
+                            </span>
+                        )}
                     </div>
                 </div>
             </div>

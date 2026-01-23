@@ -1,3 +1,4 @@
+// components/layout/header.tsx
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
@@ -12,7 +13,7 @@ import {
     ChevronDown,
     ShoppingBag,
     Search
-} from 'lucide-react' // HAPUS: Home, History, X
+} from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -26,17 +27,15 @@ import {
 import { useAuthState } from '@/hooks/use-auth-state'
 import { cn } from '@/lib/utils'
 import { FilterModal } from '@/components/shared/filter-modal'
+import { Container } from './container' // ← TAMBAH IMPORT
 
 export function Header() {
-
     const [isFilterModalOpen, setIsFilterModalOpen] = useState(false)
     const [searchQuery, setSearchQuery] = useState('')
     const searchRef = useRef<HTMLDivElement>(null)
 
     const pathname = usePathname()
     const { user, profile, signOut, isLoading, isAuthenticated } = useAuthState()
-
-    // HAPUS: navItems array karena tidak digunakan
 
     const handleSearchSubmit = (e: React.FormEvent) => {
         e.preventDefault()
@@ -52,7 +51,8 @@ export function Header() {
     return (
         <>
             <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
-                <div className="container mx-auto px-4">
+                {/* GANTI: container mx-auto px-4 → Container component */}
+                <Container size="xl" className="py-0"> {/* py-0 karena ada h-16 di dalam */}
                     <div className="flex h-16 items-center justify-between gap-3">
                         {/* Logo */}
                         <div className="flex items-center flex-shrink-0">
@@ -92,7 +92,7 @@ export function Header() {
                                         placeholder="Cari venue, photographer, catering..."
                                         className="pl-10 pr-4 w-full"
                                         value={searchQuery}
-                                        onChange={(e) => setSearchQuery(e.target.value)}
+                                        onChange={(e) => setSearchQuery(e.value)}
                                     />
                                 </div>
                             </form>
@@ -113,7 +113,6 @@ export function Header() {
                                         <Heart className="h-4 w-4" />
                                     </Link>
                                 </Button>
-
 
                                 {/* Auth Section */}
                                 {isLoading ? (
@@ -141,7 +140,7 @@ export function Header() {
                                                 <ChevronDown className="h-3 w-3 ml-1" />
                                             </Button>
                                         </DropdownMenuTrigger>
-                                        <DropdownMenuContent align="end" className=" w-56 bg-white border border-gray-200 shadow-lg">
+                                        <DropdownMenuContent align="end" className="w-56 bg-white border border-gray-200 shadow-lg">
                                             <DropdownMenuLabel>
                                                 <div className="flex flex-col space-y-1">
                                                     <p className="text-sm font-medium leading-none">
@@ -218,14 +217,13 @@ export function Header() {
                             </div>
                         </div>
                     </div>
-                </div>
-            </header >
+                </Container> {/* ← PAKAI Container component */}
+            </header>
 
             {/* Filter Modal */}
-            < FilterModal
+            <FilterModal
                 isOpen={isFilterModalOpen}
-                onClose={() => setIsFilterModalOpen(false)
-                }
+                onClose={() => setIsFilterModalOpen(false)}
             />
         </>
     )

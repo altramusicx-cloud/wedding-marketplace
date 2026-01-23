@@ -1,8 +1,7 @@
-// File: components/product/product-gallery.tsx
 "use client"
 
 import { useState } from "react"
-import { ChevronLeft, ChevronRight, ZoomIn } from "lucide-react"
+import { ChevronLeft, ChevronRight } from "lucide-react" // HAPUS ZoomIn
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { cn } from "@/lib/utils"
@@ -29,14 +28,15 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
 
     return (
         <div className="space-y-4">
-            {/* Main Image */}
-            <div className="relative aspect-square overflow-hidden rounded-xl bg-gray-100 group">
+            {/* Main Image - CLICK TO ZOOM */}
+            <div className="relative aspect-square overflow-hidden rounded-lg bg-gray-100 group cursor-zoom-in">
                 <Image
                     src={mainImage}
                     alt={`${productName} - Gambar ${selectedIndex + 1}`}
                     width={800}
                     height={800}
                     className="w-full h-full object-cover"
+                    onClick={() => setIsZoomed(true)} // ← KLIK GAMBAR LANGSUNG ZOOM
                 />
 
                 {/* Navigation Buttons */}
@@ -63,15 +63,7 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
                     </>
                 )}
 
-                {/* Zoom Button */}
-                <Button
-                    variant="ghost"
-                    size="icon"
-                    className="absolute top-4 right-4 bg-white/80 backdrop-blur-sm hover:bg-white shadow-lg"
-                    onClick={() => setIsZoomed(true)}
-                >
-                    <ZoomIn className="h-5 w-5" />
-                </Button>
+                {/* HAPUS: Zoom Button (tidak perlu lagi) */}
 
                 {/* Image Counter */}
                 <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/60 text-white text-sm px-3 py-1 rounded-full">
@@ -87,7 +79,7 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
                             key={index}
                             onClick={() => setSelectedIndex(index)}
                             className={cn(
-                                "flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all",
+                                "flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-all",
                                 selectedIndex === index
                                     ? "border-blush ring-2 ring-blush/20"
                                     : "border-gray-200 hover:border-gray-300"
@@ -96,8 +88,8 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
                             <Image
                                 src={image}
                                 alt={`Thumbnail ${index + 1}`}
-                                width={80}
-                                height={80}
+                                width={64}
+                                height={64}
                                 className="w-full h-full object-cover"
                             />
                         </button>
@@ -105,7 +97,7 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
                 </div>
             )}
 
-            {/* Zoom Modal */}
+            {/* Zoom Modal - BISA SWIPE GAMBAR LAIN */}
             <Dialog open={isZoomed} onOpenChange={setIsZoomed}>
                 <DialogContent className="max-w-4xl max-h-[90vh] p-0 overflow-hidden">
                     <div className="relative h-[80vh]">
@@ -115,8 +107,31 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
                             width={1200}
                             height={1200}
                             className="w-full h-full object-contain"
-                            quality={100} // High quality untuk zoom
+                            quality={100}
                         />
+
+                        {/* Navigation in Zoom Modal */}
+                        {images.length > 1 && (
+                            <>
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 backdrop-blur-sm"
+                                    onClick={prevImage}
+                                >
+                                    <ChevronLeft className="h-5 w-5" />
+                                </Button>
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 backdrop-blur-sm"
+                                    onClick={nextImage}
+                                >
+                                    <ChevronRight className="h-5 w-5" />
+                                </Button>
+                            </>
+                        )}
+
                         <div className="absolute top-4 right-4">
                             <Button
                                 variant="ghost"
@@ -124,7 +139,7 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
                                 className="bg-white/80 backdrop-blur-sm"
                                 onClick={() => setIsZoomed(false)}
                             >
-                                <ChevronLeft className="h-5 w-5" />
+                                ✕
                             </Button>
                         </div>
                     </div>
