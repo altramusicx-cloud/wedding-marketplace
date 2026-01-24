@@ -1,10 +1,9 @@
-// app\dashboard\page.tsx
-
-
+// app/dashboard/page.tsx - FULL FIXED VERSION
 import { requireAuth } from '@/lib/supabase/middleware'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { User, Phone, Heart, Package } from 'lucide-react'
+import Link from 'next/link' // 🔥 IMPORTANT: Add this import
 
 export const dynamic = 'force-dynamic'
 
@@ -136,8 +135,10 @@ export default async function DashboardPage() {
                                 </div>
 
                                 <div className="pt-4">
-                                    <Button className="bg-blush hover:bg-blush/90 text-charcoal">
-                                        Edit Profil
+                                    <Button asChild className="bg-blush hover:bg-blush/90 text-charcoal">
+                                        <Link href="/dashboard/profile">
+                                            Edit Profil
+                                        </Link>
                                     </Button>
                                 </div>
                             </div>
@@ -153,27 +154,36 @@ export default async function DashboardPage() {
 
                             <div className="space-y-3">
                                 {!profile?.is_vendor && (
-                                    <Button className="w-full justify-start bg-sage hover:bg-sage/90 text-white">
-                                        <Package className="mr-2 h-4 w-4" />
-                                        Jadi Vendor
+                                    <Button asChild className="w-full justify-start bg-sage hover:bg-sage/90 text-white">
+                                        <Link href="/dashboard/become-vendor">
+                                            <Package className="mr-2 h-4 w-4" />
+                                            Jadi Vendor
+                                        </Link>
                                     </Button>
                                 )}
 
                                 {profile?.is_vendor && (
-                                    <Button className="w-full justify-start bg-sage hover:bg-sage/90 text-white">
-                                        <Package className="mr-2 h-4 w-4" />
-                                        Dashboard Vendor
+                                    <Button asChild className="w-full justify-start bg-sage hover:bg-sage/90 text-white">
+                                        {/* 🔥 FIX: Tambah Link ke dashboard vendor */}
+                                        <Link href="/dashboard/vendor">
+                                            <Package className="mr-2 h-4 w-4" />
+                                            Dashboard Vendor
+                                        </Link>
                                     </Button>
                                 )}
 
-                                <Button variant="outline" className="w-full justify-start">
-                                    <Heart className="mr-2 h-4 w-4" />
-                                    Favorit Saya
+                                <Button asChild variant="outline" className="w-full justify-start">
+                                    <Link href="/dashboard/favorites">
+                                        <Heart className="mr-2 h-4 w-4" />
+                                        Favorit Saya
+                                    </Link>
                                 </Button>
 
-                                <Button variant="outline" className="w-full justify-start">
-                                    <Phone className="mr-2 h-4 w-4" />
-                                    Riwayat Kontak
+                                <Button asChild variant="outline" className="w-full justify-start">
+                                    <Link href="/dashboard/contact-history">
+                                        <Phone className="mr-2 h-4 w-4" />
+                                        Riwayat Kontak
+                                    </Link>
                                 </Button>
                             </div>
                         </Card>

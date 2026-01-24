@@ -1,4 +1,3 @@
-// app\(auth)\login\login-form.tsx
 'use client'
 
 import { useState } from 'react'
@@ -44,8 +43,10 @@ export function LoginForm() {
                 return
             }
 
-            router.push('/dashboard')
+            // ✅ BENAR: Redirect ke home, biarkan middleware handle role-based redirect
+            router.replace('/')
             router.refresh()
+
         } catch (err) {
             setFormError('Terjadi kesalahan. Silakan coba lagi.')
         } finally {

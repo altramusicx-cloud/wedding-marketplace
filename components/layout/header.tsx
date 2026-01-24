@@ -92,7 +92,7 @@ export function Header() {
                                         placeholder="Cari venue, photographer, catering..."
                                         className="pl-10 pr-4 w-full"
                                         value={searchQuery}
-                                        onChange={(e) => setSearchQuery(e.value)}
+                                        onChange={(e) => setSearchQuery(e.target.value)}
                                     />
                                 </div>
                             </form>
