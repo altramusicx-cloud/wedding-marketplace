@@ -1,4 +1,4 @@
-// lib\supabase\middleware.ts
+//lib\supabase\middleware.ts
 
 import { createClient } from './server'
 import { redirect } from 'next/navigation'

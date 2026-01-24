@@ -1,3 +1,4 @@
+// app/(auth)/login/login-form.tsx - FIXED VERSION
 'use client'
 
 import { useState } from 'react'
@@ -43,7 +44,7 @@ export function LoginForm() {
                 return
             }
 
-            // ✅ BENAR: Redirect ke home, biarkan middleware handle role-based redirect
+            // âœ… BENAR: Redirect ke home, biarkan middleware handle role-based redirect
             router.replace('/')
             router.refresh()
 
@@ -87,7 +88,7 @@ export function LoginForm() {
                     <Input
                         id="password"
                         type="password"
-                        placeholder="••••••••"
+                        placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
                         className={`w-full ${errors.password ? 'border-red-500 focus-visible:ring-red-500' : ''}`}
                         {...register('password')}
                     />

@@ -116,11 +116,11 @@ export function ProductCard({
                         {product.category}
                     </span>
 
-                    {/* Viewer Count - kanan atas (diperbesar, sejajar) */}
+                    {/* Viewer Count - kanan atas (diperbesar, sejajar) 
                     <div className="absolute top-1.5 right-1.5 flex items-center gap-2 bg-[#EE4D2D] text-white rounded-[2px] px-1.5 py-0.5">
                         <Eye className="h-2.5 w-2.5" />
                         <span className="text-[9px] font-medium">{viewCount.toLocaleString('id-ID')}</span>
-                    </div>
+                    </div>*/}
                 </div>
 
                 {/* Content Section - FIXED SPACING */}
