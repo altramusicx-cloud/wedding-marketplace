@@ -1,15 +1,15 @@
-﻿// app/admin/layout.tsx - CLEAN VERSION (NO GLOBAL HEADER)
+﻿// app/admin/layout.tsx - FIXED VERSION WITH WORKING LOGOUT
 "use client"
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { 
+import { usePathname, useRouter } from 'next/navigation'
+import {
   Home, Users, Package, FileText, BarChart3, Settings,
-  ChevronLeft, ChevronRight, Menu, X, Search, Bell, User
+  ChevronLeft, ChevronRight, Menu, X, Search, Bell, User, LogOut
 } from 'lucide-react'
 import { Input } from '@/components/ui/input'
-import { 
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -17,6 +17,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { useAuthState } from '@/hooks/use-auth-state'
 
 // Navigation items
 const navItems = [
@@ -36,6 +37,18 @@ export default function AdminLayout({
   const [isCollapsed, setIsCollapsed] = useState(false)
   const [isMobileOpen, setIsMobileOpen] = useState(false)
   const pathname = usePathname()
+  const router = useRouter()
+  const { signOut, isLoading } = useAuthState()
+
+  const handleLogout = async () => {
+    try {
+      await signOut()
+      // Redirect to login page after logout
+      router.push('/login')
+    } catch (error) {
+      console.error('Logout error:', error)
+    }
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -49,7 +62,7 @@ export default function AdminLayout({
 
       {/* Mobile Overlay */}
       {isMobileOpen && (
-        <div 
+        <div
           className="lg:hidden fixed inset-0 bg-black/50 z-40"
           onClick={() => setIsMobileOpen(false)}
         />
@@ -57,7 +70,7 @@ export default function AdminLayout({
 
       {/* Sidebar */}
       <aside className={`
-        fixed top-0 left-0 h-screen bg-white border-r border-gray-200 z-50 
+        fixed top-0 left-0 h-screen bg-white border-r border-gray-200 z-50
         transition-all duration-300
         ${isCollapsed ? 'w-16' : 'w-64'}
         ${isMobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
@@ -78,7 +91,7 @@ export default function AdminLayout({
                 <span className="text-blue-600 font-semibold text-sm">WM</span>
               </div>
             )}
-            
+
             {/* Desktop Toggle Button */}
             <button
               onClick={() => setIsCollapsed(!isCollapsed)}
@@ -112,14 +125,14 @@ export default function AdminLayout({
                 onClick={() => setIsMobileOpen(false)}
                 className={`
                   flex items-center gap-3 px-3 py-2.5 text-sm rounded-md transition-colors
-                  ${isActive 
-                    ? 'bg-blue-50 text-blue-700 font-medium' 
+                  ${isActive
+                    ? 'bg-blue-50 text-blue-700 font-medium'
                     : 'text-gray-700 hover:bg-gray-100'
                   }
                 `}
               >
                 <item.icon className={`w-4 h-4 flex-shrink-0 ${isActive ? 'text-blue-600' : 'text-gray-500'}`} />
-                
+
                 {!isCollapsed && (
                   <>
                     <span className="flex-1 truncate">{item.label}</span>
@@ -138,14 +151,14 @@ export default function AdminLayout({
 
       {/* Main Content Area */}
       <div className={`${isCollapsed ? 'lg:ml-16' : 'lg:ml-64'}`}>
-        {/* Admin Header */}
+        {/* Header */}
         <header className="sticky top-0 z-40 h-14 bg-white border-b border-gray-200">
           <div className="h-full px-4 lg:px-6 flex items-center justify-between">
             {/* Left: Title */}
             <div className="lg:hidden">
               <h1 className="text-base font-semibold text-gray-900">Admin</h1>
             </div>
-            
+
             <div className="hidden lg:block">
               <h1 className="text-lg font-semibold text-gray-900">Admin Dashboard</h1>
             </div>
@@ -181,14 +194,21 @@ export default function AdminLayout({
                     </div>
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuContent align="end" className="w-56 bg-white border border-gray-200 shadow-lg rounded-md z-50">
                   <DropdownMenuLabel>My Account</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem>Profile</DropdownMenuItem>
                   <DropdownMenuItem>Settings</DropdownMenuItem>
                   <DropdownMenuItem>Billing</DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem className="text-red-600">Logout</DropdownMenuItem>
+                  <DropdownMenuItem 
+                    onClick={handleLogout} 
+                    className="text-red-600 cursor-pointer"
+                    disabled={isLoading}
+                  >
+                    <LogOut className="mr-2 h-4 w-4" />
+                    {isLoading ? 'Logging out...' : 'Logout'}
+                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
@@ -205,3 +225,5 @@ export default function AdminLayout({
     </div>
   )
 }
+
+

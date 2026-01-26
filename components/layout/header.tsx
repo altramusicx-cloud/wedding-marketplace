@@ -1,4 +1,4 @@
-// components/layout/header.tsx
+﻿// components/layout/header.tsx - ORIGINAL VERSION
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
@@ -27,7 +27,7 @@ import {
 import { useAuthState } from '@/hooks/use-auth-state'
 import { cn } from '@/lib/utils'
 import { FilterModal } from '@/components/shared/filter-modal'
-import { Container } from './container' // ← TAMBAH IMPORT
+import { Container } from './container'
 
 export function Header() {
     const [isFilterModalOpen, setIsFilterModalOpen] = useState(false)
@@ -51,8 +51,7 @@ export function Header() {
     return (
         <>
             <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
-                {/* GANTI: container mx-auto px-4 → Container component */}
-                <Container size="xl" className="py-0"> {/* py-0 karena ada h-16 di dalam */}
+                <Container size="xl" className="py-0">
                     <div className="flex h-16 items-center justify-between gap-3">
                         {/* Logo */}
                         <div className="flex items-center flex-shrink-0">
@@ -217,7 +216,7 @@ export function Header() {
                             </div>
                         </div>
                     </div>
-                </Container> {/* ← PAKAI Container component */}
+                </Container>
             </header>
 
             {/* Filter Modal */}
