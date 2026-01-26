@@ -175,10 +175,10 @@ export default async function AdminProductsPage() {
                       </TableCell>
                       <TableCell>
                         <div className="font-medium truncate max-w-[120px]">
-                          {product.profiles?.[0]?.full_name || 'Unknown'}
+                          {product.profiles?.full_name || 'Unknown'}
                         </div>
                         <div className="text-sm text-gray-500 truncate max-w-[120px]">
-                          {product.profiles?.[0]?.whatsapp_number}
+                          {product.profiles?.whatsapp_number}
                         </div>
                       </TableCell>
                       <TableCell>
@@ -236,4 +236,3 @@ export default async function AdminProductsPage() {
     </div>
   )
 }
-
