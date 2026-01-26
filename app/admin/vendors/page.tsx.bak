@@ -1,0 +1,9 @@
+﻿// app/admin/vendors/page.tsx
+export default function en-US.TextInfo.ToTitleCase(vendors)Page() {
+  return (
+    <div className="p-6">
+      <h1 className="text-2xl font-bold mb-4">en-US.TextInfo.ToTitleCase(vendors)</h1>
+      <p className="text-gray-600">Halaman vendors admin. Fitur akan diimplementasi.</p>
+    </div>
+  )
+}

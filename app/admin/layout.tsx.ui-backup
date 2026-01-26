@@ -1,0 +1,46 @@
+﻿import { createClient } from "@/lib/supabase/server"
+import { redirect } from "next/navigation"
+import AdminSidebar from "@/components/admin/admin-sidebar"
+import AdminHeader from "@/components/admin/admin-header"
+
+export default async function AdminLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  const supabase = await createClient()
+
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) redirect('/login')
+
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('is_admin, full_name, avatar_url')
+    .eq('id', user.id)
+    .single()
+
+  if (!profile?.is_admin) redirect('/dashboard')
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* SIDEBAR - Compact & Responsive */}
+      <AdminSidebar />
+      
+      {/* MAIN CONTENT AREA */}
+      <div className="lg:ml-64">
+        {/* HEADER - Tidak full width */}
+        <AdminHeader 
+          userName={profile.full_name || 'Admin'} 
+          userRole="Super Admin" 
+        />
+        
+        {/* CONTENT AREA */}
+        <main className="p-4 lg:p-6">
+          <div className="max-w-7xl mx-auto">
+            {children}
+          </div>
+        </main>
+      </div>
+    </div>
+  )
+}

@@ -1,4 +1,4 @@
-﻿// app/admin/layout.tsx - CLEAN VERSION (NO GLOBAL HEADER)
+﻿// app/admin/layout.tsx - FIXED IMPORT
 "use client"
 
 import { useState } from 'react'
@@ -17,6 +17,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+
+// Tentukan import header berdasarkan tipe export
+// Jika header menggunakan named export, ganti dengan:
+import { Header } from '@/components/layout/header'  // Named import
 
 // Navigation items
 const navItems = [
@@ -39,10 +43,14 @@ export default function AdminLayout({
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* GLOBAL HEADER */}
+      <Header />
+      
       {/* Mobile Menu Button */}
       <button
         onClick={() => setIsMobileOpen(true)}
-        className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-white border border-gray-200 rounded-md shadow-sm"
+        className="lg:hidden fixed top-20 left-4 z-50 p-2 bg-white border border-gray-200 rounded-md shadow-sm"
+        style={{ top: '5rem' }}
       >
         <Menu className="w-5 h-5 text-gray-700" />
       </button>
@@ -52,12 +60,13 @@ export default function AdminLayout({
         <div 
           className="lg:hidden fixed inset-0 bg-black/50 z-40"
           onClick={() => setIsMobileOpen(false)}
+          style={{ top: '4rem' }}
         />
       )}
 
       {/* Sidebar */}
       <aside className={`
-        fixed top-0 left-0 h-screen bg-white border-r border-gray-200 z-50 
+        fixed top-16 left-0 h-[calc(100vh-4rem)] bg-white border-r border-gray-200 z-50 
         transition-all duration-300
         ${isCollapsed ? 'w-16' : 'w-64'}
         ${isMobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
@@ -137,9 +146,9 @@ export default function AdminLayout({
       </aside>
 
       {/* Main Content Area */}
-      <div className={`${isCollapsed ? 'lg:ml-16' : 'lg:ml-64'}`}>
+      <div className={`pt-16 ${isCollapsed ? 'lg:ml-16' : 'lg:ml-64'}`}>
         {/* Admin Header */}
-        <header className="sticky top-0 z-40 h-14 bg-white border-b border-gray-200">
+        <header className="sticky top-16 z-40 h-14 bg-white border-b border-gray-200">
           <div className="h-full px-4 lg:px-6 flex items-center justify-between">
             {/* Left: Title */}
             <div className="lg:hidden">

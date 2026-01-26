@@ -1,4 +1,5 @@
-﻿"use client"
+﻿// components/ui/admin/admin-sidebar.tsx
+"use client"
 
 import { useState } from 'react'
 import Link from 'next/link'
@@ -7,7 +8,6 @@ import {
   Home, Users, Package, FileText, BarChart3, Settings,
   ChevronLeft, ChevronRight, Menu, X
 } from 'lucide-react'
-import { cn } from '@/lib/utils'
 
 const navItems = [
   { href: '/admin', label: 'Dashboard', icon: Home, badge: null },
@@ -18,7 +18,7 @@ const navItems = [
   { href: '/admin/settings', label: 'Settings', icon: Settings, badge: null },
 ]
 
-export default function AdminSidebar() {
+export function AdminSidebar() {
   const [isCollapsed, setIsCollapsed] = useState(false)
   const [isMobileOpen, setIsMobileOpen] = useState(false)
   const pathname = usePathname()
@@ -33,20 +33,13 @@ export default function AdminSidebar() {
         <Menu className="w-5 h-5 text-gray-700" />
       </button>
 
-      {/* Mobile Overlay */}
-      {isMobileOpen && (
-        <div 
-          className="lg:hidden fixed inset-0 bg-black/50 z-40"
-          onClick={() => setIsMobileOpen(false)}
-        />
-      )}
-
       {/* Sidebar */}
-      <aside className={cn(
-        "fixed top-0 left-0 h-screen bg-white border-r border-gray-200 z-50 transition-all duration-300",
-        isCollapsed ? "w-16" : "w-64",
-        isMobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
-      )}>
+      <aside className={`
+        fixed top-0 left-0 h-screen bg-white border-r border-gray-200 z-50 
+        transition-all duration-300
+        ${isCollapsed ? 'w-16' : 'w-64'}
+        ${isMobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+      `}>
         {/* Sidebar Header */}
         <div className="p-4 border-b border-gray-200">
           <div className="flex items-center justify-between">
@@ -56,11 +49,6 @@ export default function AdminSidebar() {
                   <span className="text-primary font-semibold text-sm">WM</span>
                 </div>
                 <span className="text-lg font-semibold text-gray-900">Admin Panel</span>
-              </div>
-            )}
-            {isCollapsed && (
-              <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center mx-auto">
-                <span className="text-primary font-semibold text-sm">WM</span>
               </div>
             )}
             
@@ -95,17 +83,15 @@ export default function AdminSidebar() {
                 key={item.href}
                 href={item.href}
                 onClick={() => setIsMobileOpen(false)}
-                className={cn(
-                  "flex items-center gap-3 px-3 py-2.5 text-sm rounded-md transition-colors",
-                  isActive 
-                    ? "bg-primary/10 text-primary font-medium" 
-                    : "text-gray-700 hover:bg-gray-100"
-                )}
+                className={`
+                  flex items-center gap-3 px-3 py-2.5 text-sm rounded-md transition-colors
+                  ${isActive 
+                    ? 'bg-primary/10 text-primary font-medium' 
+                    : 'text-gray-700 hover:bg-gray-100'
+                  }
+                `}
               >
-                <item.icon className={cn(
-                  "w-4 h-4 flex-shrink-0",
-                  isActive ? "text-primary" : "text-gray-500"
-                )} />
+                <item.icon className={`w-4 h-4 flex-shrink-0 ${isActive ? 'text-primary' : 'text-gray-500'}`} />
                 
                 {!isCollapsed && (
                   <>

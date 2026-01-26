@@ -1,4 +1,4 @@
-﻿// app/admin/layout.tsx - CLEAN VERSION (NO GLOBAL HEADER)
+﻿// app/admin/layout.tsx - FIXED VERSION
 "use client"
 
 import { useState } from 'react'
@@ -138,7 +138,7 @@ export default function AdminLayout({
 
       {/* Main Content Area */}
       <div className={`${isCollapsed ? 'lg:ml-16' : 'lg:ml-64'}`}>
-        {/* Admin Header */}
+        {/* Header */}
         <header className="sticky top-0 z-40 h-14 bg-white border-b border-gray-200">
           <div className="h-full px-4 lg:px-6 flex items-center justify-between">
             {/* Left: Title */}

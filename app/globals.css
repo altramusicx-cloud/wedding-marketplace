@@ -56,4 +56,20 @@
   .btn-whatsapp {
     @apply bg-[#25D366] hover:bg-[#128C7E] text-white font-medium;
   }
+
+  
+}
+/* Hide header on admin pages */
+.admin-page header {
+  display: none !important;
+}
+
+/* Atau lebih spesifik */
+body:has(.admin-layout) header {
+  display: none !important;
+}
+
+/* Admin pages styling */
+.admin-layout {
+  /* Admin specific styles */
 }
