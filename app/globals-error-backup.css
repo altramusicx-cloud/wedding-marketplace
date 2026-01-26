@@ -1,0 +1,105 @@
+﻿/* app/globals.css - UPDATED FONT SYSTEM */
+
+@import "tailwindcss";
+
+@theme {
+  /* Color Palette */
+  --color-blush: #F7CAC9;
+  --color-blush-light: #FCE4E3;
+  --color-sage: #9DC183;
+  --color-sage-light: #C5E0B4;
+  --color-ivory: #FFF8F0;
+  --color-charcoal: #2C2C2C;
+  --color-dusty-rose: #D4A5A5;
+  
+  /* Font Families - Connected to next/font */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  --font-serif: var(--font-playfair-display), ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  
+  /* Font Sizes - Consistent scale */
+  --text-xs: 0.75rem;    /* 12px */
+  --text-sm: 0.875rem;   /* 14px */
+  --text-base: 1rem;     /* 16px */
+  --text-lg: 1.125rem;   /* 18px */
+  --text-xl: 1.25rem;    /* 20px */
+  --text-2xl: 1.5rem;    /* 24px */
+  --text-3xl: 1.875rem;  /* 30px */
+  --text-4xl: 2.25rem;   /* 36px */
+  --text-5xl: 3rem;      /* 48px */
+  
+  /* Line Heights */
+  --leading-tight: 1.25;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.75;
+}
+
+@layer base {
+  :root {
+    --color-border: var(--color-gray-200, #e5e5e5);
+    --color-input: var(--color-gray-300, #d4d4d4);
+    --color-ring: var(--color-blush);
+  }
+  
+  * {
+    @apply border-border;
+  }
+  
+  body {
+    @apply bg-white text-gray-900 font-sans antialiased;
+  }
+  
+  /* Heading styles - Consistent across all pages */
+  h1 {
+    @apply font-serif text-4xl md:text-5xl font-bold text-charcoal leading-tight;
+  }
+  
+  h2 {
+    @apply font-serif text-3xl md:text-4xl font-bold text-charcoal leading-tight;
+  }
+  
+  h3 {
+    @apply font-serif text-2xl md:text-3xl font-semibold text-charcoal leading-tight;
+  }
+  
+  h4 {
+    @apply font-sans text-xl md:text-2xl font-semibold text-charcoal leading-normal;
+  }
+  
+  h5 {
+    @apply font-sans text-lg md:text-xl font-semibold text-charcoal leading-normal;
+  }
+  
+  h6 {
+    @apply font-sans text-base md:text-lg font-semibold text-charcoal leading-normal;
+  }
+  
+  /* Text styles */
+  .text-body-large {
+    @apply font-sans text-lg text-gray-700 leading-relaxed;
+  }
+  
+  .text-body {
+    @apply font-sans text-base text-gray-700 leading-normal;
+  }
+  
+  .text-body-small {
+    @apply font-sans text-sm text-gray-600 leading-normal;
+  }
+  
+  .text-caption {
+    @apply font-sans text-xs text-gray-500 leading-normal;
+  }
+  
+  /* Utility classes for consistent typography */
+  .text-display {
+    @apply font-serif text-5xl font-bold text-charcoal leading-tight;
+  }
+  
+  .text-title {
+    @apply font-serif text-3xl font-bold text-charcoal leading-tight;
+  }
+  
+  .text-subtitle {
+    @apply font-sans text-lg font-medium text-gray-600 leading-relaxed;
+  }
+}

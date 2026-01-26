@@ -1,4 +1,4 @@
-// File: lib/constants/design-tokens.ts
+﻿// File: lib/constants/design-tokens.ts
 
 // Wedding Theme Colors (sesuai globals.css)
 export const colors = {
@@ -49,9 +49,9 @@ export const colors = {
 // Typography
 export const typography = {
     fontFamilies: {
-        heading: 'var(--font-heading)',
-        body: 'var(--font-body)',
-    },
+        heading: "var(--font-serif)",
+        body: "var(--font-sans)",
+      },,
     fontSizes: {
         xs: '0.75rem',    // 12px
         sm: '0.875rem',   // 14px
@@ -133,12 +133,12 @@ export const breakpoints = {
 export const weddingTokens = {
     // Product categories dengan warna
     categories: {
-        venue: { color: colors.blush.DEFAULT, icon: '🏛️' },
-        photographer: { color: colors.sage.DEFAULT, icon: '📸' },
-        catering: { color: colors.dustyRose, icon: '🍽️' },
-        decoration: { color: colors.info, icon: '🎨' },
-        dress: { color: colors.blush.light, icon: '👰' },
-        makeup: { color: colors.warning, icon: '💄' },
+        venue: { color: colors.blush.DEFAULT, icon: 'ðŸ›ï¸' },
+        photographer: { color: colors.sage.DEFAULT, icon: 'ðŸ“¸' },
+        catering: { color: colors.dustyRose, icon: 'ðŸ½ï¸' },
+        decoration: { color: colors.info, icon: 'ðŸŽ¨' },
+        dress: { color: colors.blush.light, icon: 'ðŸ‘°' },
+        makeup: { color: colors.warning, icon: 'ðŸ’„' },
     },
 
     // Price units display

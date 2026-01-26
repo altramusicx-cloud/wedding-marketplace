@@ -1,75 +1,127 @@
-/* app\globals.css */
+﻿/* app/globals.css - SHOPEE FONT STYLE */
 
 @import "tailwindcss";
 
 @theme {
+  /* Color Palette (tetap wedding theme) */
   --color-blush: #F7CAC9;
   --color-blush-light: #FCE4E3;
   --color-sage: #9DC183;
   --color-sage-light: #C5E0B4;
   --color-ivory: #FFF8F0;
   --color-charcoal: #2C2C2C;
-  --color-whatsapp: #25D366;
-  --color-whatsapp-dark: #128C7E;
+  --color-dusty-rose: #D4A5A5;
   
-  --radius-sm: 0.25rem;
-  --radius-md: 0.5rem;
-  --radius-lg: 0.75rem;
-  --radius-xl: 1rem;
-  --radius-2xl: 1.5rem;
+  /* Shopee Font Stack */
+  --font-shopee: var(--font-inter), -apple-system, BlinkMacSystemFont, "Segoe UI", 
+                Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif,
+                "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", 
+                "Noto Color Emoji";
   
-  --font-body: ui-sans-serif, system-ui, sans-serif, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-  --font-heading: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
-}
-
-/*
-  The default border color has changed to `currentColor` in Tailwind CSS v4,
-  so we've added this section to revert it to the previous behavior.
-*/
-@layer base {
-  :root {
-    --color-border: var(--color-gray-200, #e5e5e5);
-  }
-
-  * {
-    border-color: var(--color-border);
-  }
+  /* Font Sizes - Shopee Scale */
+  --text-xs: 0.75rem;     /* 12px - Shopee small text */
+  --text-sm: 0.875rem;    /* 14px - Shopee body text */
+  --text-base: 1rem;      /* 16px - Shopee default */
+  --text-lg: 1.125rem;    /* 18px */
+  --text-xl: 1.25rem;     /* 20px - Shopee medium heading */
+  --text-2xl: 1.5rem;     /* 24px */
+  --text-3xl: 1.75rem;    /* 28px - Shopee large heading */
+  --text-4xl: 2rem;       /* 32px */
+  --text-5xl: 2.5rem;     /* 40px */
+  
+  /* Line Heights - Shopee style */
+  --leading-tight: 1.25;
+  --leading-normal: 1.5;   /* Shopee default */
+  --leading-relaxed: 1.625;
 }
 
 @layer base {
   body {
-    @apply bg-white text-gray-900;
-    font-family: var(--font-body);
+    font-family: var(--font-shopee);
+    @apply bg-white text-gray-900 antialiased;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
   
-  h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-heading);
-    @apply font-bold;
+  /* SHOPEE HEADING STYLES */
+  h1 {
+    @apply text-3xl md:text-4xl font-bold text-charcoal leading-tight;
+    letter-spacing: -0.02em;
+  }
+  
+  h2 {
+    @apply text-2xl md:text-3xl font-bold text-charcoal leading-tight;
+    letter-spacing: -0.01em;
+  }
+  
+  h3 {
+    @apply text-xl md:text-2xl font-semibold text-charcoal leading-tight;
+  }
+  
+  h4 {
+    @apply text-lg md:text-xl font-semibold text-charcoal leading-normal;
+  }
+  
+  h5 {
+    @apply text-base md:text-lg font-semibold text-charcoal leading-normal;
+  }
+  
+  h6 {
+    @apply text-sm md:text-base font-semibold text-charcoal leading-normal;
+  }
+  
+  /* SHOPEE TEXT STYLES */
+  .text-display {
+    @apply text-4xl md:text-5xl font-bold text-charcoal leading-tight;
+    letter-spacing: -0.03em;
+  }
+  
+  .text-title {
+    @apply text-2xl md:text-3xl font-bold text-charcoal leading-tight;
+  }
+  
+  .text-subtitle {
+    @apply text-lg font-semibold text-gray-700 leading-normal;
+  }
+  
+  .text-body-large {
+    @apply text-base md:text-lg text-gray-800 leading-relaxed;
+  }
+  
+  .text-body {
+    @apply text-sm md:text-base text-gray-700 leading-normal;
+  }
+  
+  .text-body-small {
+    @apply text-xs md:text-sm text-gray-600 leading-normal;
+  }
+  
+  .text-caption {
+    @apply text-xs text-gray-500 leading-normal;
+  }
+  
+  /* Shopee specific utilities */
+  .text-shopee-heading {
+    @apply font-bold text-charcoal leading-tight;
+  }
+  
+  .text-shopee-body {
+    @apply text-gray-700 leading-normal;
+  }
+  
+  .text-shopee-label {
+    @apply text-xs font-medium text-gray-600 uppercase tracking-wide;
   }
 }
 
 @layer utilities {
-  .container-custom {
-    @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
+  /* Better text rendering */
+  .text-shopee {
+    text-rendering: optimizeLegibility;
   }
   
-  .btn-whatsapp {
-    @apply bg-[#25D366] hover:bg-[#128C7E] text-white font-medium;
+  /* Shopee-like button text */
+  .btn-text {
+    @apply font-medium text-sm md:text-base;
   }
-
-  
-}
-/* Hide header on admin pages */
-.admin-page header {
-  display: none !important;
-}
-
-/* Atau lebih spesifik */
-body:has(.admin-layout) header {
-  display: none !important;
-}
-
-/* Admin pages styling */
-.admin-layout {
-  /* Admin specific styles */
 }
