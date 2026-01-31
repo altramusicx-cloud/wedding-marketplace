@@ -1,3 +1,4 @@
+// components\shared\image-upload.tsx
 "use client"
 
 import { useState, useRef, useEffect } from "react"

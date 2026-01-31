@@ -247,7 +247,7 @@ export function EditProductForm({ product, onSuccess }: EditProductFormProps) {
 
             // Delete images marked for removal
             if (imagesToDelete.length > 0) {
-                await deleteImages(imagesToDelete, 'product-images')
+                await deleteImages(imagesToDelete, { bucket: 'product-images' })
             }
 
             // Update product in database

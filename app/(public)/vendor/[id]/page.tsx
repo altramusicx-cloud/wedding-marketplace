@@ -1,4 +1,4 @@
-// app/(public)/vendor/[id]/page.tsx
+﻿// app/(public)/vendor/[id]/page.tsx
 import { notFound } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -129,11 +129,26 @@ export default async function ProductDetailPage({
     const images = product.product_images || []
 
     // Prepare gallery images
-    const galleryImages = images.slice(0, 4).map((img: any) => img.url)
-    const displayImages = galleryImages.length > 0 ? galleryImages : [
-        'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=1200',
-        'https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=1200'
-    ]
+    const allImages = [
+        product.thumbnail_url,
+        ...(images.map((img: any) => img.url))
+    ].filter((url, index, self) =>
+        url && self.indexOf(url) === index
+    )
+
+    const displayImages = allImages.length > 0
+        ? allImages.slice(0, 8) // Max 8 images for performance
+        : [
+            'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=1200',
+            'https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=1200'
+        ]
+
+    console.log('🖼️ [PRODUCT PAGE] Images:', {
+        thumbnail: product.thumbnail_url,
+        productImages: images.length,
+        allImages: allImages.length,
+        displayImages: displayImages.length
+    })
 
     // Format vendor year
     const vendorYear = vendor?.created_at
