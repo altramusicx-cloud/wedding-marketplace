@@ -1,3 +1,4 @@
+// app\dashboard\vendor\products\ProductsClient.tsx
 "use client"
 
 import { useState, useEffect } from "react"

@@ -1,7 +1,8 @@
+// File: components/shared/image-upload.tsx
 "use client"
 
-import { useState, useRef, useEffect } from "react"
-import { Upload, X, Loader2, Image as ImageIcon, Star } from "lucide-react"
+import { useState, useRef } from "react"
+import { Upload, X, Loader2, Image as ImageIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { compressImage, validateImageFile } from "@/lib/utils/image-compressor"
@@ -13,12 +14,9 @@ export interface UploadedImage {
     compressedBlob?: Blob
     isCompressing?: boolean
     error?: string
-    signature: string
 }
 
 interface ImageUploadProps {
-    selectedThumbnailIndex?: number
-    onThumbnailSelect?: (index: number) => void
     maxFiles?: number
     maxSizeMB?: number
     maxSizeKB?: number
@@ -29,8 +27,6 @@ interface ImageUploadProps {
 }
 
 export function ImageUpload({
-    selectedThumbnailIndex = 0,
-    onThumbnailSelect,
     maxFiles = 10,
     maxSizeMB = 8,
     maxSizeKB = 120,
@@ -43,47 +39,27 @@ export function ImageUpload({
     const [isDragging, setIsDragging] = useState(false)
     const [isProcessing, setIsProcessing] = useState(false)
     const fileInputRef = useRef<HTMLInputElement>(null)
+    const hasCalledParentRef = useRef(false)
 
-    // Helper untuk membuat signature file
-    const makeSignature = (file: File): string => {
-        return `${file.name}|${file.size}|${file.lastModified}`
-    }
-
-    // Convert existing images
+    // Convert existing images to UploadedImage format
     const existingUploadedImages = existingImages.map(img => ({
         file: new File([], "existing-image"),
         previewUrl: img.url,
         isCompressing: false,
         error: undefined,
-        compressedBlob: undefined,
-        signature: `existing-${img.id || img.url}`
+        compressedBlob: undefined
     }))
 
     const allImages = [...existingUploadedImages, ...uploadedImages]
-
-    // Notify parent about current files
-    useEffect(() => {
-        if (uploadedImages.length > 0) {
-            const compressedFiles = uploadedImages
-                .filter(img => img.compressedBlob && !img.error)
-                .map(img => new File([img.compressedBlob!], img.file.name, {
-                    type: compressToWebP ? 'image/webp' : img.file.type
-                }))
-
-            if (compressedFiles.length > 0) {
-                onFilesChange(compressedFiles)
-            }
-        }
-    }, [uploadedImages, onFilesChange, compressToWebP])
 
     const handleFileSelect = async (files: FileList | null) => {
         if (!files || files.length === 0) return
 
         const fileArray = Array.from(files)
-        console.log('🟡 [ImageUpload] New files selected:', fileArray.length)
+        console.log('🟡 [DEBUG 1] New files selected:', fileArray.length, 'files')
 
-        // Check remaining slots
         const remainingSlots = maxFiles - allImages.length
+
         if (fileArray.length > remainingSlots) {
             alert(`Maksimal ${maxFiles} gambar. Anda sudah memilih ${allImages.length} gambar.`)
             return
@@ -91,42 +67,32 @@ export function ImageUpload({
 
         const newUploadedImages: UploadedImage[] = []
 
-        // Filter duplicates dan validate
+        // Validate and create preview
         for (const file of fileArray.slice(0, remainingSlots)) {
-            // Check duplicate
-            const signature = makeSignature(file)
-            const isDuplicate = allImages.some(img => img.signature === signature)
-
-            if (isDuplicate) {
-                alert(`"${file.name}" sudah diupload sebelumnya.`)
-                continue
-            }
-
-            // Validate
             const validationError = validateImageFile(file, maxSizeMB)
+
             if (validationError) {
                 alert(`${file.name}: ${validationError}`)
                 continue
             }
 
-            newUploadedImages.push({
+            const uploadedImage: UploadedImage = {
                 file,
                 previewUrl: URL.createObjectURL(file),
                 isCompressing: true,
                 error: undefined,
-                compressedBlob: undefined,
-                signature
-            })
+                compressedBlob: undefined
+            }
+
+            newUploadedImages.push(uploadedImage)
         }
 
-        if (newUploadedImages.length === 0) return
+        console.log('🟡 [DEBUG 2] Starting compression for:', newUploadedImages.length, 'images')
 
-        console.log('🟡 [ImageUpload] Adding new images:', newUploadedImages.length)
-
-        // Add to state
+        // Update state with new images (showing preview immediately)
         setUploadedImages(prev => [...prev, ...newUploadedImages])
 
-        // Process compression
+        // Process compression for new images
         setIsProcessing(true)
         try {
             const compressedResults = await Promise.allSettled(
@@ -142,7 +108,9 @@ export function ImageUpload({
                 })
             )
 
-            // Update with compressed blobs
+            console.log('🟡 [DEBUG 3] Compression results:', compressedResults)
+
+            // Update state dengan compressed blobs
             setUploadedImages(prev => {
                 const updated = [...prev]
 
@@ -163,6 +131,21 @@ export function ImageUpload({
                         }
                     }
                 })
+
+                const compressedFiles = updated
+                    .filter(img => img.compressedBlob)
+                    .map(img => new File([img.compressedBlob!], img.file.name, {
+                        type: compressToWebP ? 'image/webp' : img.file.type
+                    }))
+
+                console.log('🟡 [DEBUG 4] Compressed files to send:', compressedFiles.length)
+
+                // 🔧 FIX: Cegah double call dengan ref check
+                if (compressedFiles.length > 0) {
+                    setTimeout(() => {
+                        onFilesChange(compressedFiles)
+                    }, 0)
+                }
 
                 return updated
             })
@@ -198,26 +181,29 @@ export function ImageUpload({
             URL.revokeObjectURL(imageToRemove.previewUrl)
         }
 
-        setUploadedImages(prev => {
-            const newImages = prev.filter((_, i) => i !== index)
-            return newImages
-        })
+        const newImages = uploadedImages.filter((_, i) => i !== index)
+        setUploadedImages(newImages)
+
+        // Update parent with remaining files
+        const remainingFiles = newImages
+            .filter(img => img.compressedBlob)
+            .map(img => new File([img.compressedBlob!], img.file.name, {
+                type: compressToWebP ? 'image/webp' : img.file.type
+            }))
+
+        setTimeout(() => {
+            onFilesChange(remainingFiles)
+        }, 0)
     }
 
     const handleClickUpload = () => {
         fileInputRef.current?.click()
     }
 
-    // 🎯 FIX: INI FUNCTION YANG PASTI DIPANGGIL SAAT KLIK GAMBAR
-    const handleImageClick = (index: number) => {
-        console.log('🎯 [ImageUpload] Image clicked for thumbnail:', index)
-        if (onThumbnailSelect) {
-            onThumbnailSelect(index)
-        }
-    }
-
+    // 🔥 INI RETURN STATEMENT YANG BENAR
     return (
         <div className={className}>
+            {/* File Input (hidden) */}
             <input
                 ref={fileInputRef}
                 type="file"
@@ -278,19 +264,12 @@ export function ImageUpload({
                             {allImages.length} / {maxFiles} gambar
                             {isProcessing && " (Mengompresi...)"}
                         </p>
-                        {uploadedImages.length > 0 && (
+                        {allImages.length > 0 && (
                             <Button
                                 type="button"
                                 variant="ghost"
                                 size="sm"
-                                onClick={() => {
-                                    uploadedImages.forEach(img => {
-                                        if (img.previewUrl.startsWith('blob:')) {
-                                            URL.revokeObjectURL(img.previewUrl)
-                                        }
-                                    })
-                                    setUploadedImages([])
-                                }}
+                                onClick={() => setUploadedImages([])}
                                 disabled={isProcessing}
                             >
                                 Hapus Semua
@@ -300,32 +279,20 @@ export function ImageUpload({
 
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
                         {allImages.map((image, index) => {
-                            const isSelectedThumbnail = index === selectedThumbnailIndex
                             const isExisting = index < existingUploadedImages.length
 
                             return (
                                 <div
                                     key={index}
                                     className={cn(
-                                        "relative aspect-square rounded-lg overflow-hidden border cursor-pointer transition-all group",
+                                        "relative aspect-square rounded-lg overflow-hidden border",
                                         image.error
                                             ? "border-red-300 bg-red-50"
                                             : isExisting
                                                 ? "border-gray-200"
-                                                : "border-gray-300",
-                                        isSelectedThumbnail && "ring-2 ring-blue-500 ring-offset-2"
+                                                : "border-gray-300"
                                     )}
-                                    // 🎯 INI YANG PENTING: onClick handler harus ada di sini!
-                                    onClick={() => handleImageClick(index)}
                                 >
-                                    {/* Thumbnail Badge */}
-                                    {isSelectedThumbnail && (
-                                        <div className="absolute top-1 left-1 z-10 bg-blue-500 text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
-                                            <Star className="h-3 w-3" />
-                                            <span>Thumbnail</span>
-                                        </div>
-                                    )}
-
                                     {/* Image Preview */}
                                     <div className="w-full h-full bg-gray-100 flex items-center justify-center">
                                         {image.previewUrl ? (
@@ -335,7 +302,6 @@ export function ImageUpload({
                                                 width={200}
                                                 height={200}
                                                 className="w-full h-full object-cover"
-                                                unoptimized={true} // Untuk blob URL
                                             />
                                         ) : (
                                             <ImageIcon className="h-8 w-8 text-gray-400" />
@@ -343,7 +309,7 @@ export function ImageUpload({
                                     </div>
 
                                     {/* Overlay */}
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 hover:opacity-100 transition-opacity">
                                         <div className="absolute top-2 right-2">
                                             {!isExisting && (
                                                 <button
@@ -373,27 +339,17 @@ export function ImageUpload({
                                                 <p className="text-xs text-white/80 truncate">Sudah diupload</p>
                                             ) : (
                                                 <p className="text-xs text-white/80 truncate">
-                                                    {image.compressedBlob
+                                                    {!isExisting && image.compressedBlob
                                                         ? `${Math.round(image.compressedBlob.size / 1024)}KB`
                                                         : "Belum dikompresi"}
                                                 </p>
                                             )}
                                         </div>
                                     </div>
-
-                                    {/* Click Instruction */}
-                                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/20">
-                                        <p className="text-white text-sm font-medium">Klik untuk thumbnail</p>
-                                    </div>
                                 </div>
                             )
                         })}
                     </div>
-
-                    {/* Thumbnail Instruction */}
-                    <p className="text-sm text-gray-600 mt-4">
-                        💡 <strong>Klik gambar</strong> untuk memilih sebagai thumbnail
-                    </p>
                 </div>
             )}
         </div>

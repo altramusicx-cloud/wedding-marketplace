@@ -1,4 +1,4 @@
-﻿// app\admin\products\page.tsx 
+﻿// app\admin\products\page.tsx
 import { createClient } from "@/lib/supabase/server"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"

@@ -1,0 +1,165 @@
+// components\shared\image-upload-with-thumbnail.tsx
+"use client"
+
+import { useState, useEffect } from "react"
+import { ImageUpload, type UploadedImage } from "@/components/shared/image-upload"
+
+import { cn } from "@/lib/utils"
+import { CheckCircle } from "lucide-react"
+
+interface ImageUploadWithThumbnailProps {
+  maxFiles?: number
+  maxSizeMB?: number
+  maxSizeKB?: number
+  onFilesChange: (files: File[]) => void
+  onThumbnailChange?: (thumbnailIndex: number) => void
+  existingImages?: Array<{ url: string; id?: string }>
+  compressToWebP?: boolean
+  className?: string
+  selectedThumbnailIndex?: number
+}
+
+export function ImageUploadWithThumbnail({
+  maxFiles = 10,
+  maxSizeMB = 8,
+  maxSizeKB = 120,
+  onFilesChange,
+  onThumbnailChange,
+  existingImages = [],
+  compressToWebP = true,
+  className,
+  selectedThumbnailIndex = 0
+}: ImageUploadWithThumbnailProps) {
+  const [internalThumbnailIndex, setInternalThumbnailIndex] = useState(selectedThumbnailIndex)
+  const [uploadedFiles, setUploadedFiles] = useState<File[]>([])
+  const [uploadedPreviews, setUploadedPreviews] = useState<string[]>([])
+
+  // Combine existing images with uploaded previews
+  const allImages = [
+    ...existingImages.map(img => img.url),
+    ...uploadedPreviews
+  ]
+
+  // Handle when parent changes selected thumbnail
+  useEffect(() => {
+    setInternalThumbnailIndex(selectedThumbnailIndex)
+  }, [selectedThumbnailIndex])
+
+  const handleFilesChange = (files: File[]) => {
+    setUploadedFiles(files)
+    onFilesChange(files)
+
+    // Create preview URLs for new files
+    const newPreviews = files.map(file => URL.createObjectURL(file))
+    setUploadedPreviews(newPreviews)
+
+    // If first image uploaded and no thumbnail selected yet, auto-select it
+    if (files.length > 0 && internalThumbnailIndex >= allImages.length) {
+      const newIndex = existingImages.length // Start after existing images
+      setInternalThumbnailIndex(newIndex)
+      onThumbnailChange?.(newIndex)
+    }
+  }
+
+  const handleThumbnailSelect = (index: number) => {
+    setInternalThumbnailIndex(index)
+    onThumbnailChange?.(index)
+  }
+
+  // Cleanup preview URLs on unmount
+  useEffect(() => {
+    return () => {
+      uploadedPreviews.forEach(url => URL.revokeObjectURL(url))
+    }
+  }, [uploadedPreviews])
+
+  return (
+    <div className={className}>
+      {/* Main upload component */}
+      <ImageUpload
+        maxFiles={maxFiles}
+        maxSizeMB={maxSizeMB}
+        maxSizeKB={maxSizeKB}
+        onFilesChange={handleFilesChange}
+        existingImages={existingImages}
+        compressToWebP={compressToWebP}
+      />
+
+      {/* Thumbnail Selection (only show if we have images) */}
+      {allImages.length > 0 && (
+        <div className="mt-6 p-4 border rounded-lg bg-gray-50">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h3 className="text-sm font-medium text-gray-900">Pilih Thumbnail</h3>
+              <p className="text-xs text-gray-500">
+                Gambar yang dipilih akan ditampilkan sebagai gambar utama di listing produk
+              </p>
+            </div>
+            {internalThumbnailIndex >= 0 && (
+              <div className="flex items-center gap-1 text-xs text-green-600">
+                <CheckCircle className="h-3 w-3" />
+                <span>Thumbnail #{internalThumbnailIndex + 1} terpilih</span>
+              </div>
+            )}
+          </div>
+
+          {/* Image grid with selection */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+            {allImages.map((imageUrl, index) => (
+              <div
+                key={index}
+                className={cn(
+                  "relative aspect-square rounded-lg overflow-hidden border-2 cursor-pointer transition-all",
+                  internalThumbnailIndex === index
+                    ? "border-blush ring-2 ring-blush/20"
+                    : "border-gray-300 hover:border-gray-400"
+                )}
+                onClick={() => handleThumbnailSelect(index)}
+              >
+                {/* Image */}
+                <div className="w-full h-full bg-gray-100">
+                  <img
+                    src={imageUrl}
+                    alt={`Preview ${index + 1}`}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+
+                {/* Selection indicator */}
+                <div className="absolute top-2 left-2">
+                  <div className={cn(
+                    "w-5 h-5 rounded-full flex items-center justify-center",
+                    internalThumbnailIndex === index
+                      ? "bg-blush text-white"
+                      : "bg-white/90 text-gray-700 border border-gray-300"
+                  )}>
+                    {internalThumbnailIndex === index ? (
+                      <CheckCircle className="h-3 w-3" />
+                    ) : (
+                      <span className="text-xs font-medium">{index + 1}</span>
+                    )}
+                  </div>
+                </div>
+
+                {/* Thumbnail badge */}
+                {internalThumbnailIndex === index && (
+                  <div className="absolute bottom-2 left-0 right-0">
+                    <div className="mx-auto bg-blush text-white text-xs px-2 py-1 rounded-md w-fit">
+                      Thumbnail
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+
+          <p className="text-xs text-gray-500 mt-3">
+            Klik gambar untuk memilih sebagai thumbnail. Gambar pertama secara default adalah thumbnail.
+          </p>
+        </div>
+      )}
+    </div>
+  )
+}
+
+

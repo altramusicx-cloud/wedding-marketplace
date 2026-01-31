@@ -1,3 +1,4 @@
+// app\dashboard\vendor\products\actions.ts
 "use server"
 
 import { createClient } from "@/lib/supabase/server"

@@ -1,4 +1,4 @@
-﻿/** @type {import('tailwindcss').Config} */
+/** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
     './pages/**/*.{ts,tsx}',
@@ -11,7 +11,7 @@ module.exports = {
         shopee: ["var(--font-shopee)"],
         sans: ["var(--font-shopee)"],
         serif: ["var(--font-shopee)"], /* Shopee tidak pakai serif */
-      },,
+      },
       colors: {
         // Neutral Scale (90% dari UI)
         gray: {

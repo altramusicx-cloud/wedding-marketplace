@@ -1,9 +1,14 @@
+// app/(public)/vendor/[id]/view-increment.tsx
 'use client'
 
 import { useEffect } from 'react'
 import { useAuthState } from '@/hooks/use-auth-state'
 
-export function ViewIncrement({ productId }: { productId: string }) {
+interface ViewIncrementProps {
+    productId: string
+}
+
+export function ViewIncrement({ productId }: ViewIncrementProps) {
     const { user, isLoading } = useAuthState()
 
     useEffect(() => {

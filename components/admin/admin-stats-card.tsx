@@ -1,4 +1,5 @@
-﻿import { ReactNode } from 'react'
+﻿// components/admin/admin-stats-card.tsx
+import { ReactNode } from 'react'
 import { cn } from '@/lib/utils'
 
 interface StatsCardProps {
