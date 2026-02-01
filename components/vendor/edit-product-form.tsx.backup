@@ -84,7 +84,7 @@ export function EditProductForm({ product, onSuccess }: EditProductFormProps) {
 
     // Existing images state
     const [existingImages, setExistingImages] = useState(
-        product.images?.map(img => ({
+        product.product_images?.map(img => ({
             url: img.url,
             id: img.id
         })) || []
@@ -279,7 +279,7 @@ export function EditProductForm({ product, onSuccess }: EditProductFormProps) {
                 }))
 
                 const { error: imagesError } = await supabase
-                    .from('images')
+                    .from('product_images')
                     .insert(productImages)
 
                 if (imagesError) {
@@ -639,5 +639,4 @@ export function EditProductForm({ product, onSuccess }: EditProductFormProps) {
         </div>
     )
 }
-
 

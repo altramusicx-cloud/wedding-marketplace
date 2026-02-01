@@ -48,6 +48,28 @@ export interface Product {
   thumbnail_url?: string
   is_active: boolean
   is_approved: boolean
+  is_featured?: boolean
+  view_count?: number
+  rejection_reason?: string
+  created_at: string
+  updated_at: string
+  
+  // Relations
+  images?: ProductImage[]
+  category?: ProductCategory
+  vendor?: Vendor
+  id: string
+  name: string
+  description: string
+  category_id: string
+  vendor_id: string
+  location: string
+  price_from?: number
+  price_to?: number
+  price_unit?: string
+  thumbnail_url?: string
+  is_active: boolean
+  is_approved: boolean
   rejection_reason?: string
   created_at: string
   updated_at: string
@@ -77,5 +99,6 @@ export interface ProductFormData {
   images: File[]
   existing_images?: string[]
 }
+
 
 
