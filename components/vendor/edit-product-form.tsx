@@ -1,4 +1,4 @@
-// components/vendor/edit-product-form.tsx
+﻿// components/vendor/edit-product-form.tsx
 "use client"
 
 import { useState, useEffect } from "react"
@@ -242,7 +242,7 @@ export function EditProductForm({ product, onSuccess }: EditProductFormProps) {
                     folder: `products/${product.id}`,
                     productId: product.id
                 })
-                newImageUrls = uploadResults.map(result => result.url)
+                newImageUrls = uploadResults.map((result: any) => result.url)
             }
 
             // Delete images marked for removal
@@ -560,7 +560,7 @@ export function EditProductForm({ product, onSuccess }: EditProductFormProps) {
 
                                 <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
                                     <p className="text-sm text-amber-800">
-                                        💡                                         💡 <strong>Tips:</strong> Harga akan ditampilkan sebagai &quot;Rp 5.000.000 - Rp 10.000.000 / paket&quot;.
+                                        ðŸ’¡                                         ðŸ’¡ <strong>Tips:</strong> Harga akan ditampilkan sebagai &quot;Rp 5.000.000 - Rp 10.000.000 / paket&quot;.
                                     </p>
                                 </div>
                             </CardContent>
@@ -585,7 +585,7 @@ export function EditProductForm({ product, onSuccess }: EditProductFormProps) {
                                     compressToWebP={true}
                                 />
                                 <p className="text-xs text-gray-500 mt-3">
-                                    <strong>Note:</strong> Gambar akan dikompresi otomatis ke format WebP (≤120KB).
+                                    <strong>Note:</strong> Gambar akan dikompresi otomatis ke format WebP (â‰¤120KB).
                                     Klik X pada gambar untuk menghapus.
                                 </p>
                             </CardContent>
@@ -639,3 +639,4 @@ export function EditProductForm({ product, onSuccess }: EditProductFormProps) {
         </div>
     )
 }
+

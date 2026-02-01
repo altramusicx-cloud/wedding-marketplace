@@ -320,7 +320,7 @@ export default function CreateProductPage() {
 
             // 5. Save product images (batch insert)
             if (product && imageUrls.length > 0) {
-                const productImages = imageUrls.map((url, index) => ({
+                const productImages = imageUrls.map((url: string, index: number) => ({
                     product_id: product.id,
                     url,
                     alt_text: `${formData.name} - gambar ${index + 1}`,
@@ -769,3 +769,4 @@ export default function CreateProductPage() {
         </div>
     )
 }
+

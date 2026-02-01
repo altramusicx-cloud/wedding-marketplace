@@ -1,16 +1,15 @@
-// File: types/api.ts (SESUAI BLUEPRINT)
-export interface ApiResponse<T = any> {
-    success: boolean
-    data?: T
-    error?: string
-    message?: string
+﻿// types/api.ts - API related types
+export interface ApiResponse<T> {
+  success: boolean
+  data?: T
+  error?: string
+  message?: string
 }
 
-export interface PaginatedResponse<T> extends ApiResponse<T[]> {
-    pagination: {
-        page: number
-        limit: number
-        total: number
-        totalPages: number
-    }
+export interface PaginatedResponse<T> {
+  items: T[]
+  total: number
+  page: number
+  limit: number
+  totalPages: number
 }

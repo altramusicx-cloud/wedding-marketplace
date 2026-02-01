@@ -1,66 +1,81 @@
-// File: types/product.ts
-export interface Product {
-    id: string
-    vendor_id: string
-    name: string
-    slug: string
-    description: string
-    category: string
-    location: string
-    price_from: number | null
-    price_to: number | null
-    price_unit: string | null
-    status: 'pending' | 'approved' | 'rejected'
-    is_featured: boolean
-    is_active: boolean
-    thumbnail_url: string | null
-    created_at: string
-    updated_at: string
-    approved_at: string | null
-    rejected_at: string | null
-    rejection_reason: string | null
-}
+﻿// types/product.ts
+import { Vendor } from "./user"
+
+// types/product.ts
+import { WithId, Nullable } from '.'
 
 export interface ProductImage {
-    id: string
-    product_id: string
-    url: string
-    alt_text: string | null
-    order_index: number
-    original_size: number | null
-    compressed_size: number | null
-    format: string | null
-    created_at: string
+  id: string
+  url: string
+  alt_text?: string
+  order_index: number
+  product_id: string
 }
 
-export interface ProductWithImages extends Product {
-    product_images: ProductImage[]
-    profiles?: {  // ← TAMBAH INI
-        full_name: string
-        whatsapp_number: string
-    }
+export interface ProductCategory {
+  id: string
+  name: string
+  slug: string
+  description?: string
+  icon?: string
+  parent_id?: string
 }
 
-// TAMBAHKAN INI di types/product.ts (setelah ProductWithImages)
-export interface ProductWithVendor extends Product {
-    profiles?: {
-        full_name: string
-        avatar_url?: string
-        whatsapp_number?: string
-    }
+// Extended product types
+export type ProductWithImages = Product & {
+  images: ProductImage[]
 }
 
-export interface Vendor {
-    id: string
-    full_name: string
-    whatsapp_number: string
-    avatar_url: string | null
-    bio: string | null
-    vendor_since: string | null
+export type ProductWithVendor = Product & {
+  vendor: Vendor
 }
 
-export interface ProductCardProps {
-    product: Product
-    variant?: 'default' | 'compact' | 'featured'
-    showFavorite?: boolean
+export type ProductWithImagesAndVendor = Product & {
+  images: ProductImage[]
+  vendor: Vendor
 }
+
+export interface Product {
+  id: string
+  name: string
+  description: string
+  category_id: string
+  vendor_id: string
+  location: string
+  price_from?: number
+  price_to?: number
+  price_unit?: string
+  thumbnail_url?: string
+  is_active: boolean
+  is_approved: boolean
+  rejection_reason?: string
+  created_at: string
+  updated_at: string
+  
+  // Relations
+  images?: ProductImage[]
+  category?: ProductCategory
+  vendor?: Vendor
+}
+
+export type ProductCardData = Pick<
+  Product, 
+  'id' | 'name' | 'thumbnail_url' | 'category_id' | 'location' | 
+  'price_from' | 'price_to' | 'price_unit'
+> & {
+  category?: string
+}
+
+export interface ProductFormData {
+  name: string
+  description: string
+  category_id: string
+  location: string
+  price_from?: number
+  price_to?: number
+  price_unit?: string
+  images: File[]
+  existing_images?: string[]
+}
+
+

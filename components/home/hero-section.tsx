@@ -1,5 +1,5 @@
-// components/home/hero-section.tsx
-import { Button } from '@/components/ui/button'
+﻿// components/home/hero-section.tsx
+import { Button } from '@components/ui/button'
 import { ArrowRight, Sparkles } from 'lucide-react'
 import Link from 'next/link'
 
