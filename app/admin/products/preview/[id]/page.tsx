@@ -15,7 +15,9 @@ import {
     Image as ImageIcon
 } from "lucide-react"
 import Link from "next/link"
-import Image from 'next/image'
+
+// Import client component untuk gallery
+import { ProductImageGallery } from './product-image-gallery'
 
 interface PageProps {
     params: Promise<{ id: string }>
@@ -89,20 +91,12 @@ export default async function ProductPreviewPage({ params }: PageProps) {
         notFound()
     }
 
-    // Log untuk verifikasi
-    console.log('✅ [RLS FIXED] Product data loaded:', {
-        productId: product.id,
-        totalImages: product.product_images?.length || 0,
-        thumbnailExists: !!product.thumbnail_url,
-        vendorName: product.profiles?.full_name || 'Unknown'
-    })
-
     // Gabungkan semua gambar (thumbnail + product_images)
     const allImages = [
         product.thumbnail_url,
         ...(product.product_images?.map((img: any) => img.url) || [])
     ].filter((url, index, self) =>
-        url && self.indexOf(url) === index // Hapus duplikat
+        url && self.indexOf(url) === index
     )
 
     const approveAction = approveProduct.bind(null, id)
@@ -150,15 +144,14 @@ export default async function ProductPreviewPage({ params }: PageProps) {
                 </div>
             </div>
 
-            {/* Success Alert - Setelah RLS Fix */}
+            {/* Success Alert */}
             <div className="bg-green-50 border border-green-200 rounded-lg p-4">
                 <div className="flex items-center gap-3">
                     <CheckCircle className="h-5 w-5 text-green-600" />
                     <div>
-                        <p className="font-medium text-green-800">✅ RLS Policy Aktif</p>
+                        <p className="font-medium text-green-800">✅ {allImages.length} Gambar Tersedia</p>
                         <p className="text-sm text-green-700">
-                            Admin sekarang dapat mengakses {allImages.length} gambar untuk produk ini.
-                            {product.product_images?.length || 0} gambar dari tabel product_images + thumbnail.
+                            Klik gambar untuk zoom & review detail
                         </p>
                     </div>
                 </div>
@@ -167,57 +160,29 @@ export default async function ProductPreviewPage({ params }: PageProps) {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Left Column - Images & Details */}
                 <div className="lg:col-span-2 space-y-6">
-                    {/* All Product Images */}
+                    {/* All Product Images dengan Lightbox */}
                     <Card>
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
                                 <ImageIcon className="h-5 w-5" />
                                 Semua Gambar Produk ({allImages.length})
+                                <span className="text-sm font-normal text-gray-500 ml-2">
+                                    (Klik untuk zoom)
+                                </span>
                             </CardTitle>
                         </CardHeader>
                         <CardContent>
-                            {allImages.length > 0 ? (
-                                <>
-                                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                                        {allImages.map((url, index) => (
-                                            <div
-                                                key={index}
-                                                className="aspect-square rounded-lg overflow-hidden border bg-gray-100 relative group"
-                                            >
-                                                <Image
-                                                    src={url}
-                                                    alt={`${product.name} - gambar ${index + 1}`}
-                                                    width={200}
-                                                    height={200}
-                                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                                                />
-                                                <div className="absolute top-1 right-1 bg-black/70 text-white text-xs px-2 py-1 rounded">
-                                                    {url === product.thumbnail_url ? '⭐' : `#${index}`}
-                                                </div>
-                                                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                                    <p className="text-white text-xs truncate">
-                                                        {url === product.thumbnail_url ? 'Thumbnail utama' : `Gambar ${index + 1}`}
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                    <div className="mt-4 text-sm text-gray-600 space-y-1">
-                                        <p>📊 <strong>Statistik Gambar:</strong></p>
-                                        <p>• Total gambar unik: {allImages.length}</p>
-                                        <p>• Dari tabel product_images: {product.product_images?.length || 0} gambar</p>
-                                        <p>• Thumbnail: {product.thumbnail_url ? '✅ Ada' : '❌ Tidak ada'}</p>
-                                        {product.product_images?.length === 0 && (
-                                            <p className="text-amber-600">⚠️ Data gambar hanya ada di thumbnail, tidak di tabel product_images.</p>
-                                        )}
-                                    </div>
-                                </>
-                            ) : (
-                                <div className="text-center py-8">
-                                    <ImageIcon className="h-12 w-12 text-gray-400 mx-auto mb-3" />
-                                    <p className="text-gray-500">Tidak ada gambar tersedia</p>
-                                </div>
-                            )}
+                            {/* Client Component untuk Gallery dengan Lightbox */}
+                            <ProductImageGallery product={product} allImages={allImages} />
+
+                            <div className="mt-4 text-sm text-gray-600 space-y-1">
+                                <p>📊 <strong>Fitur Lightbox:</strong></p>
+                                <p>• Klik gambar → zoom fullscreen</p>
+                                <p>• +/- untuk zoom in/out (25%-300%)</p>
+                                <p>• ← → navigasi gambar</p>
+                                <p>• Drag gambar ketika di-zoom</p>
+                                <p>• ESC untuk tutup</p>
+                            </div>
                         </CardContent>
                     </Card>
 
