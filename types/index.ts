@@ -1,15 +1,17 @@
 ﻿// types/index.ts - Centralized type exports
-// Export semua types
-export * from './product'
-export * from './user'
-export * from './vendor'
-export * from './api'
+// Re-export types from individual files
 
-// Strict type utilities
-export type Strict<T> = {
-  [P in keyof T]-?: T[P] extends object ? Strict<T[P]> : T[P]
-}
+// Product types
+export type { Product, ProductCard, ProductFormData, ProductImage } from './product'
 
-export type WithId<T> = T & { id: string }
-export type Nullable<T> = T | null
-export type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>
+// User types
+export type { User, Vendor } from './user'
+
+// API types  
+export type { ApiResponse } from './api'
+
+// Contact types
+export type { ContactFormData } from './contact'
+
+// Base types
+export type { ProductStatus, ProductCategory, PriceUnit } from './base'

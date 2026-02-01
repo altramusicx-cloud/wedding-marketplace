@@ -144,3 +144,4 @@ export function ProductApprovalCard({ product, readonly = false }: ProductApprov
   )
 }
 
+

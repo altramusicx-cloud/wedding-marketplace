@@ -1,10 +1,10 @@
-// components\ui\card.tsx
+﻿// components\ui\card.tsx
 
 import * as React from "react"
 
 import { cn } from "@/lib/utils"
 
-function Card({ className, ...props }: React.ComponentProps<"div">) {
+export function Card({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="card"
@@ -84,7 +84,6 @@ function CardFooter({ className, ...props }: React.ComponentProps<"div">) {
 }
 
 export {
-  Card,
   CardHeader,
   CardFooter,
   CardTitle,
@@ -92,3 +91,4 @@ export {
   CardDescription,
   CardContent,
 }
+
