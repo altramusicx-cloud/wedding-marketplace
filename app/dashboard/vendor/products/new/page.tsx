@@ -1,4 +1,16 @@
-﻿// app/dashboard/vendor/products/new/page.tsx - Simplified version
+﻿import dynamic from 'next/dynamic'
+const EditProductForm = dynamic(() => import('@/components/vendor/edit-product-form').then((mod) => mod.EditProductForm), {
+  ssr: false,
+  loading: () => (`
+  <div className='space-y-4 p-6'>
+    <div className='h-8 w-48 bg-gray-200 rounded animate-pulse' />
+    <div className='h-4 w-full bg-gray-200 rounded animate-pulse' />
+    <div className='h-4 w-3/4 bg-gray-200 rounded animate-pulse' />
+    <div className='h-10 w-32 bg-gray-200 rounded animate-pulse mt-4' />
+  </div>
+`)
+})
+// app/dashboard/vendor/products/new/page.tsx - Simplified version
 "use client"
 
 import { useState } from "react"
@@ -181,3 +193,4 @@ export default function NewProductPage() {
     </div>
   )
 }
+
