@@ -6,7 +6,7 @@ import * as React from "react"
 
 import { cn } from "@/lib/utils"
 
-export function Card({ className, ...props }: React.ComponentProps<"div">) {
+export const Card = () => {
   return (
     <div
       data-slot="card"
@@ -32,7 +32,7 @@ function CardHeader({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
-function CardTitle({ className, ...props }: React.ComponentProps<"div">) {
+function // CardTitle({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="card-title"
@@ -42,7 +42,7 @@ function CardTitle({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
-function CardDescription({ className, ...props }: React.ComponentProps<"div">) {
+function // CardDescription({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="card-description"
@@ -88,10 +88,12 @@ function CardFooter({ className, ...props }: React.ComponentProps<"div">) {
 export {
   CardHeader,
   CardFooter,
-  CardTitle,
+  // CardTitle,
   CardAction,
-  CardDescription,
+  // CardDescription,
   CardContent,
 }
+
+
 
 

@@ -1,4 +1,4 @@
-﻿// types/contact.ts - Contact related types
+﻿// types/contact.ts
 export interface ContactLog {
   id: string
   product_id: string
@@ -6,13 +6,19 @@ export interface ContactLog {
   user_id?: string
   name: string
   email: string
-  phone: string
+  phone?: string
   message: string
-  status: 'pending' | 'contacted' | 'rejected' | 'closed'
+  status: 'pending' | 'contacted' | 'ignored'
   created_at: string
   updated_at: string
-  
-  // Relations
-  product?: Product
-  vendor?: Vendor
 }
+
+export interface ContactFormData {
+  product_id: string
+  name: string
+  email: string
+  message: string
+  phone?: string
+}
+
+// Re-export other contact types if needed

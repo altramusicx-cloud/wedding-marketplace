@@ -16,3 +16,6 @@ export type { ApiResponse } from './api'
 // Base types
 // export type { ProductStatus, ProductCategory, PriceUnit } from './base'  // TEMPORARY COMMENT
 
+
+export type { ContactLog } from "./contact"
+export type { ProductWithVendor } from "./product"

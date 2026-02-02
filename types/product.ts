@@ -130,3 +130,13 @@ export function isProduct(obj: any): obj is Product {
 export function isProductCard(obj: any): obj is ProductCard {
   return obj && typeof obj.id === 'string' && typeof obj.name === 'string'
 }
+
+
+export type ProductWithVendor = Product & {
+  vendor: {
+    id: string
+    name: string
+    email: string
+  }
+}
+
