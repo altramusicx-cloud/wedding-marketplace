@@ -5,7 +5,7 @@ import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+
 import {
     Search,
     PlusCircle,
@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { formatCurrency } from "@/lib/utils/format-currency"
 import { formatDate } from "@/lib/utils/format-date"
-import type { ProductWithImages } from "@/types"
+import type { Product } from "@/types"
 import { deleteProduct, toggleProductFeatured } from "./actions"
 
 const STATUS_COLORS = {
@@ -44,7 +44,7 @@ const STATUS_LABELS = {
 }
 
 interface ProductsClientProps {
-    initialProducts: ProductWithImages[]
+    initialProducts: Product[]
     initialStats: {
         approved: number
         pending: number
@@ -60,7 +60,7 @@ export default function ProductsClient({
     const [search, setSearch] = useState("")
     const [statusFilter, setStatusFilter] = useState("all")
     const [currentPage, setCurrentPage] = useState(1)
-    const [products, setProducts] = useState<ProductWithImages[]>(initialProducts)
+    const [products, setProducts] = useState<Product[]>(initialProducts)
     const [stats, setStats] = useState(initialStats)
     const [isDeleting, setIsDeleting] = useState<string | null>(null)
 
@@ -74,8 +74,8 @@ export default function ProductsClient({
     // Filter produk (client-side)
     const filteredProducts = products.filter(product => {
         const matchesSearch = product.name.toLowerCase().includes(search.toLowerCase()) ||
-            product.category?.name?.toLowerCase() || "".includes(search.toLowerCase())
-        const matchesStatus = statusFilter === "all" || (product.is_approved ? "approved" : "pending") === statusFilter
+            product.category.toLowerCase() || "".includes(search.toLowerCase())
+        const matchesStatus = statusFilter === "all" || (product.status === 'approved' ? "approved" : "pending") === statusFilter
 
         return matchesSearch && matchesStatus
     })
@@ -105,8 +105,8 @@ export default function ProductsClient({
                 if (deletedProduct) {
                     setStats(prev => ({
                         ...prev,
-                        approved: deletedProduct.is_approved ? prev.approved - 1 : prev.approved,
-                        pending: !deletedProduct.is_approved.is_approved ? prev.pending - 1 : prev.pending
+                        approved: deletedProduct.status === 'approved' ? prev.approved - 1 : prev.approved,
+                        pending: !deletedProduct.status === 'approved'.status === 'approved' ? prev.pending - 1 : prev.pending
                     }))
                 }
             } else {
@@ -174,18 +174,17 @@ export default function ProductsClient({
                         </div>
 
                         <div className="flex gap-3">
-                            <Select value={statusFilter} onValueChange={setStatusFilter}>
-                                <SelectTrigger className="w-[180px]">
-                                    <Filter className="mr-2 h-4 w-4" />
-                                    <SelectValue placeholder="Filter Status" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="all">Semua Status</SelectItem>
-                                    <SelectItem value="approved">Disetujui</SelectItem>
-                                    <SelectItem value="pending">Menunggu</SelectItem>
-                                    <SelectItem value="rejected">Ditolak</SelectItem>
-                                </SelectContent>
-                            </Select>
+                            <select 
+    value={statusFilter} 
+    onChange={(e) => setStatusFilter(e.target.value)}
+    className="w-[180px] p-2 border rounded-md flex items-center gap-2"
+>
+    <option value="all">Semua Status</option>
+    <option value="approved">Disetujui</option>
+    <option value="pending">Menunggu</option>
+    <option value="rejected">Ditolak</option>
+    <option value="draft">Draft</option>
+</select>
                         </div>
                     </div>
                 </CardContent>
@@ -270,12 +269,12 @@ export default function ProductsClient({
                                                 </td>
                                                 <td className="py-4 px-4">
                                                     <span className="inline-block bg-gray-100 text-gray-800 text-sm px-3 py-1 rounded capitalize">
-                                                        {product.category?.name}
+                                                        {product.category}
                                                     </span>
                                                 </td>
                                                 <td className="py-4 px-4">
-                                                    <span className={`inline-block text-xs px-3 py-1 rounded-full ${STATUS_COLORS[(product.is_approved ? "approved" : "pending") as keyof typeof STATUS_COLORS] || STATUS_COLORS.draft}`}>
-                                                        {STATUS_LABELS[(product.is_approved ? "approved" : "pending") as keyof typeof STATUS_LABELS] || (product.is_approved ? "approved" : "pending")}
+                                                    <span className={`inline-block text-xs px-3 py-1 rounded-full ${STATUS_COLORS[(product.status === 'approved' ? "approved" : "pending") as keyof typeof STATUS_COLORS] || STATUS_COLORS.draft}`}>
+                                                        {STATUS_LABELS[(product.status === 'approved' ? "approved" : "pending") as keyof typeof STATUS_LABELS] || (product.status === 'approved' ? "approved" : "pending")}
                                                     </span>
                                                 </td>
                                                 <td className="py-4 px-4 font-medium">
@@ -390,6 +389,10 @@ export default function ProductsClient({
         </div>
     )
 }
+
+
+
+
 
 
 

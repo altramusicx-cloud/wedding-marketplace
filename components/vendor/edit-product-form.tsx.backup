@@ -3,11 +3,11 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Button } from "../uibutton"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../uicard"
+import { Input } from "../uiinput"
+import { Textarea } from "../uitextarea"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../uiselect"
 import { ArrowLeft, Loader2 } from "lucide-react"
 import Link from "next/link"
 import { ImageUpload } from "@/components/shared/image-upload"
@@ -66,12 +66,12 @@ export function EditProductForm({ product, onSuccess }: EditProductFormProps) {
     // Form state
     const [formData, setFormData] = useState<ProductFormData>({
         name: product.name || "",
-        category: (product.category as "venue" | "photographer" | "catering" | "decoration" | "dress" | "makeup" | "music" | "invitation") || "venue",
+        category: product.category || "venue",
         description: product.description || "",
         location: product.location || "",
         price_from: product.price_from || null,
         price_to: product.price_to || null,
-        price_unit: (product.price_unit as "paket" | "per jam" | "per orang" | "custom") || "paket"
+        price_unit: product.price_unit || "paket"
     })
 
     // Location state
@@ -84,7 +84,7 @@ export function EditProductForm({ product, onSuccess }: EditProductFormProps) {
 
     // Existing images state
     const [existingImages, setExistingImages] = useState(
-        product.product_images?.map(img => ({
+        product.images?.map(img => ({
             url: img.url,
             id: img.id
         })) || []
@@ -158,7 +158,7 @@ export function EditProductForm({ product, onSuccess }: EditProductFormProps) {
         }
     }
 
-    const handleSelectChange = (name: keyof ProductFormData, value: string) => {
+    const handleSelectChange = (name: keyof ProductFormData & string, value: string) => {
         setFormData(prev => ({ ...prev, [name]: value }))
         if (errors[name]) {
             setErrors(prev => ({ ...prev, [name]: '' }))
@@ -279,7 +279,7 @@ export function EditProductForm({ product, onSuccess }: EditProductFormProps) {
                 }))
 
                 const { error: imagesError } = await supabase
-                    .from('product_images')
+                    .from('images')
                     .insert(productImages)
 
                 if (imagesError) {
@@ -639,4 +639,11 @@ export function EditProductForm({ product, onSuccess }: EditProductFormProps) {
         </div>
     )
 }
+
+
+
+
+
+
+
 

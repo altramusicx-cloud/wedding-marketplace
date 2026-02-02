@@ -10,12 +10,12 @@ import {
   Phone,
   Calendar
 } from "lucide-react"
-import type { ProductWithImages } from "@/types"
+import type { Product } from "@/types"
 import { formatCurrency } from "@/lib/utils/format-currency"
 import { formatDate } from "@/lib/utils/format-date"
 
 interface ProductApprovalCardProps {
-  product: ProductWithImages
+  product: Product
   readonly?: boolean
 }
 
@@ -143,5 +143,6 @@ export function ProductApprovalCard({ product, readonly = false }: ProductApprov
     </Card>
   )
 }
+
 
 

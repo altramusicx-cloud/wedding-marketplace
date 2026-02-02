@@ -1,9 +1,9 @@
-//app\dashboard\vendor\products\ProductsClient.tsx
+﻿//app\dashboard\vendor\products\ProductsClient.tsx
 
 import { createClient } from "@/lib/supabase/server"
 import { redirect } from "next/navigation"
 import ProductsClient from "./ProductsClient"
-import type { ProductWithImages } from "@/types"
+import type { Product } from "@/types"
 
 export default async function VendorProductsPage() {
     const supabase = await createClient()
@@ -51,7 +51,7 @@ export default async function VendorProductsPage() {
 
     return (
         <ProductsClient
-            initialProducts={products as ProductWithImages[] || []}
+            initialProducts={products as Product[] || []}
             initialStats={stats}
         />
     )

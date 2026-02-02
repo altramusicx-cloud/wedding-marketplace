@@ -1,4 +1,4 @@
-// app\dashboard\vendor\products\ProductsClient.tsx
+﻿// app\dashboard\vendor\products\ProductsClient.tsx
 "use client"
 
 import { useState, useEffect } from "react"
@@ -74,8 +74,8 @@ export default function ProductsClient({
     // Filter produk (client-side)
     const filteredProducts = products.filter(product => {
         const matchesSearch = product.name.toLowerCase().includes(search.toLowerCase()) ||
-            product.category.toLowerCase().includes(search.toLowerCase())
-        const matchesStatus = statusFilter === "all" || product.status === statusFilter
+            product.category?.name?.toLowerCase() || "".includes(search.toLowerCase())
+        const matchesStatus = statusFilter === "all" || (product.is_approved ? "approved" : "pending") === statusFilter
 
         return matchesSearch && matchesStatus
     })
@@ -105,8 +105,8 @@ export default function ProductsClient({
                 if (deletedProduct) {
                     setStats(prev => ({
                         ...prev,
-                        approved: deletedProduct.status === 'approved' ? prev.approved - 1 : prev.approved,
-                        pending: deletedProduct.status === 'pending' ? prev.pending - 1 : prev.pending
+                        approved: deletedProduct.is_approved ? prev.approved - 1 : prev.approved,
+                        pending: !deletedProduct.is_approved.is_approved ? prev.pending - 1 : prev.pending
                     }))
                 }
             } else {
@@ -270,12 +270,12 @@ export default function ProductsClient({
                                                 </td>
                                                 <td className="py-4 px-4">
                                                     <span className="inline-block bg-gray-100 text-gray-800 text-sm px-3 py-1 rounded capitalize">
-                                                        {product.category}
+                                                        {product.category?.name}
                                                     </span>
                                                 </td>
                                                 <td className="py-4 px-4">
-                                                    <span className={`inline-block text-xs px-3 py-1 rounded-full ${STATUS_COLORS[product.status as keyof typeof STATUS_COLORS] || STATUS_COLORS.draft}`}>
-                                                        {STATUS_LABELS[product.status as keyof typeof STATUS_LABELS] || product.status}
+                                                    <span className={`inline-block text-xs px-3 py-1 rounded-full ${STATUS_COLORS[(product.is_approved ? "approved" : "pending") as keyof typeof STATUS_COLORS] || STATUS_COLORS.draft}`}>
+                                                        {STATUS_LABELS[(product.is_approved ? "approved" : "pending") as keyof typeof STATUS_LABELS] || (product.is_approved ? "approved" : "pending")}
                                                     </span>
                                                 </td>
                                                 <td className="py-4 px-4 font-medium">
@@ -390,3 +390,6 @@ export default function ProductsClient({
         </div>
     )
 }
+
+
+
