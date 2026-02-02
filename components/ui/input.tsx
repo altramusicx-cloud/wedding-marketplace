@@ -1,4 +1,6 @@
-﻿// components\ui\input.tsx
+﻿export {}
+
+// components\ui\input.tsx
 
 import * as React from "react"
 
@@ -19,6 +21,7 @@ export function Input({ className, type, ...props }: React.ComponentProps<"input
     />
   )
 }
+
 
 
 

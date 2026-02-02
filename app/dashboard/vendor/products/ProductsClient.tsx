@@ -107,7 +107,7 @@ export default function ProductsClient({
                     setStats(prev => ({
                         ...prev,
                         approved: deletedProduct.status === 'approved' ? prev.approved - 1 : prev.approved,
-                        pending: !deletedProduct.status === 'approved'.status === 'approved' ? prev.pending - 1 : prev.pending
+                        pending: deletedProduct.status !== 'approved' ? prev.pending - 1 : prev.pending
                     }))
                 }
             } else {
@@ -175,17 +175,17 @@ export default function ProductsClient({
                         </div>
 
                         <div className="flex gap-3">
-                            <select 
-    value={statusFilter} 
-    onChange={(e) => setStatusFilter(e.target.value)}
-    className="w-[180px] p-2 border rounded-md flex items-center gap-2"
->
-    <option value="all">Semua Status</option>
-    <option value="approved">Disetujui</option>
-    <option value="pending">Menunggu</option>
-    <option value="rejected">Ditolak</option>
-    <option value="draft">Draft</option>
-</select>
+                            <select
+                                value={statusFilter}
+                                onChange={(e) => setStatusFilter(e.target.value)}
+                                className="w-[180px] p-2 border rounded-md flex items-center gap-2"
+                            >
+                                <option value="all">Semua Status</option>
+                                <option value="approved">Disetujui</option>
+                                <option value="pending">Menunggu</option>
+                                <option value="rejected">Ditolak</option>
+                                <option value="draft">Draft</option>
+                            </select>
                         </div>
                     </div>
                 </CardContent>

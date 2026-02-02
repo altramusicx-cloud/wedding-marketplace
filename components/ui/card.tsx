@@ -1,4 +1,6 @@
-﻿// components\ui\card.tsx
+﻿export {}
+
+// components\ui\card.tsx
 
 import * as React from "react"
 
@@ -91,4 +93,5 @@ export {
   CardDescription,
   CardContent,
 }
+
 

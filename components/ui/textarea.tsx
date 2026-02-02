@@ -1,4 +1,6 @@
-﻿// components\ui\textarea.tsx
+﻿export {}
+
+// components\ui\textarea.tsx
 
 import * as React from "react"
 
@@ -16,6 +18,7 @@ export function Textarea({ className, ...props }: React.ComponentProps<"textarea
         />
     )
 }
+
 
 
 

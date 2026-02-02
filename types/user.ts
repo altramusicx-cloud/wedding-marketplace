@@ -2,7 +2,7 @@
 import { Product } from "./product"
 
 // types/user.ts
-import { WithId } from '.'
+// import { WithId } from '.'  // TEMPORARY COMMENT
 
 export interface UserProfile {
   id: string
@@ -40,4 +40,5 @@ export type SessionUser = Pick<
   UserProfile, 
   'id' | 'email' | 'full_name' | 'avatar_url' | 'role' | 'vendor_id'
 >
+
 

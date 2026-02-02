@@ -5,13 +5,14 @@
 export type { Product, ProductCard, ProductFormData, ProductImage } from './product'
 
 // User types
-export type { User, Vendor } from './user'
+// export type { User, Vendor } from './user'  // TEMPORARY COMMENT
 
 // API types  
 export type { ApiResponse } from './api'
 
 // Contact types
-export type { ContactFormData } from './contact'
+// export type { ContactFormData } from './contact'  // TEMPORARY COMMENT
 
 // Base types
-export type { ProductStatus, ProductCategory, PriceUnit } from './base'
+// export type { ProductStatus, ProductCategory, PriceUnit } from './base'  // TEMPORARY COMMENT
+

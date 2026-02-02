@@ -9,14 +9,14 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Loader2, ArrowLeft, AlertTriangle } from "lucide-react"
 import Link from "next/link"
-import type { ProductWithImages } from "@/types"
+import { Product } from "@/types"
 
 export default function EditProductPage() {
     const params = useParams()
     const router = useRouter()
     const supabase = createClient()
 
-    const [product, setProduct] = useState<ProductWithImages | null>(null)
+    const [product, setProduct] = useState<Product | null>(null);
     const [isLoading, setIsLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
     const [isAuthorized, setIsAuthorized] = useState(false)
@@ -63,7 +63,7 @@ export default function EditProductPage() {
             }
 
             setIsAuthorized(true)
-            setProduct(productData as ProductWithImages)
+            setProduct(productData as Product)
 
         } catch (error) {
             console.error('Error:', error)
@@ -155,7 +155,13 @@ export default function EditProductPage() {
     return (
         <div className="min-h-screen bg-ivory">
             <EditProductForm
-                product={product}
+                productId={productId}  // PAKAI productId, bukan id
+                initialData={{
+                    name: product?.name || "",
+                    description: product?.description || "",
+                    priceFrom: product?.price_from,
+                    priceTo: product?.price_to
+                }}
                 onSuccess={handleSuccess}
             />
         </div>
