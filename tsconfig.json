@@ -56,8 +56,10 @@
     "exclude":  [
                     "node_modules",
                     ".next",
-                    ".next/**/*",
                     "**/*.test.ts",
-                    "**/*.spec.ts"
+                    "**/*.spec.ts",
+                    "jest.config.js",
+                    "**/node_modules/@bcoe/**",
+                    "**/node_modules/zod/**"
                 ]
 }
