@@ -1,5 +1,6 @@
 ﻿// app/(public)/vendor/[id]/page.tsx
 import { notFound } from "next/navigation"
+import dynamic from 'next/dynamic'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { ProductSchema } from '@/components/seo/product-schema'
@@ -13,7 +14,6 @@ import {
     Share2
 } from "lucide-react"
 import Link from "next/link"
-import { ProductGallery } from "@/components/product/product-gallery"
 import { ContactButton } from "@/components/product/contact-button"
 import { StickyBottomBar } from "@/components/product/sticky-bottom-bar"
 import { Recommendations } from '@/components/product/recommendations'
@@ -21,6 +21,14 @@ import { Container } from "@/components/layout/container"
 import { ProductGrid } from "@/components/product/product-card"
 import { createClient } from '@/lib/supabase/server'
 import { generateProductMetadata } from '@/lib/utils/generate-metadata'
+
+// ✅ TAMBAH DI SINI - Dynamic imports for heavy components
+const ProductGallery = dynamic(
+    () => import('@/components/product/product-gallery').then(mod => mod.ProductGallery),
+    {
+        loading: () => <div className="aspect-square bg-gray-200 animate-pulse rounded-lg" />
+    }
+)
 
 // Dynamic metadata
 export async function generateMetadata({

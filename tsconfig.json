@@ -1,6 +1,6 @@
 ﻿{
     "compilerOptions":  {
-                            "target":  "es5",
+                            "target":  "ES2015",
                             "lib":  [
                                         "dom",
                                         "dom.iterable",
@@ -23,7 +23,7 @@
                             "moduleResolution":  "bundler",
                             "resolveJsonModule":  true,
                             "isolatedModules":  true,
-                            "jsx":  "preserve",
+                            "jsx":  "react-jsx",
                             "incremental":  true,
                             "baseUrl":  ".",
                             "paths":  {
@@ -39,15 +39,25 @@
                                           "@types/*":  [
                                                            "types/*"
                                                        ]
-                                      }
+                                      },
+                            "plugins":  [
+                                            {
+                                                "name":  "next"
+                                            }
+                                        ]
                         },
     "include":  [
                     "next-env.d.ts",
                     "**/*.ts",
                     "**/*.tsx",
-                    ".next/types/**/*.ts"
+                    ".next/types/**/*.ts",
+                    ".next/dev/types/**/*.ts"
                 ],
     "exclude":  [
-                    "node_modules"
+                    "node_modules",
+                    ".next",
+                    ".next/**/*",
+                    "**/*.test.ts",
+                    "**/*.spec.ts"
                 ]
 }

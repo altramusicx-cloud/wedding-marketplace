@@ -1,3 +1,4 @@
+// lib\utils\image-compressor.ts
 export interface CompressionOptions {
     maxWidth?: number
     maxHeight?: number

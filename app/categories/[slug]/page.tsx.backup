@@ -1,43 +1,11 @@
 // app/categories/[slug]/page.tsx
 import { notFound } from "next/navigation"
-import dynamic from 'next/dynamic'
-
-// Dynamic imports for heavy components
-const ProductGrid = dynamic(
-    () => import('@/components/product/product-card').then(mod => mod.ProductGrid),
-    {
-        loading: () => <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[1, 2, 3, 4, 5, 6].map(i => (
-                <div key={i} className="h-64 bg-gray-200 rounded-lg animate-pulse" />
-            ))}
-        </div>
-    }
-)
-
-const ProductCard = dynamic(
-    () => import('@/components/product/product-card').then(mod => mod.ProductCard),
-    { loading: () => <div className="h-64 bg-gray-200 rounded-lg animate-pulse" /> }
-)
-
-// Dynamic imports for Select components
-const Select = dynamic(() => import('@/components/ui/select').then(mod => mod.Select))
-const SelectContent = dynamic(() => import('@/components/ui/select').then(mod => mod.SelectContent))
-const SelectItem = dynamic(() => import('@/components/ui/select').then(mod => mod.SelectItem))
-const SelectTrigger = dynamic(() => import('@/components/ui/select').then(mod => mod.SelectTrigger))
-const SelectValue = dynamic(() => import('@/components/ui/select').then(mod => mod.SelectValue))
-
-// Dynamic imports for Card components
-const Card = dynamic(() => import("@/components/ui/card").then(mod => mod.Card))
-const CardContent = dynamic(() => import("@/components/ui/card").then(mod => mod.CardContent))
-
-// Dynamic imports for Input & Button
-const Input = dynamic(() => import("@/components/ui/input").then(mod => mod.Input))
-const Button = dynamic(() => import("@/components/ui/button").then(mod => mod.Button))
-
-// Dynamic imports for Icons
-const Filter = dynamic(() => import("lucide-react").then(mod => mod.Filter))
-const Search = dynamic(() => import("lucide-react").then(mod => mod.Search))
-const MapPin = dynamic(() => import("lucide-react").then(mod => mod.MapPin))
+import { Card, CardContent } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Button } from "@/components/ui/button"
+import { ProductCard, ProductGrid } from "@/components/product/product-card"
+import { Filter, Search, MapPin } from "lucide-react"
 
 // Mock data for categories
 const CATEGORIES = {
@@ -176,7 +144,9 @@ const SORT_OPTIONS = [
     { value: "rating", label: "Rating Tertinggi" }
 ]
 
+// ✅ PERBAIKAN: Tambahkan async dan ubah tipe params menjadi Promise
 export default async function CategoryPage({ params }: { params: Promise<{ slug: string }> }) {
+    // ✅ PERBAIKAN: Gunakan await untuk unwrap Promise
     const { slug } = await params
     const category = CATEGORIES[slug as keyof typeof CATEGORIES]
 
@@ -184,6 +154,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
         notFound()
     }
 
+    // Filter products by category
     const categoryProducts = MOCK_PRODUCTS.filter(
         product => product.category.toLowerCase() === category.name.toLowerCase()
     )
@@ -355,6 +326,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
                                             key={product.id}
                                             product={product}
                                             variant="default"
+
                                         />
                                     ))}
                                 </ProductGrid>
@@ -371,6 +343,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
                                                     key={product.id}
                                                     product={product}
                                                     variant="default"
+
                                                 />
                                             ))}
                                     </ProductGrid>

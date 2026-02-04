@@ -1,6 +1,7 @@
-﻿import dynamic from 'next/dynamic'
+"use client"
+import dynamic from 'next/dynamic'
 const EditProductForm = dynamic(() => import('@/components/vendor/edit-product-form').then((mod) => mod.EditProductForm), {
-  ssr: false,
+  
   loading: () => (`
   <div className='space-y-4 p-6'>
     <div className='h-8 w-48 bg-gray-200 rounded animate-pulse' />
@@ -11,8 +12,6 @@ const EditProductForm = dynamic(() => import('@/components/vendor/edit-product-f
 `)
 })
 // app/dashboard/vendor/products/new/page.tsx - Simplified version
-"use client"
-
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
@@ -22,7 +21,6 @@ import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { ArrowLeft, Loader2 } from "lucide-react"
 import Link from "next/link"
-
 export default function NewProductPage() {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
@@ -34,7 +32,6 @@ export default function NewProductPage() {
     priceTo: "",
     priceUnit: "paket"
   })
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
@@ -46,12 +43,10 @@ export default function NewProductPage() {
       router.push("/dashboard/vendor/products")
     }, 1500)
   }
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target
     setFormData(prev => ({ ...prev, [name]: value }))
   }
-
   return (
     <div className="container mx-auto py-6 max-w-4xl">
       {/* Header */}
@@ -66,7 +61,6 @@ export default function NewProductPage() {
           <p className="text-gray-600">Isi detail produk Anda</p>
         </div>
       </div>
-
       <form onSubmit={handleSubmit}>
         <Card className="mb-6">
           <CardHeader>
@@ -86,7 +80,6 @@ export default function NewProductPage() {
                 required
               />
             </div>
-
             {/* Kategori */}
             <div className="space-y-2">
               <Label htmlFor="category">Kategori *</Label>
@@ -106,7 +99,6 @@ export default function NewProductPage() {
                 <option value="other">Lainnya</option>
               </select>
             </div>
-
             {/* Deskripsi */}
             <div className="space-y-2">
               <Label htmlFor="description">Deskripsi</Label>
@@ -119,7 +111,6 @@ export default function NewProductPage() {
                 rows={4}
               />
             </div>
-
             {/* Harga */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="space-y-2">
@@ -162,7 +153,6 @@ export default function NewProductPage() {
             </div>
           </CardContent>
         </Card>
-
         {/* Action Buttons */}
         <div className="flex justify-end gap-3">
           <Button type="button" variant="outline" asChild>
@@ -180,7 +170,6 @@ export default function NewProductPage() {
           </Button>
         </div>
       </form>
-
       {/* Info Message */}
       <Card className="mt-6 bg-blue-50 border-blue-200">
         <CardContent className="p-4">
@@ -193,4 +182,5 @@ export default function NewProductPage() {
     </div>
   )
 }
+
 

@@ -1,4 +1,5 @@
-﻿import { createClient } from '@/lib/supabase/client'
+﻿// lib\utils\upload-image.ts
+import { createClient } from '@/lib/supabase/client'
 import { compressImage } from '@/lib/utils/image-compressor'
 
 export interface UploadOptions {

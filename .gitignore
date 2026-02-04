@@ -37,3 +37,6 @@ next-env.d.ts
 
 # supabase
 .supabase/
+# Bundle analysis reports
+stats.json
+.next/analyze/
