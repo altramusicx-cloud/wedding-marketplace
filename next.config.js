@@ -1,52 +1,16 @@
-﻿// next.config.js
-/** @type {import('next').NextConfig} */
+﻿/** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    remotePatterns: [
-      {
-        protocol: 'http',
-        hostname: 'localhost',
-        port: '',
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'images.unsplash.com',
-        port: '',
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
-        hostname: '**.unsplash.com',
-        port: '',
-        pathname: '/**',
-      },
-      // ✅ TAMBAH INI untuk Supabase
-      {
-        protocol: 'https',
-        hostname: 'jarkcayhllsvgwprvmzb.supabase.co',
-        port: '',
-        pathname: '/**',
-      },
-      // ✅ Atau pattern generic untuk semua Supabase
-      {
-        protocol: 'https',
-        hostname: '**.supabase.co',
-        port: '',
-        pathname: '/**',
-      },
-    ],
-    formats: ['image/avif', 'image/webp'],
+    domains: ['localhost'],
+    unoptimized: process.env.NODE_ENV === 'development',
   },
-  experimental: {
-    optimizeCss: true,
+  eslint: {
+    ignoreDuringBuilds: false,
   },
-  turbopack: {},
+  typescript: {
+    ignoreBuildErrors: false,
+  },
 }
 
-const withBundleAnalyzer = require('@next/bundle-analyzer')({
-  enabled: process.env.ANALYZE === 'true',
-})
-
-module.exports = withBundleAnalyzer(nextConfig)
+module.exports = nextConfig
