@@ -28,7 +28,7 @@ export default function RootLayout({
       <head>
         <link rel="icon" href="/favicon.ico" sizes="any" />
       </head>
-      <body className="antialiased">
+      <body className="bg-white text-neutral-900 antialiased font-sans">
         <ErrorBoundary>
           <AuthProvider>
             {children}

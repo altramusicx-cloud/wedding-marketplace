@@ -1,4 +1,4 @@
-﻿// File: components/ui/badge.tsx
+﻿// File: components/ui/badge.tsx - Fixed version
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
@@ -8,21 +8,13 @@ const badgeVariants = cva(
     {
         variants: {
             variant: {
-                default:
-                    "border-transparent bg-primary text-primary-foreground hover:bg-primary/80",
-                secondary:
-                    "border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80",
-                destructive:
-                    "border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80",
-                outline: "text-foreground",
-                success:
-                    "border-transparent bg-green-100 text-green-800 hover:bg-green-200",
-                warning:
-                    "border-transparent bg-amber-100 text-amber-800 hover:bg-amber-200",
-                blush:
-                    "border-transparent bg-blush text-charcoal hover:bg-blush/80",
-                sage:
-                    "border-transparent bg-sage text-white hover:bg-sage/80",
+                default: "border-transparent bg-primary text-white hover:bg-primary/80",
+                secondary: "border-transparent bg-neutral-100 text-neutral-900 hover:bg-neutral-200",
+                destructive: "border-transparent bg-danger text-white hover:bg-danger/80",
+                outline: "border border-neutral-300 text-neutral-900",
+                category: "border-transparent bg-gold text-white hover:bg-gold-dark uppercase font-bold",
+                success: "border-transparent bg-success text-white hover:bg-success/80",
+                warning: "border-transparent bg-warning text-white hover:bg-warning/80",
             },
         },
         defaultVariants: {

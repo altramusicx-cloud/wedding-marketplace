@@ -1,37 +1,8 @@
-﻿// File: lib/constants/design-tokens.ts
+// File: lib/constants/design-tokens.ts
 
 // Wedding Theme Colors (sesuai globals.css)
-// === WEDDINGS.ID DESIGN TOKENS ===
-// Updated: $(Get-Date -Format 'yyyy-MM-dd HH:mm')
-// Based on reference HTML with Shopee Mall Red (#d0011b)
-
 export const colors = {
-    // PRIMARY COLORS (Shopee Mall Red from reference)
-    primary: {
-        DEFAULT: '#d0011b',      // EXACT: Shopee Mall Red
-        dark: '#b00116',         // EXACT: Hover state  
-        light: '#ffe6e9',        // EXACT: Light background
-    },
-    
-    // GOLD ACCENT (for category badges from reference)
-    gold: {
-        DEFAULT: '#c5a368',      // EXACT: .card-category color
-        dark: '#a88747',         // EXACT: Dark gold variant
-    },
-    
-    // NEUTRAL PALETTE (EXACT from reference CSS variables)
-    neutral: {
-        900: '#212121',  // EXACT: --neutral-900 (Primary text)
-        700: '#424242',  // EXACT: --neutral-700 (Secondary text)
-        500: '#757575',  // EXACT: --neutral-500 (Tertiary text)
-        300: '#bdbdbd',  // EXACT: --neutral-300 (Borders, dividers)
-        200: '#e0e0e0',  // EXACT: --neutral-200 (Light borders)
-        100: '#f5f5f5',  // EXACT: --neutral-100 (Background)
-        50: '#fafafa',   // EXACT: --neutral-50 (Cards background)
-        white: '#ffffff',
-    },
-
-    // Wedding theme colors (keep for backward compatibility)
+    // Primary Colors
     blush: {
         DEFAULT: '#F7CAC9',
         light: '#FCE4E3',
@@ -50,17 +21,17 @@ export const colors = {
     sageLight: '#C5E0B4',
     blushLight: '#FCE4E3',
 
-    // Functional Colors (updated to match reference)
-    success: '#4caf50',          // EXACT: --success (#4caf50)
-    warning: '#ff9800',          // EXACT: --warning (rating stars)
-    error: '#f44336',            // EXACT: --error
-    info: '#2196f3',             // EXACT: --info
+    // Functional Colors
+    success: '#88B04B',
+    warning: '#FFB347',
+    error: '#FF6B6B',
+    info: '#6C63FF',
 
-    // WhatsApp Colors (keep)
+    // WhatsApp Colors
     whatsapp: '#25D366',
     whatsappDark: '#128C7E',
 
-    // Gray Scale (deprecated, use neutral instead)
+    // Neutrals (Gray Scale)
     gray: {
         50: '#FAFAFA',
         100: '#F5F5F5',
@@ -162,12 +133,12 @@ export const breakpoints = {
 export const weddingTokens = {
     // Product categories dengan warna
     categories: {
-        venue: { color: colors.blush.DEFAULT, icon: 'ðŸ›ï¸' },
-        photographer: { color: colors.sage.DEFAULT, icon: 'ðŸ“¸' },
-        catering: { color: colors.dustyRose, icon: 'ðŸ½ï¸' },
-        decoration: { color: colors.info, icon: 'ðŸŽ¨' },
-        dress: { color: colors.blush.light, icon: 'ðŸ‘°' },
-        makeup: { color: colors.warning, icon: 'ðŸ’„' },
+        venue: { color: colors.blush.DEFAULT, icon: '🏛️' },
+        photographer: { color: colors.sage.DEFAULT, icon: '📸' },
+        catering: { color: colors.dustyRose, icon: '🍽️' },
+        decoration: { color: colors.info, icon: '🎨' },
+        dress: { color: colors.blush.light, icon: '👰' },
+        makeup: { color: colors.warning, icon: '💄' },
     },
 
     // Price units display

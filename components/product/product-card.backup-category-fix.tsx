@@ -1,4 +1,4 @@
-﻿// components/product/product-card.tsx
+// components/product/product-card.tsx
 'use client'
 
 import { Eye, MapPin } from "lucide-react"
@@ -90,7 +90,7 @@ export function ProductCard({
         >
             {/* CARD SHOPEE STYLE - DIV BIASA */}
             <div className={cn(
-                "bg-white border border-neutral-200 rounded-[3px] overflow-hidden",
+                "bg-white border border-[#E5E5E5] rounded-[3px] overflow-hidden",
                 "shadow-sm hover:shadow-md transition-shadow duration-200",
                 prefersReducedMotion ? "" : "active:scale-[0.98]",
                 "cursor-pointer"
@@ -112,33 +112,33 @@ export function ProductCard({
                     />
 
                     {/* Badge Kategori - kiri atas (diperbesar) */}
-                    <span className="bg-[#d0011b] text-white text-[10px] font-bold uppercase px-1.5 py-0.5 rounded-br-[2px]">
+                    <span className="bg-[#EE4D2D] text-white text-[10px] font-medium px-1.5 py-0.5 rounded-br-[2px]">
                         {product.category}
                     </span>
 
                     {/* Viewer Count - kanan atas (diperbesar, sejajar) 
-                    <div className="absolute top-1.5 right-1.5 flex items-center gap-2 bg-[#d0011b] text-white rounded-[2px] px-1.5 py-0.5">
+                    <div className="absolute top-1.5 right-1.5 flex items-center gap-2 bg-[#EE4D2D] text-white rounded-[2px] px-1.5 py-0.5">
                         <Eye className="h-2.5 w-2.5" />
-                        <span className="text-[11px] font-medium">{viewCount.toLocaleString('id-ID')}</span>
+                        <span className="text-[9px] font-medium">{viewCount.toLocaleString('id-ID')}</span>
                     </div>*/}
                 </div>
 
                 {/* Content Section - FIXED SPACING */}
                 <div className="p-1.5 space-y-1">
                     {/* Title - FIXED HEIGHT 2 lines max */}
-                    <h3 className="font-bold text-neutral-900 text-[16px] sm:text-[14px] leading-tight line-clamp-2 h-8">
+                    <h3 className="font-normal text-[#212121] text-[11px] leading-tight line-clamp-2 h-8">
                         {product.name}
                     </h3>
 
                     {/* Location - SINGLE LINE */}
                     <div className="flex items-center gap-1">
-                        <MapPin className="h-2 w-2 text-neutral-500 flex-shrink-0" />
+                        <MapPin className="h-2 w-2 text-[#757575] flex-shrink-0" />
                         <div className="flex-1 min-w-0">
-                            <div className="text-[11px] text-neutral-500 truncate">
+                            <div className="text-[9px] text-[#757575] truncate">
                                 {city}
                             </div>
                             {district !== '-' && (
-                                <div className="text-[11px] text-neutral-500 truncate pl-0.5">
+                                <div className="text-[8px] text-[#757575] truncate pl-0.5">
                                     {district}
                                 </div>
                             )}
@@ -146,17 +146,17 @@ export function ProductCard({
                     </div>
 
                     {/* Price Label */}
-                    <div className="text-[11px] text-neutral-500">
+                    <div className="text-[8px] text-[#757575]">
                         Harga mulai
                     </div>
 
                     {/* Price */}
                     <div className="flex items-baseline">
-                        <span className="text-[#d0011b] font-bold text-[16px] sm:text-[14px] leading-none">
+                        <span className="text-[#EE4D2D] font-bold text-[13px] leading-none">
                             Rp{formatPrice(displayPrice)}
                         </span>
                         {product.price_unit && (
-                            <span className="text-neutral-500 text-[10px] ml-0.5">
+                            <span className="text-[#757575] text-[10px] ml-0.5">
                                 /{product.price_unit}
                             </span>
                         )}

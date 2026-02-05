@@ -1,4 +1,4 @@
-﻿// File: components/product/contact-button.tsx (UPDATED VERSION)
+// File: components/product/contact-button.tsx (UPDATED VERSION)
 "use client"
 
 import { useState } from "react"
@@ -15,7 +15,7 @@ interface ContactButtonProps {
     vendorWhatsApp: string
     productId: string
     productName: string
-    vendorName: string // â† JANGAN OPTIONAL, HARUS REQUIRED
+    vendorName: string // ← JANGAN OPTIONAL, HARUS REQUIRED
     variant?: 'default' | 'large' | 'sticky'
     className?: string
 }
@@ -139,7 +139,7 @@ export function ContactButton({
             onClick={handleContact}
             disabled={isLoading}
             className={cn(
-                "bg-primary hover:bg-primary/90 text-white transition-all",
+                "bg-whatsapp hover:bg-whatsapp-dark text-white transition-all",
                 variants[variant],
                 isLoading && "opacity-70 cursor-not-allowed",
                 className

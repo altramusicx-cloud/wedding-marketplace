@@ -1,7 +1,7 @@
-﻿// components/layout/header.tsx - REVISI FINAL
+﻿// components/layout/header.tsx - ORIGINAL VERSION
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
@@ -12,8 +12,7 @@ import {
     Filter,
     ChevronDown,
     ShoppingBag,
-    Search,
-    Bell
+    Search
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -33,7 +32,6 @@ import { Container } from './container'
 export function Header() {
     const [isFilterModalOpen, setIsFilterModalOpen] = useState(false)
     const [searchQuery, setSearchQuery] = useState('')
-    const [hasNotifications, setHasNotifications] = useState(true)
     const searchRef = useRef<HTMLDivElement>(null)
 
     const pathname = usePathname()
@@ -52,39 +50,30 @@ export function Header() {
 
     return (
         <>
-            <header className="sticky top-0 z-50 w-full bg-[#d0011b] border-b border-[#b00116]">
+            <header className="sticky top-0 z-50 w-full bg-primary border-b border-primary-dark">
                 <Container size="xl" className="py-0">
-                    {/* HEADER HEIGHT: Mobile tipis (h-12), Desktop normal (h-16) */}
-                    <div className="flex h-12 lg:h-16 items-center justify-between gap-3">
-
-                        {/* === DESKTOP ONLY: Logo (kiri) === */}
-                        <div className="hidden lg:flex items-center flex-shrink-0">
+                    <div className="flex h-16 items-center justify-between gap-3">
+                        {/* Logo */}
+                        <div className="flex items-center flex-shrink-0">
                             <Link href="/" className="flex items-center">
-                                <div className="h-7 w-7 rounded-lg bg-white/20 flex items-center justify-center">
+                                <div className="h-7 w-7 rounded-lg bg-primary flex items-center justify-center">
                                     <Heart className="h-4 w-4 text-white" />
                                 </div>
-                                <span className="font-bold text-lg text-white ml-2">
+                                <span className="font-bold text-lg text-primary hidden sm:inline-block ml-2">
                                     WeddingMarket
                                 </span>
                             </Link>
                         </div>
 
-                        {/* === SEARCH BAR (Mobile & Tablet: full, Desktop: normal) === */}
-                        <div className={cn(
-                            "flex-1",
-                            // Mobile & Tablet: full width
-                            "w-full md:w-full",
-                            // Desktop: normal width
-                            "lg:max-w-2xl lg:mx-4"
-                        )}>
+                        {/* MOBILE: SearchBar kecil */}
+                        <div className="flex-1 md:hidden">
                             <form onSubmit={handleSearchSubmit} className="w-full">
                                 <div className="relative" ref={searchRef}>
-                                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400 h-4 w-4" />
+                                    <Search className="absolute left-2.5 top-1/2 transform -translate-y-1/2 text-neutral-500 h-3.5 w-3.5" />
                                     <Input
                                         type="search"
-                                        placeholder="Cari venue, photographer, catering..."
-                                        // Mobile: height lebih kecil
-                                        className="pl-10 pr-4 w-full bg-white border-white/30 focus:border-white h-9 lg:h-10"
+                                        placeholder="Cari..."
+                                        className="pl-8 pr-3 h-9 text-sm"
                                         value={searchQuery}
                                         onChange={(e) => setSearchQuery(e.target.value)}
                                     />
@@ -92,59 +81,45 @@ export function Header() {
                             </form>
                         </div>
 
-                        {/* === RIGHT SIDE === */}
+                        {/* Desktop Search Bar */}
+                        <div className="hidden md:flex flex-1 max-w-2xl mx-4">
+                            <form onSubmit={handleSearchSubmit} className="w-full">
+                                <div className="relative">
+                                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-500 h-4 w-4" />
+                                    <Input
+                                        type="search"
+                                        placeholder="Cari venue, photographer, catering..."
+                                        className="pl-10 pr-4 w-full"
+                                        value={searchQuery}
+                                        onChange={(e) => setSearchQuery(e.target.value)}
+                                    />
+                                </div>
+                            </form>
+                        </div>
+
+                        {/* Right Side Actions */}
                         <div className="flex items-center gap-2">
-                            {/* MOBILE & TABLET: Hanya Filter Button saja */}
-                            <div className="flex lg:hidden items-center">
-                                <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    // Mobile: button lebih kecil
-                                    className="h-9 w-9 hover:bg-white/10"
-                                    onClick={() => setIsFilterModalOpen(true)}
-                                >
-                                    <Filter className="h-5 w-5 text-white" />
-                                </Button>
-                            </div>
-
-                            {/* DESKTOP ONLY: Semua actions */}
-                            <div className="hidden lg:flex items-center gap-4">
-                                {/* Notifications */}
-                                <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    asChild
-                                    className="h-9 w-9 hover:bg-white/10 relative"
-                                >
-                                    <Link href="/notifications">
-                                        <Bell className="h-4 w-4 text-white" />
-                                        {hasNotifications && (
-                                            <span className="absolute -top-1 -right-1 h-4 w-4 bg-white text-[#d0011b] text-[10px] font-bold rounded-full flex items-center justify-center">
-                                                3
-                                            </span>
-                                        )}
-                                    </Link>
-                                </Button>
-
+                            {/* Desktop Actions */}
+                            <div className="hidden md:flex items-center gap-4">
                                 {/* Favorites */}
                                 <Button
                                     variant="ghost"
                                     size="icon"
                                     asChild
-                                    className="h-9 w-9 hover:bg-white/10"
+                                    className="h-9 w-9"
                                 >
                                     <Link href="/dashboard?tab=favorites">
-                                        <Heart className="h-4 w-4 text-white" />
+                                        <Heart className="h-4 w-4" />
                                     </Link>
                                 </Button>
 
                                 {/* Auth Section */}
                                 {isLoading ? (
-                                    <div className="h-9 w-24 bg-white/20 rounded animate-pulse"></div>
+                                    <div className="h-9 w-24 bg-neutral-200 rounded animate-pulse"></div>
                                 ) : isAuthenticated ? (
                                     <DropdownMenu>
                                         <DropdownMenuTrigger asChild>
-                                            <Button variant="ghost" className="h-9 px-2 hover:bg-white/10 text-white">
+                                            <Button variant="ghost" className="h-9 px-2">
                                                 <div className="h-7 w-7 rounded-full bg-white/20 flex items-center justify-center mr-2">
                                                     {profile?.avatar_url ? (
                                                         <Image
@@ -155,10 +130,10 @@ export function Header() {
                                                             className="h-full w-full rounded-full object-cover"
                                                         />
                                                     ) : (
-                                                        <User className="h-3 w-3 text-white" />
+                                                        <User className="h-3 w-3 text-white/90" />
                                                     )}
                                                 </div>
-                                                <span className="text-sm font-medium">
+                                                <span className="text-sm font-medium text-white hidden lg:inline-block">
                                                     {profile?.full_name?.split(' ')[0] || 'User'}
                                                 </span>
                                                 <ChevronDown className="h-3 w-3 ml-1" />
@@ -184,12 +159,27 @@ export function Header() {
                                                 </Link>
                                             </DropdownMenuItem>
 
-                                            {/* HAPUS "Jadi Vendor" dan "Admin Panel" - hanya untuk vendor */}
-                                            {profile?.is_vendor && (
+                                            {profile?.is_vendor ? (
                                                 <DropdownMenuItem asChild>
                                                     <Link href="/dashboard/vendor" className="w-full cursor-pointer">
                                                         <ShoppingBag className="mr-2 h-4 w-4" />
                                                         Vendor Dashboard
+                                                    </Link>
+                                                </DropdownMenuItem>
+                                            ) : (
+                                                <DropdownMenuItem asChild>
+                                                    <Link href="/dashboard/vendor/register" className="w-full cursor-pointer">
+                                                        <ShoppingBag className="mr-2 h-4 w-4" />
+                                                        Jadi Vendor
+                                                    </Link>
+                                                </DropdownMenuItem>
+                                            )}
+
+                                            {profile?.is_admin && (
+                                                <DropdownMenuItem asChild>
+                                                    <Link href="/admin" className="w-full cursor-pointer">
+                                                        <User className="mr-2 h-4 w-4" />
+                                                        Admin Panel
                                                     </Link>
                                                 </DropdownMenuItem>
                                             )}
@@ -203,24 +193,26 @@ export function Header() {
                                     </DropdownMenu>
                                 ) : (
                                     <div className="flex items-center gap-2">
-                                        <Button
-                                            variant="outline"
-                                            asChild
-                                            size="sm"
-                                            className="border-white text-white bg-transparent hover:bg-transparent"
-                                        >
+                                        <Button variant="ghost" asChild size="sm">
                                             <Link href="/login">Login</Link>
                                         </Button>
-                                        <Button
-                                            variant="outline"
-                                            asChild
-                                            size="sm"
-                                            className="border-white text-white bg-transparent hover:bg-transparent"
-                                        >
+                                        <Button asChild size="sm" className="bg-primary hover:bg-primary/90 text-white">
                                             <Link href="/register">Daftar</Link>
                                         </Button>
                                     </div>
                                 )}
+                            </div>
+
+                            {/* Mobile Actions */}
+                            <div className="flex md:hidden items-center">
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="h-9 w-9"
+                                    onClick={() => setIsFilterModalOpen(true)}
+                                >
+                                    <Filter className="h-5 w-5" />
+                                </Button>
                             </div>
                         </div>
                     </div>
@@ -235,3 +227,8 @@ export function Header() {
         </>
     )
 }
+
+
+
+
+
