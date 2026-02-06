@@ -1,4 +1,4 @@
-﻿// app\(auth)\register\register-form.tsx
+// app\(auth)\register\register-form.tsx
 'use client'
 
 import { useState } from 'react'
@@ -95,14 +95,14 @@ export default function RegisterForm() {
 
             <div className="space-y-4">
                 <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                    <label htmlFor="email" className="block text-sm font-medium text-neutral-700 mb-1">
                         Email *
                     </label>
                     <Input
                         id="email"
                         type="email"
                         placeholder="nama@email.com"
-                        className={`w-full ${errors.email ? 'border-red-500 focus-visible:ring-red-500' : 'border-gray-300'}`}
+                        className={`w-full ${errors.email ? 'border-red-500 focus-visible:ring-red-500' : 'border-neutral-300'}`}
                         {...register('email')}
                     />
                     {errors.email && (
@@ -111,14 +111,14 @@ export default function RegisterForm() {
                 </div>
 
                 <div>
-                    <label htmlFor="full_name" className="block text-sm font-medium text-gray-700 mb-1">
+                    <label htmlFor="full_name" className="block text-sm font-medium text-neutral-700 mb-1">
                         Nama Lengkap *
                     </label>
                     <Input
                         id="full_name"
                         type="text"
                         placeholder="Nama lengkap Anda"
-                        className={`w-full ${errors.full_name ? 'border-red-500 focus-visible:ring-red-500' : 'border-gray-300'}`}
+                        className={`w-full ${errors.full_name ? 'border-red-500 focus-visible:ring-red-500' : 'border-neutral-300'}`}
                         {...register('full_name')}
                     />
                     {errors.full_name && (
@@ -127,52 +127,52 @@ export default function RegisterForm() {
                 </div>
 
                 <div>
-                    <label htmlFor="whatsapp_number" className="block text-sm font-medium text-gray-700 mb-1">
+                    <label htmlFor="whatsapp_number" className="block text-sm font-medium text-neutral-700 mb-1">
                         Nomor WhatsApp *
                     </label>
                     <Input
                         id="whatsapp_number"
                         type="tel"
                         placeholder="6281234567890"
-                        className={`w-full ${errors.whatsapp_number ? 'border-red-500 focus-visible:ring-red-500' : 'border-gray-300'}`}
+                        className={`w-full ${errors.whatsapp_number ? 'border-red-500 focus-visible:ring-red-500' : 'border-neutral-300'}`}
                         {...register('whatsapp_number')}
                     />
                     {errors.whatsapp_number && (
                         <p className="mt-1 text-sm text-red-600">{errors.whatsapp_number.message}</p>
                     )}
-                    <p className="text-xs text-gray-500 mt-1">
+                    <p className="text-xs text-neutral-500 mt-1">
                         Gunakan format: 6281234567890 (tanpa + atau spasi)
                     </p>
                 </div>
 
                 <div>
-                    <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+                    <label htmlFor="password" className="block text-sm font-medium text-neutral-700 mb-1">
                         Password *
                     </label>
                     <Input
                         id="password"
                         type="password"
                         placeholder="Minimal 8 karakter"
-                        className={`w-full ${errors.password ? 'border-red-500 focus-visible:ring-red-500' : 'border-gray-300'}`}
+                        className={`w-full ${errors.password ? 'border-red-500 focus-visible:ring-red-500' : 'border-neutral-300'}`}
                         {...register('password')}
                     />
                     {errors.password && (
                         <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>
                     )}
-                    <p className="text-xs text-gray-500 mt-1">
+                    <p className="text-xs text-neutral-500 mt-1">
                         Harus mengandung huruf kecil, huruf besar, dan angka
                     </p>
                 </div>
 
                 <div>
-                    <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">
+                    <label htmlFor="confirmPassword" className="block text-sm font-medium text-neutral-700 mb-1">
                         Konfirmasi Password *
                     </label>
                     <Input
                         id="confirmPassword"
                         type="password"
                         placeholder="Ketik ulang password"
-                        className={`w-full ${errors.confirmPassword ? 'border-red-500 focus-visible:ring-red-500' : 'border-gray-300'}`}
+                        className={`w-full ${errors.confirmPassword ? 'border-red-500 focus-visible:ring-red-500' : 'border-neutral-300'}`}
                         {...register('confirmPassword')}
                     />
                     {errors.confirmPassword && (
@@ -181,14 +181,14 @@ export default function RegisterForm() {
                 </div>
             </div>
 
-            <div className="text-sm text-gray-600">
+            <div className="text-sm text-neutral-600">
                 <p>
                     Dengan mendaftar, Anda menyetujui{' '}
-                    <a href="#" className="text-blush hover:text-blush/80">
+                    <a href="#" className="text-primary hover:text-primary/80">
                         Syarat & Ketentuan
                     </a>{' '}
                     dan{' '}
-                    <a href="#" className="text-blush hover:text-blush/80">
+                    <a href="#" className="text-primary hover:text-primary/80">
                         Kebijakan Privasi
                     </a>{' '}
                     kami.

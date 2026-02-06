@@ -1,4 +1,4 @@
-﻿// app/dashboard/layout.tsx - USER DASHBOARD LAYOUT
+// app/dashboard/layout.tsx - USER DASHBOARD LAYOUT
 import { Header } from '@/components/layout/header'
 
 export default function DashboardLayout({
@@ -7,7 +7,7 @@ export default function DashboardLayout({
     children: React.ReactNode
 }) {
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-neutral-50">
             {/* Header untuk dashboard (bisa beda variant nanti) */}
             <Header />
             

@@ -1,4 +1,4 @@
-﻿"use client"
+"use client"
 
 import { useState, useEffect } from "react"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
@@ -131,7 +131,7 @@ export function ImageLightbox({
                         <h3 className="font-medium truncate max-w-md">
                             {productName} - Gambar {currentIndex + 1} / {images.length}
                         </h3>
-                        <p className="text-sm text-gray-300">
+                        <p className="text-sm text-neutral-300">
                             {currentImage.split("/").pop()}
                         </p>
                     </div>
@@ -217,7 +217,7 @@ export function ImageLightbox({
                                         setZoomLevel(1)
                                         setPosition({ x: 0, y: 0 })
                                     }}
-                                    className={`flex-shrink-0 w-16 h-16 rounded-md overflow-hidden border-2 transition-all ${currentIndex === index ? "border-blue-500 scale-105" : "border-transparent hover:border-gray-400"}`}
+                                    className={`flex-shrink-0 w-16 h-16 rounded-md overflow-hidden border-2 transition-all ${currentIndex === index ? "border-blue-500 scale-105" : "border-transparent hover:border-neutral-400"}`}
                                 >
                                     <Image
                                         src={img}
@@ -272,8 +272,8 @@ export function ImageLightbox({
 
                     {/* Zoom Instructions */}
                     {zoomLevel > 1 && (
-                        <p className="text-center text-xs text-gray-300 mt-2">
-                            📍 Klik & drag untuk geser gambar | ESC untuk tutup
+                        <p className="text-center text-xs text-neutral-300 mt-2">
+                            ?? Klik & drag untuk geser gambar | ESC untuk tutup
                         </p>
                     )}
                 </div>

@@ -1,4 +1,4 @@
-﻿// File: components/ui/button.tsx
+// File: components/ui/button.tsx
 // ROADMAP DAY 2: Update colors ONLY
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"

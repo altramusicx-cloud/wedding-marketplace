@@ -29,7 +29,7 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
     return (
         <div className="space-y-4">
             {/* Main Image - CLICK TO ZOOM */}
-            <div className="relative aspect-square overflow-hidden rounded-lg bg-gray-100 group cursor-zoom-in">
+            <div className="relative aspect-square overflow-hidden rounded-lg bg-neutral-100 group cursor-zoom-in">
                 <Image
                     src={mainImage}
                     alt={`${productName} - Gambar ${selectedIndex + 1}`}
@@ -81,8 +81,8 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
                             className={cn(
                                 "flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-all",
                                 selectedIndex === index
-                                    ? "border-blush ring-2 ring-blush/20"
-                                    : "border-gray-200 hover:border-gray-300"
+                                    ? "border-primary ring-2 ring-primary/20"
+                                    : "border-neutral-200 hover:border-neutral-300"
                             )}
                         >
                             <Image

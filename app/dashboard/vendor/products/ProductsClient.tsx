@@ -1,4 +1,4 @@
-﻿// app\dashboard\vendor\products\ProductsClient.tsx
+// app\dashboard\vendor\products\ProductsClient.tsx
 "use client"
 
 import { useState, useEffect } from "react"
@@ -34,7 +34,7 @@ const STATUS_COLORS = {
     approved: "bg-green-100 text-green-800",
     pending: "bg-yellow-100 text-yellow-800",
     rejected: "bg-red-100 text-red-800",
-    draft: "bg-gray-100 text-gray-800",
+    draft: "bg-neutral-100 text-neutral-800",
 }
 
 const STATUS_LABELS = {
@@ -150,9 +150,9 @@ export default function ProductsClient({
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
                     <h1 className="text-3xl font-bold text-charcoal">Kelola Produk</h1>
-                    <p className="text-gray-600">Lihat dan kelola semua produk Anda</p>
+                    <p className="text-neutral-600">Lihat dan kelola semua produk Anda</p>
                 </div>
-                <Button asChild className="bg-blush hover:bg-blush/90 text-charcoal">
+                <Button asChild className="bg-primary hover:bg-primary/90 text-charcoal">
                     <Link href="/dashboard/vendor/products/new">
                         <PlusCircle className="mr-2 h-4 w-4" />
                         Tambah Produk
@@ -165,7 +165,7 @@ export default function ProductsClient({
                 <CardContent className="p-6">
                     <div className="flex flex-col md:flex-row gap-4">
                         <div className="flex-1 relative">
-                            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-neutral-400" />
                             <Input
                                 placeholder="Cari produk atau kategori..."
                                 value={search}
@@ -196,25 +196,25 @@ export default function ProductsClient({
                 <Card>
                     <CardContent className="p-4">
                         <div className="text-2xl font-bold text-green-600">{stats.approved}</div>
-                        <p className="text-sm text-gray-600">Disetujui</p>
+                        <p className="text-sm text-neutral-600">Disetujui</p>
                     </CardContent>
                 </Card>
                 <Card>
                     <CardContent className="p-4">
                         <div className="text-2xl font-bold text-yellow-600">{stats.pending}</div>
-                        <p className="text-sm text-gray-600">Menunggu</p>
+                        <p className="text-sm text-neutral-600">Menunggu</p>
                     </CardContent>
                 </Card>
                 <Card>
                     <CardContent className="p-4">
                         <div className="text-2xl font-bold">{stats.totalViews}</div>
-                        <p className="text-sm text-gray-600">Total Dilihat</p>
+                        <p className="text-sm text-neutral-600">Total Dilihat</p>
                     </CardContent>
                 </Card>
                 <Card>
                     <CardContent className="p-4">
                         <div className="text-2xl font-bold">{stats.totalContacts}</div>
-                        <p className="text-sm text-gray-600">Total Kontak</p>
+                        <p className="text-sm text-neutral-600">Total Kontak</p>
                     </CardContent>
                 </Card>
             </div>
@@ -230,8 +230,8 @@ export default function ProductsClient({
                 <CardContent>
                     {filteredProducts.length === 0 ? (
                         <div className="text-center py-8">
-                            <p className="text-gray-500">Tidak ada produk ditemukan</p>
-                            <Button asChild className="mt-4 bg-blush hover:bg-blush/90">
+                            <p className="text-neutral-500">Tidak ada produk ditemukan</p>
+                            <Button asChild className="mt-4 bg-primary hover:bg-primary/90">
                                 <Link href="/dashboard/vendor/products/new">
                                     <PlusCircle className="mr-2 h-4 w-4" />
                                     Tambah Produk Pertama
@@ -244,24 +244,24 @@ export default function ProductsClient({
                                 <table className="w-full">
                                     <thead>
                                         <tr className="border-b">
-                                            <th className="text-left py-3 px-4 text-sm font-medium text-gray-700">Produk</th>
-                                            <th className="text-left py-3 px-4 text-sm font-medium text-gray-700">Kategori</th>
-                                            <th className="text-left py-3 px-4 text-sm font-medium text-gray-700">Status</th>
-                                            <th className="text-left py-3 px-4 text-sm font-medium text-gray-700">Harga</th>
-                                            <th className="text-left py-3 px-4 text-sm font-medium text-gray-700">Dibuat</th>
-                                            <th className="text-left py-3 px-4 text-sm font-medium text-gray-700">Aksi</th>
+                                            <th className="text-left py-3 px-4 text-sm font-medium text-neutral-700">Produk</th>
+                                            <th className="text-left py-3 px-4 text-sm font-medium text-neutral-700">Kategori</th>
+                                            <th className="text-left py-3 px-4 text-sm font-medium text-neutral-700">Status</th>
+                                            <th className="text-left py-3 px-4 text-sm font-medium text-neutral-700">Harga</th>
+                                            <th className="text-left py-3 px-4 text-sm font-medium text-neutral-700">Dibuat</th>
+                                            <th className="text-left py-3 px-4 text-sm font-medium text-neutral-700">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {currentProducts.map((product) => (
-                                            <tr key={product.id} className="border-b hover:bg-gray-50">
+                                            <tr key={product.id} className="border-b hover:bg-neutral-50">
                                                 <td className="py-4 px-4">
                                                     <div>
                                                         <p className="font-medium">{product.name}</p>
-                                                        <p className="text-sm text-gray-500">
+                                                        <p className="text-sm text-neutral-500">
                                                             {formatDate(product.created_at)}
                                                             {product.is_featured && (
-                                                                <span className="ml-2 inline-block bg-blush text-charcoal text-xs px-2 py-0.5 rounded">
+                                                                <span className="ml-2 inline-block bg-primary text-charcoal text-xs px-2 py-0.5 rounded">
                                                                     Featured
                                                                 </span>
                                                             )}
@@ -269,7 +269,7 @@ export default function ProductsClient({
                                                     </div>
                                                 </td>
                                                 <td className="py-4 px-4">
-                                                    <span className="inline-block bg-gray-100 text-gray-800 text-sm px-3 py-1 rounded capitalize">
+                                                    <span className="inline-block bg-neutral-100 text-neutral-800 text-sm px-3 py-1 rounded capitalize">
                                                         {product.category}
                                                     </span>
                                                 </td>
@@ -289,7 +289,7 @@ export default function ProductsClient({
                                                         'Contact for price'
                                                     )}
                                                 </td>
-                                                <td className="py-4 px-4 text-sm text-gray-600">
+                                                <td className="py-4 px-4 text-sm text-neutral-600">
                                                     {formatDate(product.created_at)}
                                                 </td>
                                                 <td className="py-4 px-4">
@@ -347,7 +347,7 @@ export default function ProductsClient({
                             {/* Pagination */}
                             {totalPages > 1 && (
                                 <div className="flex items-center justify-between mt-6">
-                                    <p className="text-sm text-gray-600">
+                                    <p className="text-sm text-neutral-600">
                                         Menampilkan {startIndex + 1}-{Math.min(endIndex, filteredProducts.length)} dari {filteredProducts.length} produk
                                     </p>
                                     <div className="flex items-center gap-2">
@@ -365,7 +365,7 @@ export default function ProductsClient({
                                                 key={page}
                                                 variant={currentPage === page ? "default" : "outline"}
                                                 size="icon"
-                                                className={currentPage === page ? "bg-blush hover:bg-blush/90" : ""}
+                                                className={currentPage === page ? "bg-primary hover:bg-primary/90" : ""}
                                                 onClick={() => setCurrentPage(page)}
                                             >
                                                 {page}

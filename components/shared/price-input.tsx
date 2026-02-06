@@ -1,4 +1,4 @@
-﻿// components\shared\price-input.tsx
+// components\shared\price-input.tsx
 "use client"
 
 import { Input } from "@/components/ui/input"
@@ -63,7 +63,7 @@ export function PriceInput({
 
   return (
     <div className="relative">
-      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm font-medium">
+      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500 text-sm font-medium">
         Rp
       </span>
       <Input

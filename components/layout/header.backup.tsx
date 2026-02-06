@@ -1,4 +1,4 @@
-﻿// components/layout/header.tsx - ORIGINAL VERSION
+// components/layout/header.tsx - ORIGINAL VERSION
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
@@ -56,7 +56,7 @@ export function Header() {
                         {/* Logo */}
                         <div className="flex items-center flex-shrink-0">
                             <Link href="/" className="flex items-center">
-                                <div className="h-7 w-7 rounded-lg bg-blush flex items-center justify-center">
+                                <div className="h-7 w-7 rounded-lg bg-primary flex items-center justify-center">
                                     <Heart className="h-4 w-4 text-white" />
                                 </div>
                                 <span className="font-bold text-lg text-charcoal hidden sm:inline-block ml-2">
@@ -69,7 +69,7 @@ export function Header() {
                         <div className="flex-1 md:hidden">
                             <form onSubmit={handleSearchSubmit} className="w-full">
                                 <div className="relative" ref={searchRef}>
-                                    <Search className="absolute left-2.5 top-1/2 transform -translate-y-1/2 text-gray-400 h-3.5 w-3.5" />
+                                    <Search className="absolute left-2.5 top-1/2 transform -translate-y-1/2 text-neutral-400 h-3.5 w-3.5" />
                                     <Input
                                         type="search"
                                         placeholder="Cari..."
@@ -85,7 +85,7 @@ export function Header() {
                         <div className="hidden md:flex flex-1 max-w-2xl mx-4">
                             <form onSubmit={handleSearchSubmit} className="w-full">
                                 <div className="relative">
-                                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400 h-4 w-4" />
                                     <Input
                                         type="search"
                                         placeholder="Cari venue, photographer, catering..."
@@ -115,12 +115,12 @@ export function Header() {
 
                                 {/* Auth Section */}
                                 {isLoading ? (
-                                    <div className="h-9 w-24 bg-gray-200 rounded animate-pulse"></div>
+                                    <div className="h-9 w-24 bg-neutral-200 rounded animate-pulse"></div>
                                 ) : isAuthenticated ? (
                                     <DropdownMenu>
                                         <DropdownMenuTrigger asChild>
                                             <Button variant="ghost" className="h-9 px-2">
-                                                <div className="h-7 w-7 rounded-full bg-gray-100 flex items-center justify-center mr-2">
+                                                <div className="h-7 w-7 rounded-full bg-neutral-100 flex items-center justify-center mr-2">
                                                     {profile?.avatar_url ? (
                                                         <Image
                                                             src={profile.avatar_url}
@@ -130,7 +130,7 @@ export function Header() {
                                                             className="h-full w-full rounded-full object-cover"
                                                         />
                                                     ) : (
-                                                        <User className="h-3 w-3 text-gray-600" />
+                                                        <User className="h-3 w-3 text-neutral-600" />
                                                     )}
                                                 </div>
                                                 <span className="text-sm font-medium hidden lg:inline-block">
@@ -139,13 +139,13 @@ export function Header() {
                                                 <ChevronDown className="h-3 w-3 ml-1" />
                                             </Button>
                                         </DropdownMenuTrigger>
-                                        <DropdownMenuContent align="end" className="w-56 bg-white border border-gray-200 shadow-lg">
+                                        <DropdownMenuContent align="end" className="w-56 bg-white border border-neutral-200 shadow-lg">
                                             <DropdownMenuLabel>
                                                 <div className="flex flex-col space-y-1">
                                                     <p className="text-sm font-medium leading-none">
                                                         {profile?.full_name || 'User'}
                                                     </p>
-                                                    <p className="text-xs leading-none text-gray-500">
+                                                    <p className="text-xs leading-none text-neutral-500">
                                                         {user?.email}
                                                     </p>
                                                 </div>
@@ -196,7 +196,7 @@ export function Header() {
                                         <Button variant="ghost" asChild size="sm">
                                             <Link href="/login">Login</Link>
                                         </Button>
-                                        <Button asChild size="sm" className="bg-blush hover:bg-blush/90 text-charcoal">
+                                        <Button asChild size="sm" className="bg-primary hover:bg-primary/90 text-charcoal">
                                             <Link href="/register">Daftar</Link>
                                         </Button>
                                     </div>

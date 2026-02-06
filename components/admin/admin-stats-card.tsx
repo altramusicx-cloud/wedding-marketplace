@@ -1,4 +1,4 @@
-﻿// components/admin/admin-stats-card.tsx
+// components/admin/admin-stats-card.tsx
 import { ReactNode } from 'react'
 import { cn } from '@/lib/utils'
 
@@ -20,7 +20,7 @@ export default function StatsCard({
   className
 }: StatsCardProps) {
   const variantStyles = {
-    default: 'border-gray-200',
+    default: 'border-neutral-200',
     primary: 'border-primary/20 bg-primary/5',
     success: 'border-green-200 bg-green-50',
     warning: 'border-yellow-200 bg-yellow-50',
@@ -28,7 +28,7 @@ export default function StatsCard({
   }
 
   const iconStyles = {
-    default: 'bg-gray-100 text-gray-600',
+    default: 'bg-neutral-100 text-neutral-600',
     primary: 'bg-primary/10 text-primary',
     success: 'bg-green-100 text-green-600',
     warning: 'bg-yellow-100 text-yellow-600',
@@ -36,7 +36,7 @@ export default function StatsCard({
   }
 
   const changeStyles = {
-    default: 'text-gray-600',
+    default: 'text-neutral-600',
     primary: 'text-primary',
     success: 'text-green-600',
     warning: 'text-yellow-600',
@@ -51,8 +51,8 @@ export default function StatsCard({
     )}>
       <div className="flex justify-between items-start">
         <div>
-          <p className="text-sm font-medium text-gray-600 mb-1">{title}</p>
-          <p className="text-2xl font-bold text-gray-900">{value}</p>
+          <p className="text-sm font-medium text-neutral-600 mb-1">{title}</p>
+          <p className="text-2xl font-bold text-neutral-900">{value}</p>
           {change && (
             <p className={cn("text-xs font-medium mt-1", changeStyles[variant])}>
               {change}

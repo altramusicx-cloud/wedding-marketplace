@@ -1,4 +1,4 @@
-﻿import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { 
@@ -26,7 +26,7 @@ export function ProductApprovalCard({ product, readonly = false }: ProductApprov
         {/* Product Image */}
         <div className="md:w-1/4 p-4">
           {product.images && product.images.length > 0 ? (
-            <div className="relative aspect-square rounded-lg overflow-hidden bg-gray-100">
+            <div className="relative aspect-square rounded-lg overflow-hidden bg-neutral-100">
               <img
                 src={product.images[0].url}
                 alt={product.name}
@@ -34,9 +34,9 @@ export function ProductApprovalCard({ product, readonly = false }: ProductApprov
               />
             </div>
           ) : (
-            <div className="aspect-square rounded-lg bg-gray-100 flex items-center justify-center">
-              <div className="text-gray-400 text-center p-4">
-                <div className="text-3xl mb-2">📷</div>
+            <div className="aspect-square rounded-lg bg-neutral-100 flex items-center justify-center">
+              <div className="text-neutral-400 text-center p-4">
+                <div className="text-3xl mb-2">??</div>
                 <p className="text-sm">No image</p>
               </div>
             </div>
@@ -47,10 +47,10 @@ export function ProductApprovalCard({ product, readonly = false }: ProductApprov
         <div className="md:w-3/4 p-4">
           <div className="flex justify-between items-start mb-4">
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-1">
+              <h3 className="text-lg font-semibold text-neutral-900 mb-1">
                 {product.name}
               </h3>
-              <div className="flex items-center gap-2 text-sm text-gray-600 mb-2">
+              <div className="flex items-center gap-2 text-sm text-neutral-600 mb-2">
                 <Badge variant="outline">{product.category}</Badge>
                 <div className="flex items-center gap-1">
                   <MapPin className="w-3 h-3" />
@@ -60,20 +60,20 @@ export function ProductApprovalCard({ product, readonly = false }: ProductApprov
             </div>
             
             <div className="text-right">
-              <div className="text-lg font-bold text-gray-900">
+              <div className="text-lg font-bold text-neutral-900">
                 {formatCurrency(product.price_from || 0)}
                 {product.price_to && product.price_to > (product.price_from || 0) ? (
-                  <span className="text-gray-600"> - {formatCurrency(product.price_to)}</span>
+                  <span className="text-neutral-600"> - {formatCurrency(product.price_to)}</span>
                 ) : ''}
               </div>
-              <div className="text-sm text-gray-500">
+              <div className="text-sm text-neutral-500">
                 per {product.price_unit || 'paket'}
               </div>
             </div>
           </div>
 
           {/* Description */}
-          <p className="text-gray-700 mb-4 line-clamp-2">
+          <p className="text-neutral-700 mb-4 line-clamp-2">
             {product.description}
           </p>
 
@@ -81,25 +81,25 @@ export function ProductApprovalCard({ product, readonly = false }: ProductApprov
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div className="space-y-2">
               <div className="flex items-center gap-2">
-                <User className="w-4 h-4 text-gray-500" />
+                <User className="w-4 h-4 text-neutral-500" />
                 <span className="text-sm font-medium">Vendor:</span>
-                <span className="text-sm text-gray-700">
+                <span className="text-sm text-neutral-700">
                   {(product as any).profiles?.[0]?.full_name || 'Unknown'}
                 </span>
               </div>
               <div className="flex items-center gap-2">
-                <Phone className="w-4 h-4 text-gray-500" />
+                <Phone className="w-4 h-4 text-neutral-500" />
                 <span className="text-sm font-medium">WhatsApp:</span>
-                <span className="text-sm text-gray-700">
+                <span className="text-sm text-neutral-700">
                   {(product as any).profiles?.[0]?.whatsapp_number || '-'}
                 </span>
               </div>
             </div>
             <div className="space-y-2">
               <div className="flex items-center gap-2">
-                <Calendar className="w-4 h-4 text-gray-500" />
+                <Calendar className="w-4 h-4 text-neutral-500" />
                 <span className="text-sm font-medium">Submitted:</span>
-                <span className="text-sm text-gray-700">
+                <span className="text-sm text-neutral-700">
                   {formatDate(product.created_at)}
                 </span>
               </div>

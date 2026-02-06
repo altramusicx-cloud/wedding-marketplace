@@ -1,4 +1,4 @@
-﻿// components/admin/admin-sidebar.tsx
+// components/admin/admin-sidebar.tsx
 "use client"
 
 import { useState } from 'react'
@@ -29,9 +29,9 @@ export default function AdminSidebar() {
             {/* Mobile Menu Button */}
             <button
                 onClick={() => setIsMobileOpen(true)}
-                className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-white border border-gray-200 rounded-md shadow-sm"
+                className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-white border border-neutral-200 rounded-md shadow-sm"
             >
-                <Menu className="w-5 h-5 text-gray-700" />
+                <Menu className="w-5 h-5 text-neutral-700" />
             </button>
 
             {/* Mobile Overlay */}
@@ -44,19 +44,19 @@ export default function AdminSidebar() {
 
             {/* Sidebar */}
             <aside className={cn(
-                "fixed top-0 left-0 h-screen bg-white border-r border-gray-200 z-50 transition-all duration-300",
+                "fixed top-0 left-0 h-screen bg-white border-r border-neutral-200 z-50 transition-all duration-300",
                 isCollapsed ? "w-16" : "w-64",
                 isMobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
             )}>
                 {/* Sidebar Header */}
-                <div className="p-4 border-b border-gray-200">
+                <div className="p-4 border-b border-neutral-200">
                     <div className="flex items-center justify-between">
                         {!isCollapsed && (
                             <div className="flex items-center gap-3">
                                 <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
                                     <span className="text-primary font-semibold text-sm">WM</span>
                                 </div>
-                                <span className="text-lg font-semibold text-gray-900">Admin Panel</span>
+                                <span className="text-lg font-semibold text-neutral-900">Admin Panel</span>
                             </div>
                         )}
                         {isCollapsed && (
@@ -68,21 +68,21 @@ export default function AdminSidebar() {
                         {/* Desktop Toggle Button */}
                         <button
                             onClick={() => setIsCollapsed(!isCollapsed)}
-                            className="hidden lg:flex p-1.5 hover:bg-gray-100 rounded-md"
+                            className="hidden lg:flex p-1.5 hover:bg-neutral-100 rounded-md"
                         >
                             {isCollapsed ? (
-                                <ChevronRight className="w-4 h-4 text-gray-500" />
+                                <ChevronRight className="w-4 h-4 text-neutral-500" />
                             ) : (
-                                <ChevronLeft className="w-4 h-4 text-gray-500" />
+                                <ChevronLeft className="w-4 h-4 text-neutral-500" />
                             )}
                         </button>
 
                         {/* Mobile Close Button */}
                         <button
                             onClick={() => setIsMobileOpen(false)}
-                            className="lg:hidden p-1.5 hover:bg-gray-100 rounded-md"
+                            className="lg:hidden p-1.5 hover:bg-neutral-100 rounded-md"
                         >
-                            <X className="w-4 h-4 text-gray-500" />
+                            <X className="w-4 h-4 text-neutral-500" />
                         </button>
                     </div>
                 </div>
@@ -100,19 +100,19 @@ export default function AdminSidebar() {
                                     "flex items-center gap-3 px-3 py-2.5 text-sm rounded-md transition-colors",
                                     isActive
                                         ? "bg-primary/10 text-primary font-medium"
-                                        : "text-gray-700 hover:bg-gray-100"
+                                        : "text-neutral-700 hover:bg-neutral-100"
                                 )}
                             >
                                 <item.icon className={cn(
                                     "w-4 h-4 flex-shrink-0",
-                                    isActive ? "text-primary" : "text-gray-500"
+                                    isActive ? "text-primary" : "text-neutral-500"
                                 )} />
 
                                 {!isCollapsed && (
                                     <>
                                         <span className="flex-1 truncate">{item.label}</span>
                                         {item.badge && (
-                                            <span className="bg-gray-200 text-gray-700 text-xs px-2 py-0.5 rounded-full">
+                                            <span className="bg-neutral-200 text-neutral-700 text-xs px-2 py-0.5 rounded-full">
                                                 {item.badge}
                                             </span>
                                         )}

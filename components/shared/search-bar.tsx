@@ -73,7 +73,7 @@ export function SearchBar() {
             <form onSubmit={handleSubmit} className="w-full">
                 <div className="flex flex-col md:flex-row gap-4">
                     <div className="flex-1 relative">
-                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400 h-4 w-4" />
                         <Input
                             type="search"
                             placeholder="Cari venue, photographer, catering, makeup artist..."
@@ -97,7 +97,7 @@ export function SearchBar() {
                             <button
                                 type="button"
                                 onClick={clearSearch}
-                                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-neutral-400 hover:text-neutral-600"
                             >
                                 <X className="h-4 w-4" />
                             </button>
@@ -119,7 +119,7 @@ export function SearchBar() {
                         <Button
                             type="submit"
                             size="lg"
-                            className="bg-blush hover:bg-blush-dark text-white gap-2"
+                            className="bg-primary hover:bg-primary-dark text-white gap-2"
                         >
                             <Search className="h-4 w-4" />
                             Cari
@@ -129,19 +129,19 @@ export function SearchBar() {
 
                 {/* Live Search Dropdown */}
                 {isDropdownOpen && (
-                    <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-xl border border-gray-200 z-50 max-h-[480px] overflow-hidden">
-                        <div className="divide-y divide-gray-100">
+                    <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-xl border border-neutral-200 z-50 max-h-[480px] overflow-hidden">
+                        <div className="divide-y divide-neutral-100">
                             {/* Recent Searches */}
                             {recentSearches.length > 0 && results.length === 0 && !isLoading && (
                                 <div className="p-4">
                                     <div className="flex items-center justify-between mb-3">
-                                        <div className="flex items-center gap-2 text-sm font-medium text-gray-700">
+                                        <div className="flex items-center gap-2 text-sm font-medium text-neutral-700">
                                             <Clock className="h-4 w-4" />
                                             Pencarian Terbaru
                                         </div>
                                         <button
                                             onClick={clearRecentSearches}
-                                            className="text-xs text-gray-500 hover:text-gray-700"
+                                            className="text-xs text-neutral-500 hover:text-neutral-700"
                                         >
                                             Hapus semua
                                         </button>
@@ -154,13 +154,13 @@ export function SearchBar() {
                                                     setQuery(searchTerm)
                                                     navigateToSearchPage()
                                                 }}
-                                                className="w-full text-left p-2 rounded-lg hover:bg-gray-50 flex items-center justify-between group"
+                                                className="w-full text-left p-2 rounded-lg hover:bg-neutral-50 flex items-center justify-between group"
                                             >
                                                 <div className="flex items-center gap-3">
-                                                    <Clock className="h-4 w-4 text-gray-400" />
-                                                    <span className="text-gray-700">{searchTerm}</span>
+                                                    <Clock className="h-4 w-4 text-neutral-400" />
+                                                    <span className="text-neutral-700">{searchTerm}</span>
                                                 </div>
-                                                <Search className="h-4 w-4 text-gray-400 opacity-0 group-hover:opacity-100" />
+                                                <Search className="h-4 w-4 text-neutral-400 opacity-0 group-hover:opacity-100" />
                                             </button>
                                         ))}
                                     </div>
@@ -170,7 +170,7 @@ export function SearchBar() {
                             {/* Search Results */}
                             {results.length > 0 && (
                                 <div className="p-4">
-                                    <div className="mb-3 text-sm font-medium text-gray-700">
+                                    <div className="mb-3 text-sm font-medium text-neutral-700">
                                         Hasil Pencarian
                                     </div>
                                     <div className="space-y-2">
@@ -179,10 +179,10 @@ export function SearchBar() {
                                                 key={product.id}
                                                 href={`/vendor/${product.id}`}
                                                 onClick={closeDropdown}
-                                                className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 group"
+                                                className="flex items-center gap-3 p-2 rounded-lg hover:bg-neutral-50 group"
                                             >
                                                 {product.thumbnail_url ? (
-                                                    <div className="h-12 w-12 rounded-lg overflow-hidden bg-gray-100">
+                                                    <div className="h-12 w-12 rounded-lg overflow-hidden bg-neutral-100">
                                                         <Image
                                                             src={product.thumbnail_url || '/placeholder-image.jpg'}
                                                             alt={product.name}
@@ -192,22 +192,22 @@ export function SearchBar() {
                                                         />
                                                     </div>
                                                 ) : (
-                                                    <div className="h-12 w-12 rounded-lg bg-gray-100 flex items-center justify-center">
-                                                        <Search className="h-5 w-5 text-gray-400" />
+                                                    <div className="h-12 w-12 rounded-lg bg-neutral-100 flex items-center justify-center">
+                                                        <Search className="h-5 w-5 text-neutral-400" />
                                                     </div>
                                                 )}
                                                 <div className="flex-1 min-w-0">
-                                                    <div className="font-medium text-gray-900 truncate">
+                                                    <div className="font-medium text-neutral-900 truncate">
                                                         {product.name}
                                                     </div>
-                                                    <div className="text-xs text-gray-500 flex items-center gap-2">
+                                                    <div className="text-xs text-neutral-500 flex items-center gap-2">
                                                         <span className="capitalize">{product.category}</span>
                                                         <span>•</span>
                                                         <span>{product.location}</span>
                                                     </div>
                                                 </div>
                                                 {product.price_from && (
-                                                    <div className="text-sm font-semibold text-blush">
+                                                    <div className="text-sm font-semibold text-primary">
                                                         Rp {product.price_from.toLocaleString('id-ID')}
                                                     </div>
                                                 )}
@@ -217,7 +217,7 @@ export function SearchBar() {
                                     {query.trim() && (
                                         <button
                                             onClick={navigateToSearchPage}
-                                            className="w-full mt-3 p-2 text-center text-blush hover:bg-blush-light rounded-lg font-medium"
+                                            className="w-full mt-3 p-2 text-center text-primary hover:bg-primary-light rounded-lg font-medium"
                                         >
                                             Lihat semua hasil untuk "{query}"
                                         </button>
@@ -228,7 +228,7 @@ export function SearchBar() {
                             {/* Loading State */}
                             {isLoading && (
                                 <div className="p-8 flex items-center justify-center">
-                                    <div className="flex items-center gap-3 text-gray-600">
+                                    <div className="flex items-center gap-3 text-neutral-600">
                                         <Loader2 className="h-5 w-5 animate-spin" />
                                         Mencari...
                                     </div>
@@ -238,19 +238,19 @@ export function SearchBar() {
                             {/* Empty Results */}
                             {!isLoading && results.length === 0 && query.trim().length >= 2 && (
                                 <div className="p-8 text-center">
-                                    <Search className="h-12 w-12 text-gray-300 mx-auto mb-3" />
-                                    <div className="text-gray-700 font-medium mb-1">
+                                    <Search className="h-12 w-12 text-neutral-300 mx-auto mb-3" />
+                                    <div className="text-neutral-700 font-medium mb-1">
                                         Tidak ditemukan
                                     </div>
-                                    <p className="text-gray-500 text-sm">
+                                    <p className="text-neutral-500 text-sm">
                                         Coba dengan kata kunci lain
                                     </p>
                                 </div>
                             )}
 
                             {/* Popular Searches */}
-                            <div className="p-4 bg-gray-50">
-                                <div className="flex items-center gap-2 mb-3 text-sm font-medium text-gray-700">
+                            <div className="p-4 bg-neutral-50">
+                                <div className="flex items-center gap-2 mb-3 text-sm font-medium text-neutral-700">
                                     <TrendingUp className="h-4 w-4" />
                                     Pencarian Populer
                                 </div>
@@ -262,12 +262,12 @@ export function SearchBar() {
                                             onClick={() => handleQuickSearch(item.term)}
                                             className={cn(
                                                 "text-xs px-3 py-1.5 rounded-full transition-colors",
-                                                "bg-white border border-gray-200 hover:border-blush hover:text-blush",
+                                                "bg-white border border-neutral-200 hover:border-primary hover:text-primary",
                                                 "flex items-center gap-1"
                                             )}
                                         >
                                             {item.term}
-                                            <span className="text-xs text-gray-400">
+                                            <span className="text-xs text-neutral-400">
                                                 ({item.count})
                                             </span>
                                         </button>
@@ -286,7 +286,7 @@ export function SearchBar() {
                         key={item.term}
                         type="button"
                         onClick={() => handleQuickSearch(item.term)}
-                        className="text-xs px-3 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors"
+                        className="text-xs px-3 py-1.5 bg-neutral-100 hover:bg-neutral-200 rounded-full transition-colors"
                     >
                         {item.term}
                     </button>

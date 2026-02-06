@@ -232,8 +232,8 @@ export function ImageUpload({
                     className={cn(
                         "border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors",
                         isDragging
-                            ? "border-blush bg-blush/10"
-                            : "border-gray-300 hover:border-blush hover:bg-gray-50"
+                            ? "border-primary bg-primary/10"
+                            : "border-neutral-300 hover:border-primary hover:bg-neutral-50"
                     )}
                     onClick={handleClickUpload}
                     onDragOver={handleDragOver}
@@ -241,18 +241,18 @@ export function ImageUpload({
                     onDrop={handleDrop}
                 >
                     <div className="space-y-3">
-                        <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gray-100">
+                        <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-neutral-100">
                             {isProcessing ? (
-                                <Loader2 className="h-6 w-6 text-gray-400 animate-spin" />
+                                <Loader2 className="h-6 w-6 text-neutral-400 animate-spin" />
                             ) : (
-                                <Upload className="h-6 w-6 text-gray-400" />
+                                <Upload className="h-6 w-6 text-neutral-400" />
                             )}
                         </div>
                         <div>
-                            <p className="text-sm font-medium text-gray-700">
+                            <p className="text-sm font-medium text-neutral-700">
                                 {isProcessing ? "Mengompresi gambar..." : "Drag & drop gambar atau klik untuk upload"}
                             </p>
-                            <p className="text-xs text-gray-500 mt-1">
+                            <p className="text-xs text-neutral-500 mt-1">
                                 Maksimal {maxFiles} gambar, masing-masing maksimal {maxSizeMB}MB
                                 {compressToWebP && `, akan dikompresi ke ≤${maxSizeKB}KB format WebP`}
                             </p>
@@ -272,7 +272,7 @@ export function ImageUpload({
             {allImages.length > 0 && (
                 <div className="mt-6">
                     <div className="flex items-center justify-between mb-4">
-                        <p className="text-sm font-medium text-gray-700">
+                        <p className="text-sm font-medium text-neutral-700">
                             {allImages.length} / {maxFiles} gambar
                             {isProcessing && " (Mengompresi...)"}
                         </p>
@@ -316,8 +316,8 @@ export function ImageUpload({
                                             image.error
                                                 ? "border-red-300 bg-red-50"
                                                 : isExisting
-                                                    ? "border-gray-200"
-                                                    : "border-gray-300",
+                                                    ? "border-neutral-200"
+                                                    : "border-neutral-300",
                                             isSelectedThumbnail && "ring-2 ring-blue-500 ring-offset-1"
                                         )}
                                     >
@@ -338,7 +338,7 @@ export function ImageUpload({
                                                 handleImageClick(index)
                                             }}
                                             onKeyDown={(e) => e.key === "Enter" && handleImageClick(index)}
-                                            className="w-full h-full bg-gray-100 flex items-center justify-center cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-inset"
+                                            className="w-full h-full bg-neutral-100 flex items-center justify-center cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-inset"
                                         >
                                             {image.previewUrl ? (
                                                 <Image
@@ -350,7 +350,7 @@ export function ImageUpload({
                                                     unoptimized={true}
                                                 />
                                             ) : (
-                                                <ImageIcon className="h-8 w-8 text-gray-400" />
+                                                <ImageIcon className="h-8 w-8 text-neutral-400" />
                                             )}
                                         </div>
 
@@ -413,10 +413,10 @@ export function ImageUpload({
 
                     {/* Instruction */}
                     <div className="mt-4 p-3 bg-blue-50 rounded-lg">
-                        <p className="text-sm text-gray-700">
+                        <p className="text-sm text-neutral-700">
                             <span className="font-medium">💡 Petunjuk:</span>
                         </p>
-                        <ul className="text-xs text-gray-600 mt-1 space-y-1">
+                        <ul className="text-xs text-neutral-600 mt-1 space-y-1">
                             <li>• <span className="font-medium">Klik gambar</span> → pilih sebagai thumbnail</li>
                             <li>• <span className="font-medium">Klik tombol ✕ merah</span> di pojok kanan atas → hapus gambar</li>
                             <li>• <span className="font-medium">"Hapus Semua Gambar"</span> → hapus semua gambar baru</li>

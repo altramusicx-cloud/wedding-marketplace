@@ -7,7 +7,7 @@ import Link from "next/link"
 export default function VendorDashboardPage() {
     // Mock data untuk dashboard
     const stats = [
-        { label: "Total Produk", value: "12", icon: Package, change: "+2", color: "bg-blush" },
+        { label: "Total Produk", value: "12", icon: Package, change: "+2", color: "bg-primary" },
         { label: "Dilihat", value: "1,243", icon: Eye, change: "+12%", color: "bg-sage" },
         { label: "Kontak", value: "48", icon: MessageSquare, change: "+5", color: "bg-blue-100" },
         { label: "Konversi", value: "23%", icon: TrendingUp, change: "+3%", color: "bg-purple-100" },
@@ -26,9 +26,9 @@ export default function VendorDashboardPage() {
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
                     <h1 className="text-3xl font-bold text-charcoal">Dashboard Vendor</h1>
-                    <p className="text-gray-600">Kelola produk dan pantau performa Anda</p>
+                    <p className="text-neutral-600">Kelola produk dan pantau performa Anda</p>
                 </div>
-                <Button asChild className="bg-blush hover:bg-blush/90 text-charcoal">
+                <Button asChild className="bg-primary hover:bg-primary/90 text-charcoal">
                     <Link href="/dashboard/vendor/products/new">
                         <PlusCircle className="mr-2 h-4 w-4" />
                         Tambah Produk
@@ -39,11 +39,11 @@ export default function VendorDashboardPage() {
             {/* Stats Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 {stats.map((stat, index) => (
-                    <Card key={index} className="border-gray-200">
+                    <Card key={index} className="border-neutral-200">
                         <CardContent className="p-6">
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <p className="text-sm text-gray-600">{stat.label}</p>
+                                    <p className="text-sm text-neutral-600">{stat.label}</p>
                                     <p className="text-2xl font-bold mt-1">{stat.value}</p>
                                     <p className="text-xs text-green-600 mt-1">{stat.change} bulan ini</p>
                                 </div>
@@ -66,14 +66,14 @@ export default function VendorDashboardPage() {
                     <CardContent>
                         <div className="space-y-4">
                             {recentProducts.map((product) => (
-                                <div key={product.id} className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50">
+                                <div key={product.id} className="flex items-center justify-between p-3 border rounded-lg hover:bg-neutral-50">
                                     <div className="flex items-center gap-3">
                                         <div className={`h-3 w-3 rounded-full ${product.status === 'active' ? 'bg-green-500' :
-                                                product.status === 'pending' ? 'bg-yellow-500' : 'bg-gray-500'
+                                                product.status === 'pending' ? 'bg-yellow-500' : 'bg-neutral-500'
                                             }`} />
                                         <div>
                                             <p className="font-medium">{product.name}</p>
-                                            <div className="flex gap-4 text-sm text-gray-500">
+                                            <div className="flex gap-4 text-sm text-neutral-500">
                                                 <span>{product.views} dilihat</span>
                                                 <span>{product.contacts} kontak</span>
                                             </div>
@@ -135,7 +135,7 @@ export default function VendorDashboardPage() {
                                     <span className="text-sm">Kontak</span>
                                     <span className="font-medium">+24%</span>
                                 </div>
-                                <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                                <div className="h-2 bg-neutral-200 rounded-full overflow-hidden">
                                     <div className="h-full bg-sage w-3/4"></div>
                                 </div>
 
@@ -143,15 +143,15 @@ export default function VendorDashboardPage() {
                                     <span className="text-sm">Dilihat</span>
                                     <span className="font-medium">+18%</span>
                                 </div>
-                                <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
-                                    <div className="h-full bg-blush w-2/3"></div>
+                                <div className="h-2 bg-neutral-200 rounded-full overflow-hidden">
+                                    <div className="h-full bg-primary w-2/3"></div>
                                 </div>
 
                                 <div className="flex justify-between">
                                     <span className="text-sm">Konversi</span>
                                     <span className="font-medium">+8%</span>
                                 </div>
-                                <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                                <div className="h-2 bg-neutral-200 rounded-full overflow-hidden">
                                     <div className="h-full bg-blue-400 w-1/2"></div>
                                 </div>
                             </div>

@@ -1,4 +1,4 @@
-﻿// File: components/ui/badge.tsx
+// File: components/ui/badge.tsx
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
@@ -19,8 +19,8 @@ const badgeVariants = cva(
                     "border-transparent bg-green-100 text-green-800 hover:bg-green-200",
                 warning:
                     "border-transparent bg-amber-100 text-amber-800 hover:bg-amber-200",
-                blush:
-                    "border-transparent bg-blush text-charcoal hover:bg-blush/80",
+                primary:
+                    "border-transparent bg-primary text-charcoal hover:bg-primary/80",
                 sage:
                     "border-transparent bg-sage text-white hover:bg-sage/80",
             },

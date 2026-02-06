@@ -52,7 +52,7 @@ export async function Recommendations({
 
         if (!products || products.length === 0) {
             return (
-                <div className="text-center py-8 text-gray-500">
+                <div className="text-center py-8 text-neutral-500">
                     <p className="text-sm">Belum ada rekomendasi produk saat ini.</p>
                     <p className="text-xs mt-2">Coba lihat kategori {currentCategory} lainnya.</p>
                 </div>
@@ -93,7 +93,7 @@ export async function Recommendations({
 
         // Fallback: tampilkan pesan error atau empty state
         return (
-            <div className="text-center py-8 text-gray-500">
+            <div className="text-center py-8 text-neutral-500">
                 <p className="text-sm">Gagal memuat rekomendasi.</p>
                 <p className="text-xs mt-2">Silakan refresh halaman atau coba lagi nanti.</p>
                 <Button

@@ -33,32 +33,32 @@ interface EmptyStateProps {
 
 const variantConfig = {
     default: {
-        icon: <Package className="h-12 w-12 text-gray-400" />,
+        icon: <Package className="h-12 w-12 text-neutral-400" />,
         title: "No data available",
         description: "There's nothing to display here yet."
     },
     search: {
-        icon: <Search className="h-12 w-12 text-gray-400" />,
+        icon: <Search className="h-12 w-12 text-neutral-400" />,
         title: "No results found",
         description: "Try adjusting your search or filter to find what you're looking for."
     },
     products: {
-        icon: <ShoppingBag className="h-12 w-12 text-gray-400" />,
+        icon: <ShoppingBag className="h-12 w-12 text-neutral-400" />,
         title: "No products yet",
         description: "Get started by adding your first product to the marketplace."
     },
     users: {
-        icon: <Users className="h-12 w-12 text-gray-400" />,
+        icon: <Users className="h-12 w-12 text-neutral-400" />,
         title: "No users found",
         description: "There are no users to display at the moment."
     },
     messages: {
-        icon: <MessageSquare className="h-12 w-12 text-gray-400" />,
+        icon: <MessageSquare className="h-12 w-12 text-neutral-400" />,
         title: "No messages yet",
         description: "Your conversations will appear here."
     },
     home: {
-        icon: <Home className="h-12 w-12 text-gray-400" />,
+        icon: <Home className="h-12 w-12 text-neutral-400" />,
         title: "Welcome to the marketplace",
         description: "Start by browsing products or creating your own listing."
     }
@@ -88,7 +88,7 @@ export function EmptyState({
                 {title || config.title}
             </h3>
 
-            <p className="text-gray-600 max-w-md mb-6">
+            <p className="text-neutral-600 max-w-md mb-6">
                 {description || config.description}
             </p>
 
@@ -98,7 +98,7 @@ export function EmptyState({
                         <Button
                             onClick={action.onClick}
                             variant={action.variant || "default"}
-                            className={action.variant === "default" ? "bg-blush hover:bg-blush/90" : ""}
+                            className={action.variant === "default" ? "bg-primary hover:bg-primary/90" : ""}
                         >
                             {action.label === "Add New" && <PlusCircle className="mr-2 h-4 w-4" />}
                             {action.label === "Refresh" && <RefreshCw className="mr-2 h-4 w-4" />}

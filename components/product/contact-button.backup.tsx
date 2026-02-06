@@ -120,7 +120,7 @@ export function ContactButton({
             <Button
                 disabled
                 className={cn(
-                    "bg-gray-300 text-gray-500",
+                    "bg-neutral-300 text-neutral-500",
                     variants[variant],
                     className
                 )}
