@@ -1,4 +1,4 @@
-// File: components/layout/bottom-nav.tsx - REVISI
+// components/layout/bottom-nav.tsx - FIXED
 'use client'
 
 import Link from 'next/link'
@@ -16,15 +16,25 @@ export function BottomNav() {
     const isMobile = useMediaQuery('(max-width: 768px)')
     const [isSearchModalOpen, setIsSearchModalOpen] = useState(false)
 
-    // Hide bottom nav di halaman auth dan admin
-    const hideBottomNav = pathname.startsWith('/login') ||
-        pathname.startsWith('/register') ||
-        pathname.startsWith('/admin')
+    // DEBUG: Tampilkan pathname actual
+    console.log('🔍 BottomNav Debug - pathname:', pathname)
+
+    // FIXED: Handle route groups (auth) and (public)
+    const hideBottomNav =
+        pathname.includes('/login') ||      // /(auth)/login atau /login
+        pathname.includes('/register') ||   // /(auth)/register atau /register  
+        pathname.includes('/admin') ||      // /admin/* (semua admin routes)
+        pathname.includes('/api') ||        // API routes
+        pathname === '/404' ||              // Error pages
+        pathname === '/500'
 
     // Hanya tampil di mobile
     if (!isMobile || hideBottomNav) {
+        console.log('🚫 Hiding BottomNav - isMobile:', isMobile, 'hideBottomNav:', hideBottomNav)
         return null
     }
+
+    console.log('✅ Showing BottomNav')
 
     const navItems = [
         {

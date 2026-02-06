@@ -1,13 +1,13 @@
-﻿// app/layout.tsx - SHOPEE FONT STYLE
-import type { Metadata } from "next"
+﻿import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
 import { AuthProvider } from '@/components/providers/auth-provider'
 import { ErrorBoundary } from '@/components/shared/error-boundary'
 import { Toaster } from '@/components/ui/toaster'
+import { BottomNav } from '@/components/layout/bottom-nav' // ✅ ADD THIS IMPORT!
 
 // Shopee style: Inter font saja (sans-serif semua)
-const inter = Inter({ 
+const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
   display: "swap"
@@ -31,7 +31,14 @@ export default function RootLayout({
       <body className="bg-white text-neutral-900 antialiased font-sans">
         <ErrorBoundary>
           <AuthProvider>
-            {children}
+            {/* Konten utama */}
+            <main className="min-h-screen">
+              {children}
+            </main>
+
+            {/* Bottom Navigation - hanya muncul di mobile (< 768px) */}
+            <BottomNav /> {/* ✅ ADD THIS LINE! */}
+
             <Toaster />
           </AuthProvider>
         </ErrorBoundary>
