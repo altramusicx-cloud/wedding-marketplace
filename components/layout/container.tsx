@@ -52,12 +52,12 @@ export function SectionContainer({
 }: {
     children: React.ReactNode;
     className?: string;
-    background?: "white" | "gray" | "blush" | "ivory";
+    background?: "white" | "gray" | "primary" | "ivory";
 }) {
     const backgroundClasses = {
         white: "bg-white",
-        gray: "bg-gray-50",
-        blush: "bg-blush/10",
+        gray: "bg-neutral-50",
+        primary: "bg-primary/10",
         ivory: "bg-ivory",
     }
 

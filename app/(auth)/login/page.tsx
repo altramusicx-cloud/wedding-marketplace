@@ -7,7 +7,7 @@ export default function LoginPage() {
                 <h1 className="text-2xl font-bold text-charcoal mb-2">
                     Masuk ke Akun Anda
                 </h1>
-                <p className="text-gray-600">
+                <p className="text-neutral-600">
                     Selamat datang kembali! Silakan masuk untuk melanjutkan.
                 </p>
             </div>
@@ -15,11 +15,11 @@ export default function LoginPage() {
             <LoginForm />
 
             <div className="mt-6 text-center">
-                <p className="text-gray-600">
+                <p className="text-neutral-600">
                     Belum punya akun?{' '}
                     <a
                         href="/register"
-                        className="font-medium text-blush hover:text-blush/80"
+                        className="font-medium text-primary hover:text-primary/80"
                     >
                         Daftar sekarang
                     </a>

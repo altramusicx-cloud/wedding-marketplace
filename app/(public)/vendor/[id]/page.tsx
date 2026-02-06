@@ -26,7 +26,7 @@ import { generateProductMetadata } from '@/lib/utils/generate-metadata'
 const ProductGallery = dynamic(
     () => import('@/components/product/product-gallery').then(mod => mod.ProductGallery),
     {
-        loading: () => <div className="aspect-square bg-gray-200 animate-pulse rounded-lg" />
+        loading: () => <div className="aspect-square bg-neutral-200 animate-pulse rounded-lg" />
     }
 )
 
@@ -169,10 +169,10 @@ export default async function ProductDetailPage({
     return (
         <div className="min-h-screen bg-white">
             {/* Mobile Header - Shopee Style */}
-            <div className="sticky top-0 bg-white border-b border-[#E5E5E5] z-50 px-4 py-3 lg:hidden">
+            <div className="sticky top-0 bg-white border-b border-neutral-200 z-50 px-4 py-3 lg:hidden">
                 <div className="flex items-center justify-between">
                     <Link href="/" className="p-1">
-                        <ArrowLeft className="h-5 w-5 text-[#212121]" />
+                        <ArrowLeft className="h-5 w-5 text-neutral-900" />
                     </Link>
                     <div className="flex items-center gap-3">
                         <Button
@@ -181,7 +181,7 @@ export default async function ProductDetailPage({
                             className="h-8 w-8"
                             aria-label="Bagikan"
                         >
-                            <Share2 className="h-4 w-4 text-[#757575]" />
+                            <Share2 className="h-4 w-4 text-neutral-500" />
                         </Button>
                         <FavoritesButton
                             productId={product.id}
@@ -193,28 +193,28 @@ export default async function ProductDetailPage({
             </div>
 
             {/* Desktop Breadcrumb */}
-            <div className="hidden lg:block border-b border-[#E5E5E5] bg-white">
+            <div className="hidden lg:block border-b border-neutral-200 bg-white">
                 <Container size="xl" className="py-4 md:py-6">
                     <div className="flex items-center gap-2 text-[13px]">
                         <Button variant="ghost" size="sm" asChild className="p-0 h-auto">
-                            <Link href="/" className="text-[#757575] hover:text-[#EE4D2D]">
+                            <Link href="/" className="text-neutral-500 hover:text-primary">
                                 Beranda
                             </Link>
                         </Button>
-                        <span className="text-[#E5E5E5]">/</span>
+                        <span className="text-[border-neutral-200]">/</span>
                         <Button variant="ghost" size="sm" asChild className="p-0 h-auto">
-                            <Link href="/categories" className="text-[#757575] hover:text-[#EE4D2D]">
+                            <Link href="/categories" className="text-neutral-500 hover:text-primary">
                                 Kategori
                             </Link>
                         </Button>
-                        <span className="text-[#E5E5E5]">/</span>
+                        <span className="text-[border-neutral-200]">/</span>
                         <Button variant="ghost" size="sm" asChild className="p-0 h-auto">
-                            <Link href={`/categories/${product.category.toLowerCase()}`} className="text-[#757575] hover:text-[#EE4D2D]">
+                            <Link href={`/categories/${product.category.toLowerCase()}`} className="text-neutral-500 hover:text-primary">
                                 {product.category}
                             </Link>
                         </Button>
-                        <span className="text-[#E5E5E5]">/</span>
-                        <span className="text-[#212121] font-medium truncate text-[13px]">{product.name}</span>
+                        <span className="text-[border-neutral-200]">/</span>
+                        <span className="text-neutral-900 font-medium truncate text-[13px]">{product.name}</span>
                     </div>
                 </Container>
             </div>
@@ -237,30 +237,30 @@ export default async function ProductDetailPage({
                     <div className="flex-1 mt-4 lg:mt-0">
                         {/* Product Title - Desktop only */}
                         <div className="hidden lg:block mb-4">
-                            <h1 className="text-[17px] font-medium text-[#212121] leading-tight">
+                            <h1 className="text-[17px] font-medium text-neutral-900 leading-tight">
                                 {product.name}
                             </h1>
                         </div>
 
                         {/* Category Badge - Shopee Style */}
                         <div className="mb-3">
-                            <span className="inline-flex items-center gap-1 bg-[#EE4D2D]/10 text-[#EE4D2D] text-[11px] px-2 py-1 rounded-[2px]">
+                            <span className="inline-flex items-center gap-1 bg-primary/10 text-primary text-[11px] px-2 py-1 rounded-[2px]">
                                 <Calendar className="h-3 w-3" />
                                 {product.category}
                             </span>
                         </div>
 
                         {/* Price Card - Shopee Style */}
-                        <div className="bg-white border border-[#E5E5E5] rounded-[3px] p-3 mb-4">
-                            <div className="text-[11px] text-[#757575] mt-2">
+                        <div className="bg-white border border-neutral-200 rounded-[3px] p-3 mb-4">
+                            <div className="text-[11px] text-neutral-500 mt-2">
                                 Harga mulai
                             </div>
                             <div className="flex items-baseline gap-1">
-                                <span className="text-[13px] font-bold text-[#EE4D2D] leading-none">
+                                <span className="text-[13px] font-bold text-primary leading-none">
                                     {formatPrice(product.price_from, product.price_to)}
                                 </span>
                                 {product.price_unit && (
-                                    <span className="text-[13px] text-[#757575]">
+                                    <span className="text-[13px] text-neutral-500">
                                         /{product.price_unit}
                                     </span>
                                 )}
@@ -270,19 +270,19 @@ export default async function ProductDetailPage({
 
                         {/* Quick Info Grid - Hanya Kategori (User pindah ke atas) */}
                         <div className="grid grid-cols-1 gap-2 mb-4">
-                            <div className="flex items-center gap-2 p-2 bg-[#FAFAFA] border border-[#E5E5E5] rounded-[3px]">
-                                <Calendar className="h-3.5 w-3.5 text-[#757575]" />
+                            <div className="flex items-center gap-2 p-2 bg-neutral-50 border border-neutral-200 rounded-[3px]">
+                                <Calendar className="h-3.5 w-3.5 text-neutral-500" />
                                 <div>
-                                    <div className="text-[9px] text-[#757575]">Kategori</div>
-                                    <div className="text-[11px] text-[#212121]">{product.category}</div>
+                                    <div className="text-[9px] text-neutral-500">Kategori</div>
+                                    <div className="text-[11px] text-neutral-900">{product.category}</div>
                                 </div>
                             </div>
                         </div>
 
                         <div className="grid grid-cols-1 gap-2 mb-4">
-                            <div className="flex items-center gap-2 p-2 bg-[#FAFAFA] border border-[#E5E5E5] rounded-[3px]">
-                                <Eye className="h-3.5 w-3.5 text-[#757575]" />
-                                <span className="text-[11px] text-[#757575]">
+                            <div className="flex items-center gap-2 p-2 bg-neutral-50 border border-neutral-200 rounded-[3px]">
+                                <Eye className="h-3.5 w-3.5 text-neutral-500" />
+                                <span className="text-[11px] text-neutral-500">
                                     {viewerCount} dilihat
                                 </span>
                             </div>
@@ -290,22 +290,22 @@ export default async function ProductDetailPage({
 
                         {/* Location with MapPin - Line Breaks */}
                         <div className="mb-4 flex items-start gap-1.5">
-                            <MapPin className="h-3.5 w-3.5 text-[#757575] mt-0.5 flex-shrink-0" />
-                            <div className="text-[11px] text-[#757575] leading-tight">
+                            <MapPin className="h-3.5 w-3.5 text-neutral-500 mt-0.5 flex-shrink-0" />
+                            <div className="text-[11px] text-neutral-500 leading-tight">
                                 {formatLocation(product.location)}
                             </div>
                         </div>
 
                         {/* Vendor Info Card - Shopee Style Size */}
-                        <div className="bg-white border border-[#E5E5E5] rounded-[3px] p-3 mb-4">
+                        <div className="bg-white border border-neutral-200 rounded-[3px] p-3 mb-4">
                             <div className="flex items-center gap-3 mb-3">
-                                <div className="h-10 w-10 rounded-full bg-[#F7CAC9] flex items-center justify-center flex-shrink-0">
-                                    <span className="font-bold text-[#212121] text-[16px]">
+                                <div className="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
+                                    <span className="font-bold text-neutral-900 text-[16px]">
                                         {vendor?.full_name?.charAt(0) || 'V'}
                                     </span>
                                 </div>
                                 <div className="flex-1 min-w-0">
-                                    <h3 className="font-medium text-[13px] text-[#212121] truncate">
+                                    <h3 className="font-medium text-[13px] text-neutral-900 truncate">
                                         {vendor?.full_name || 'Vendor'}
                                     </h3>
                                     <div className="flex items-center gap-1.5 text-[11px] mt-1">
@@ -313,14 +313,14 @@ export default async function ProductDetailPage({
                                             <CheckCircle className="h-3 w-3" />
                                             <span>Terverifikasi</span>
                                         </div>
-                                        <span className="text-[#E5E5E5]">•</span>
-                                        <span className="text-[#757575]">
+                                        <span className="text-[border-neutral-200]">•</span>
+                                        <span className="text-neutral-500">
                                             Vendor sejak {vendorYear}
                                         </span>
                                     </div>
                                 </div>
                             </div>
-                            <div className="space-y-1.5 text-[11px] text-[#757575]">
+                            <div className="space-y-1.5 text-[11px] text-neutral-500">
                                 <div className="flex items-center gap-2">
                                     <CheckCircle className="h-3.5 w-3.5 text-[#00B14F]" />
                                     <span>Responsif via WhatsApp</span>
@@ -341,7 +341,7 @@ export default async function ProductDetailPage({
                                 productName={product.name}
                                 vendorName={vendor?.full_name || 'Vendor'}
                                 variant="large"
-                                className="w-full h-12 rounded-[3px] bg-[#EE4D2D] hover:bg-[#D73211] text-white font-medium text-[15px]"
+                                className="w-full h-12 rounded-[3px] bg-primary hover:bg-primary-dark text-white font-medium text-[15px]"
                             />
                         </div>
                     </div>
@@ -349,11 +349,11 @@ export default async function ProductDetailPage({
 
                 {/* Product Description Card - Shopee Style Size */}
                 <div className="mt-6">
-                    <div className="bg-white border border-[#E5E5E5] rounded-[3px] p-4">
-                        <h2 className="text-[15px] font-medium text-[#212121] mb-3">
+                    <div className="bg-white border border-neutral-200 rounded-[3px] p-4">
+                        <h2 className="text-[15px] font-medium text-neutral-900 mb-3">
                             📝 Deskripsi Produk
                         </h2>
-                        <div className="text-[13px] text-[#212121] leading-relaxed whitespace-pre-line">
+                        <div className="text-[13px] text-neutral-900 leading-relaxed whitespace-pre-line">
                             {product.description}
                         </div>
                     </div>
@@ -362,10 +362,10 @@ export default async function ProductDetailPage({
                 {/* Recommendations - SAMA DENGAN HOMEPAGE */}
                 <div className="mt-8">
                     <div className="mb-4">
-                        <h2 className="text-[15px] font-medium text-[#212121]">
+                        <h2 className="text-[15px] font-medium text-neutral-900">
                             🔄 Produk Serupa
                         </h2>
-                        <div className="text-[11px] text-[#757575] mt-1">
+                        <div className="text-[11px] text-neutral-500 mt-1">
                             Lihat produk lain yang mungkin Anda sukai
                         </div>
                     </div>

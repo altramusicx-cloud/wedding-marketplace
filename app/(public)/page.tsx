@@ -84,7 +84,7 @@ export default async function HomePage() {
                     <section className="mb-12">
                         <div className="flex items-center justify-between mb-6">
                             <h2 className="text-2xl font-bold text-charcoal">Produk Unggulan</h2>
-                            <a href="/categories?sort=featured" className="text-blush hover:text-blush-dark font-medium">
+                            <a href="/categories?sort=featured" className="text-primary hover:text-primary-dark font-medium">
                                 Lihat semua →
                             </a>
                         </div>
@@ -118,7 +118,7 @@ export default async function HomePage() {
                     <section className="mb-12">
                         <div className="flex items-center justify-between mb-6">
                             <h2 className="text-2xl font-bold text-charcoal">Produk Terbaru</h2>
-                            <a href="/categories?sort=newest" className="text-blush hover:text-blush-dark font-medium">
+                            <a href="/categories?sort=newest" className="text-primary hover:text-primary-dark font-medium">
                                 Lihat semua →
                             </a>
                         </div>
@@ -159,9 +159,9 @@ export default async function HomePage() {
                     {/* Stats */}
                     <section className="mt-16 bg-white rounded-2xl p-8 shadow-sm">
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-                            <div><div className="text-4xl font-bold text-blush mb-2">{products.length}+</div><div className="text-gray-600">Produk Terdaftar</div></div>
-                            <div><div className="text-4xl font-bold text-sage mb-2">{Object.keys(categoryCounts).length || 0}</div><div className="text-gray-600">Kategori</div></div>
-                            <div><div className="text-4xl font-bold text-dusty-rose mb-2">500+</div><div className="text-gray-600">Pesanan Sukses</div></div>
+                            <div><div className="text-4xl font-bold text-primary mb-2">{products.length}+</div><div className="text-neutral-600">Produk Terdaftar</div></div>
+                            <div><div className="text-4xl font-bold text-sage mb-2">{Object.keys(categoryCounts).length || 0}</div><div className="text-neutral-600">Kategori</div></div>
+                            <div><div className="text-4xl font-bold text-dusty-rose mb-2">500+</div><div className="text-neutral-600">Pesanan Sukses</div></div>
                         </div>
                     </section>
                 </Container>
@@ -174,7 +174,7 @@ export default async function HomePage() {
                 <Container>
                     <div className="text-center">
                         <h1 className="text-2xl font-bold text-charcoal mb-4">Terjadi Kesalahan</h1>
-                        <p className="text-gray-600">Silakan coba beberapa saat lagi.</p>
+                        <p className="text-neutral-600">Silakan coba beberapa saat lagi.</p>
                     </div>
                 </Container>
             </div>

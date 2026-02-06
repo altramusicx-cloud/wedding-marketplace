@@ -45,7 +45,7 @@ export function FeaturedProducts({
     if (!products || products.length === 0) {
         return (
             <div className="text-center py-12">
-                <div className="text-gray-400 mb-4">Belum ada produk tersedia</div>
+                <div className="text-neutral-400 mb-4">Belum ada produk tersedia</div>
                 <Button asChild variant="outline">
                     <Link href="/categories">Jelajahi Kategori</Link>
                 </Button>

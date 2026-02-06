@@ -84,10 +84,10 @@ export function FilterModal({ isOpen, onClose }: FilterModalProps) {
             <div className="fixed inset-0 z-50 overflow-y-auto">
                 <div className="min-h-full bg-white flex flex-col">
                     {/* Header */}
-                    <div className="sticky top-0 bg-white border-b border-gray-200 px-4 py-3">
+                    <div className="sticky top-0 bg-white border-b border-neutral-200 px-4 py-3">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
-                                <Filter className="h-5 w-5 text-blush" />
+                                <Filter className="h-5 w-5 text-primary" />
                                 <h2 className="text-lg font-semibold text-charcoal">
                                     Filter & Sort
                                 </h2>
@@ -107,7 +107,7 @@ export function FilterModal({ isOpen, onClose }: FilterModalProps) {
                     <div className="flex-1 overflow-y-auto px-4 py-6">
                         {/* Categories Section */}
                         <div className="mb-8">
-                            <h3 className="font-medium text-gray-700 mb-4 flex items-center gap-2">
+                            <h3 className="font-medium text-neutral-700 mb-4 flex items-center gap-2">
                                 <Sparkles className="h-4 w-4" />
                                 Kategori
                             </h3>
@@ -122,16 +122,16 @@ export function FilterModal({ isOpen, onClose }: FilterModalProps) {
                                             className={cn(
                                                 "flex flex-col items-center justify-center p-3 rounded-xl border transition-all",
                                                 isSelected
-                                                    ? "border-blush bg-blush-light"
-                                                    : "border-gray-200 hover:border-blush hover:bg-blush/5"
+                                                    ? "border-primary bg-primary-light"
+                                                    : "border-neutral-200 hover:border-primary hover:bg-primary/5"
                                             )}
                                         >
                                             <span className="text-2xl mb-1">{category.icon}</span>
-                                            <span className="text-xs font-medium text-gray-700 mb-1">
+                                            <span className="text-xs font-medium text-neutral-700 mb-1">
                                                 {category.name}
                                             </span>
                                             {isSelected && (
-                                                <Check className="h-3 w-3 text-blush" />
+                                                <Check className="h-3 w-3 text-primary" />
                                             )}
                                         </button>
                                     )
@@ -141,7 +141,7 @@ export function FilterModal({ isOpen, onClose }: FilterModalProps) {
 
                         {/* Location Section */}
                         <div className="mb-8">
-                            <h3 className="font-medium text-gray-700 mb-4 flex items-center gap-2">
+                            <h3 className="font-medium text-neutral-700 mb-4 flex items-center gap-2">
                                 <MapPin className="h-4 w-4" />
                                 Lokasi
                             </h3>
@@ -155,17 +155,17 @@ export function FilterModal({ isOpen, onClose }: FilterModalProps) {
 
                         {/* Price Range */}
                         <div className="mb-8">
-                            <h3 className="font-medium text-gray-700 mb-4 flex items-center gap-2">
+                            <h3 className="font-medium text-neutral-700 mb-4 flex items-center gap-2">
                                 <DollarSign className="h-4 w-4" />
                                 Rentang Harga
                             </h3>
                             <div className="grid grid-cols-2 gap-3">
                                 <div>
-                                    <label className="text-xs text-gray-500 mb-1 block">
+                                    <label className="text-xs text-neutral-500 mb-1 block">
                                         Minimal
                                     </label>
                                     <div className="relative">
-                                        <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
+                                        <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-500">
                                             Rp
                                         </span>
                                         <Input
@@ -177,11 +177,11 @@ export function FilterModal({ isOpen, onClose }: FilterModalProps) {
                                     </div>
                                 </div>
                                 <div>
-                                    <label className="text-xs text-gray-500 mb-1 block">
+                                    <label className="text-xs text-neutral-500 mb-1 block">
                                         Maksimal
                                     </label>
                                     <div className="relative">
-                                        <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
+                                        <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-500">
                                             Rp
                                         </span>
                                         <Input
@@ -197,7 +197,7 @@ export function FilterModal({ isOpen, onClose }: FilterModalProps) {
 
                         {/* Popular Filters */}
                         <div className="mb-8">
-                            <h3 className="font-medium text-gray-700 mb-4">
+                            <h3 className="font-medium text-neutral-700 mb-4">
                                 Filter Populer
                             </h3>
                             <div className="flex flex-wrap gap-2">
@@ -211,7 +211,7 @@ export function FilterModal({ isOpen, onClose }: FilterModalProps) {
                                     <button
                                         key={filter}
                                         type="button"
-                                        className="px-3 py-1.5 border border-gray-200 rounded-full text-sm hover:border-blush hover:bg-blush-light transition-colors"
+                                        className="px-3 py-1.5 border border-neutral-200 rounded-full text-sm hover:border-primary hover:bg-primary-light transition-colors"
                                     >
                                         {filter}
                                     </button>
@@ -221,18 +221,18 @@ export function FilterModal({ isOpen, onClose }: FilterModalProps) {
                     </div>
 
                     {/* Footer Actions */}
-                    <div className="sticky bottom-0 bg-white border-t border-gray-200 p-4">
+                    <div className="sticky bottom-0 bg-white border-t border-neutral-200 p-4">
                         <div className="flex gap-3">
                             <Button
                                 variant="outline"
                                 onClick={resetFilters}
-                                className="flex-1 border-gray-300"
+                                className="flex-1 border-neutral-300"
                             >
                                 Reset
                             </Button>
                             <Button
                                 onClick={applyFilters}
-                                className="flex-1 bg-blush hover:bg-blush-dark text-white"
+                                className="flex-1 bg-primary hover:bg-primary-dark text-white"
                             >
                                 Terapkan Filter
                             </Button>

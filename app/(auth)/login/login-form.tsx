@@ -1,4 +1,4 @@
-﻿// app/(auth)/login/login-form.tsx - FIXED VERSION
+// app/(auth)/login/login-form.tsx - FIXED VERSION
 'use client'
 
 import { useState } from 'react'
@@ -44,7 +44,7 @@ export function LoginForm() {
                 return
             }
 
-            // Ã¢Å“â€¦ BENAR: Redirect ke home, biarkan middleware handle role-based redirect
+            // âœ… BENAR: Redirect ke home, biarkan middleware handle role-based redirect
             router.replace('/')
             router.refresh()
 
@@ -66,7 +66,7 @@ export function LoginForm() {
 
             <div className="space-y-4">
                 <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                    <label htmlFor="email" className="block text-sm font-medium text-neutral-700 mb-1">
                         Email
                     </label>
                     <Input
@@ -82,13 +82,13 @@ export function LoginForm() {
                 </div>
 
                 <div>
-                    <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+                    <label htmlFor="password" className="block text-sm font-medium text-neutral-700 mb-1">
                         Password
                     </label>
                     <Input
                         id="password"
                         type="password"
-                        placeholder="Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢Ã¢â‚¬Â¢"
+                        placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
                         className={`w-full ${errors.password ? 'border-red-500 focus-visible:ring-red-500' : ''}`}
                         {...register('password')}
                     />
@@ -101,26 +101,26 @@ export function LoginForm() {
             <Button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-blush hover:bg-blush/90 text-charcoal"
+                className="w-full bg-primary hover:bg-primary/90 text-charcoal"
             >
                 {loading ? 'Memproses...' : 'Masuk'}
             </Button>
 
             <div className="relative my-6">
                 <div className="absolute inset-0 flex items-center">
-                    <div className="w-full border-t border-gray-300"></div>
+                    <div className="w-full border-t border-neutral-300"></div>
                 </div>
                 <div className="relative flex justify-center text-sm">
-                    <span className="px-2 bg-white text-gray-500">Atau</span>
+                    <span className="px-2 bg-white text-neutral-500">Atau</span>
                 </div>
             </div>
 
-            <div className="text-center text-sm text-gray-600">
+            <div className="text-center text-sm text-neutral-600">
                 <p>
                     Lupa password?{' '}
                     <button
                         type="button"
-                        className="font-medium text-blush hover:text-blush/80"
+                        className="font-medium text-primary hover:text-primary/80"
                         onClick={() => {
                             // TODO: Implement reset password
                             alert('Fitur reset password akan segera hadir!')

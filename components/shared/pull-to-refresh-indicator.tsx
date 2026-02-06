@@ -33,7 +33,7 @@ export function PullToRefreshIndicator({
             <div className="bg-white rounded-full shadow-lg p-3 mt-4">
                 <RefreshCw
                     className={cn(
-                        'h-6 w-6 text-blush transition-all duration-300',
+                        'h-6 w-6 text-primary transition-all duration-300',
                         isRefreshing && 'animate-spin',
                         shouldRefresh && !isRefreshing && 'rotate-180'
                     )}
@@ -46,7 +46,7 @@ export function PullToRefreshIndicator({
             </div>
 
             {/* Progress text */}
-            <div className="absolute top-20 text-xs text-gray-600 font-medium">
+            <div className="absolute top-20 text-xs text-neutral-600 font-medium">
                 {isRefreshing
                     ? 'Memuat ulang...'
                     : shouldRefresh

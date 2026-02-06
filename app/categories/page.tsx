@@ -1,4 +1,4 @@
-﻿// app/categories/page.tsx - Categories listing page
+// app/categories/page.tsx - Categories listing page
 // Dynamic route [slug] temporarily disabled
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -19,7 +19,7 @@ export default function CategoriesPage() {
     <div className="container mx-auto py-8">
       <div className="mb-8">
         <h1 className="text-4xl font-bold text-charcoal">Kategori Wedding</h1>
-        <p className="text-gray-600 mt-2">
+        <p className="text-neutral-600 mt-2">
           Temukan vendor berdasarkan kategori
         </p>
       </div>
@@ -34,10 +34,10 @@ export default function CategoriesPage() {
               <CardTitle className="text-lg">{category.name}</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-600">{category.count} vendors tersedia</p>
+              <p className="text-neutral-600">{category.count} vendors tersedia</p>
               <div className="mt-4">
-                <button className="text-sm text-blush hover:text-blush/80 font-medium">
-                  Lihat Semua →
+                <button className="text-sm text-primary hover:text-primary/80 font-medium">
+                  Lihat Semua ?
                 </button>
               </div>
             </CardContent>

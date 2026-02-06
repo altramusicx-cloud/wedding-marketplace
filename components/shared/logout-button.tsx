@@ -1,4 +1,4 @@
-﻿// components/shared/logout-button.tsx - Safe logout button
+// components/shared/logout-button.tsx - Safe logout button
 "use client"
 
 import { useRouter } from 'next/navigation'
@@ -38,9 +38,9 @@ export function LogoutButton({ className = '', variant = 'default' }: LogoutButt
   }
 
   const variantClasses = {
-    default: 'text-gray-700 hover:bg-gray-100',
+    default: 'text-neutral-700 hover:bg-neutral-100',
     destructive: 'text-red-600 hover:bg-red-50',
-    outline: 'border border-gray-300 hover:bg-gray-50'
+    outline: 'border border-neutral-300 hover:bg-neutral-50'
   }
 
   return (

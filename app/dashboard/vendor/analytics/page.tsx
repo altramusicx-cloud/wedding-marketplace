@@ -1,4 +1,4 @@
-﻿// app/dashboard/vendor/analytics/page.tsx - Simplified version
+// app/dashboard/vendor/analytics/page.tsx - Simplified version
 "use client"
 
 import { useState } from "react"
@@ -14,7 +14,7 @@ export default function VendorAnalyticsPage() {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-3xl font-bold text-charcoal">Analytics</h1>
-          <p className="text-gray-600">Pantau performa produk dan bisnis Anda</p>
+          <p className="text-neutral-600">Pantau performa produk dan bisnis Anda</p>
         </div>
         <div className="flex gap-3">
           {/* Simplified select - hanya dropdown sederhana */}
@@ -36,33 +36,33 @@ export default function VendorAnalyticsPage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Views</CardTitle>
-            <Eye className="h-4 w-4 text-gray-500" />
+            <Eye className="h-4 w-4 text-neutral-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">1,234</div>
-            <p className="text-xs text-gray-500">+12% from last month</p>
+            <p className="text-xs text-neutral-500">+12% from last month</p>
           </CardContent>
         </Card>
         
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Contacts</CardTitle>
-            <MessageSquare className="h-4 w-4 text-gray-500" />
+            <MessageSquare className="h-4 w-4 text-neutral-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">45</div>
-            <p className="text-xs text-gray-500">+8% from last month</p>
+            <p className="text-xs text-neutral-500">+8% from last month</p>
           </CardContent>
         </Card>
         
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Revenue</CardTitle>
-            <DollarSign className="h-4 w-4 text-gray-500" />
+            <DollarSign className="h-4 w-4 text-neutral-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">$5,678</div>
-            <p className="text-xs text-gray-500">+15% from last month</p>
+            <p className="text-xs text-neutral-500">+15% from last month</p>
           </CardContent>
         </Card>
       </div>
@@ -76,7 +76,7 @@ export default function VendorAnalyticsPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <p className="text-gray-600">
+          <p className="text-neutral-600">
             Fitur lengkap analytics akan diimplementasikan setelah type system stabil.
           </p>
         </CardContent>

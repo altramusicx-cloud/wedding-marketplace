@@ -1,13 +1,13 @@
-﻿"use client"
+"use client"
 import dynamic from 'next/dynamic'
 const EditProductForm = dynamic(() => import('@/components/vendor/edit-product-form').then((mod) => mod.EditProductForm), {
   
   loading: () => (
   <div className='space-y-4 p-6'>
-    <div className='h-8 w-48 bg-gray-200 rounded animate-pulse' />
-    <div className='h-4 w-full bg-gray-200 rounded animate-pulse' />
-    <div className='h-4 w-3/4 bg-gray-200 rounded animate-pulse' />
-    <div className='h-32 w-full bg-gray-200 rounded animate-pulse' />
+    <div className='h-8 w-48 bg-neutral-200 rounded animate-pulse' />
+    <div className='h-4 w-full bg-neutral-200 rounded animate-pulse' />
+    <div className='h-4 w-3/4 bg-neutral-200 rounded animate-pulse' />
+    <div className='h-32 w-full bg-neutral-200 rounded animate-pulse' />
   </div>
 )
 })
@@ -58,7 +58,7 @@ export default function NewProductPage() {
         </Button>
         <div>
           <h1 className="text-3xl font-bold text-charcoal">Tambah Produk Baru</h1>
-          <p className="text-gray-600">Isi detail produk Anda</p>
+          <p className="text-neutral-600">Isi detail produk Anda</p>
         </div>
       </div>
       <form onSubmit={handleSubmit}>

@@ -138,7 +138,7 @@ export function ProductGridInfinite({
                     <Button
                         variant="outline"
                         onClick={loadMore}
-                        className="border-blush text-primary hover:bg-primary/10"
+                        className="border-primary text-primary hover:bg-primary/10"
                     >
                         Muat Produk Lainnya
                     </Button>

@@ -17,7 +17,7 @@ const categories = [
         id: 'venue',
         name: 'Venue',
         icon: Home,
-        color: 'bg-blush/20 text-blush',
+        color: 'bg-primary/20 text-primary',
         description: 'Gedung, ballroom, outdoor venue'
     },
     {
@@ -88,21 +88,21 @@ export function CategoryGrid({ categoryCounts = {} }: CategoryGridProps) {
                         href={`/categories/${category.id}`}
                         className="group"
                     >
-                        <Card className="h-full hover:shadow-lg transition-shadow duration-300 border-gray-200">
+                        <Card className="h-full hover:shadow-lg transition-shadow duration-300 border-neutral-200">
                             <CardContent className="p-4 flex flex-col items-center text-center">
                                 <div className={`${category.color} p-3 rounded-full mb-3 group-hover:scale-110 transition-transform`}>
                                     <Icon className="h-6 w-6" />
                                 </div>
 
-                                <h3 className="font-semibold text-gray-800 mb-1">{category.name}</h3>
+                                <h3 className="font-semibold text-neutral-800 mb-1">{category.name}</h3>
 
                                 {count > 0 && (
-                                    <div className="text-xs text-gray-500 mb-2">
+                                    <div className="text-xs text-neutral-500 mb-2">
                                         {count} produk
                                     </div>
                                 )}
 
-                                <p className="text-xs text-gray-600 line-clamp-2">
+                                <p className="text-xs text-neutral-600 line-clamp-2">
                                     {category.description}
                                 </p>
                             </CardContent>

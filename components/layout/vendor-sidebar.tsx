@@ -35,12 +35,12 @@ export function VendorSidebar() {
             {/* Vendor Info */}
             <div className="p-6 border-b">
                 <div className="flex items-center gap-3">
-                    <div className="h-12 w-12 rounded-full bg-blush flex items-center justify-center">
+                    <div className="h-12 w-12 rounded-full bg-primary flex items-center justify-center">
                         <User className="h-6 w-6 text-charcoal" />
                     </div>
                     <div>
                         <h3 className="font-semibold">Vendor Name</h3>
-                        <p className="text-sm text-gray-600">Wedding Photographer</p>
+                        <p className="text-sm text-neutral-600">Wedding Photographer</p>
                         <div className="flex items-center gap-1 mt-1">
                             <div className="h-2 w-2 rounded-full bg-green-500"></div>
                             <span className="text-xs text-green-600">Online</span>
@@ -63,13 +63,13 @@ export function VendorSidebar() {
                                     className={cn(
                                         "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors",
                                         isActive
-                                            ? "bg-blush/20 text-charcoal font-medium"
-                                            : "text-gray-700 hover:bg-gray-100"
+                                            ? "bg-primary/20 text-charcoal font-medium"
+                                            : "text-neutral-700 hover:bg-neutral-100"
                                     )}
                                 >
                                     <item.icon className={cn(
                                         "h-5 w-5",
-                                        isActive ? "text-blush" : "text-gray-500"
+                                        isActive ? "text-primary" : "text-neutral-500"
                                     )} />
                                     {item.label}
                                     {item.label === "Pesan" && (
@@ -86,7 +86,7 @@ export function VendorSidebar() {
                 {/* Upgrade Banner */}
                 <div className="mt-8 p-4 bg-sage/10 rounded-lg border border-sage/30">
                     <h4 className="font-medium text-sm mb-1">Upgrade ke Pro</h4>
-                    <p className="text-xs text-gray-600 mb-3">Dapatkan fitur analytics lengkap</p>
+                    <p className="text-xs text-neutral-600 mb-3">Dapatkan fitur analytics lengkap</p>
                     <Button size="sm" className="w-full bg-sage hover:bg-sage/90 text-white">
                         Upgrade Sekarang
                     </Button>

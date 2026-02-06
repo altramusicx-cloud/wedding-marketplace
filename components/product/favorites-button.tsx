@@ -57,7 +57,7 @@ export function FavoritesButton({
                         "h-5 w-5 transition-colors",
                         isFavoritedState
                             ? "fill-red-500 text-red-500"
-                            : "text-gray-400 hover:text-gray-600"
+                            : "text-neutral-400 hover:text-neutral-600"
                     )}
                 />
             </button>

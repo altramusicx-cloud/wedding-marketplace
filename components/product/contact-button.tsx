@@ -1,4 +1,4 @@
-﻿// File: components/product/contact-button.tsx (UPDATED VERSION)
+// File: components/product/contact-button.tsx (UPDATED VERSION)
 "use client"
 
 import { useState } from "react"
@@ -15,7 +15,7 @@ interface ContactButtonProps {
     vendorWhatsApp: string
     productId: string
     productName: string
-    vendorName: string // â† JANGAN OPTIONAL, HARUS REQUIRED
+    vendorName: string // ← JANGAN OPTIONAL, HARUS REQUIRED
     variant?: 'default' | 'large' | 'sticky'
     className?: string
 }
@@ -120,7 +120,7 @@ export function ContactButton({
             <Button
                 disabled
                 className={cn(
-                    "bg-gray-300 text-gray-500",
+                    "bg-neutral-300 text-neutral-500",
                     variants[variant],
                     className
                 )}

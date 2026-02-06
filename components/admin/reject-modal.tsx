@@ -70,7 +70,7 @@ export function RejectModal({
                             className="min-h-[100px]"
                             required
                         />
-                        <p className="text-xs text-gray-500">
+                        <p className="text-xs text-neutral-500">
                             Minimum 20 characters. Be constructive to help vendor improve.
                         </p>
                     </div>
