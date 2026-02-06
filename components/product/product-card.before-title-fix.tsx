@@ -126,9 +126,9 @@ export function ProductCard({
                 {/* Content Section - FIXED SPACING */}
                 <div className="p-1.5 space-y-1">
                     {/* Title - FIXED HEIGHT 2 lines max */}
-                    <h4 className="font-bold text-neutral-900 text-large sm:text-base truncate whitespace-nowrap">
+                    <h3 className="font-bold text-neutral-900 text-large sm:text-base leading-tight line-clamp-2 h-8">
                         {product.name}
-                    </h4>
+                    </h3>
 
                     {/* Location - SINGLE LINE */}
                     <div className="flex items-center gap-1">
@@ -190,4 +190,3 @@ export function ProductGrid({
 
 // Export skeleton juga
 export { ProductCardSkeleton }
-

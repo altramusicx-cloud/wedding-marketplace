@@ -1,4 +1,4 @@
-// File: components/layout/bottom-nav.tsx
+// File: components/layout/bottom-nav.tsx - REVISI
 'use client'
 
 import Link from 'next/link'
@@ -67,8 +67,8 @@ export function BottomNav() {
 
     return (
         <>
-            {/* Bottom Navigation Bar */}
-            <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 pb-safe">
+            {/* Bottom Navigation Bar - UPDATED WITH SHOPEE COLORS */}
+            <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-neutral-200 pb-safe">
                 <div className="grid grid-cols-5 h-16">
                     {navItems.map((item) => {
                         // Jika item require auth dan user belum login, redirect ke login
@@ -87,10 +87,10 @@ export function BottomNav() {
                                     className={cn(
                                         'flex flex-col items-center justify-center gap-1',
                                         'transition-colors duration-200',
-                                        'active:bg-gray-100',
+                                        'active:bg-neutral-100', // Updated
                                         isActive
-                                            ? 'text-blush'
-                                            : 'text-gray-600 hover:text-blush'
+                                            ? 'text-primary' // Shopee red
+                                            : 'text-neutral-500 hover:text-primary' // Updated
                                     )}
                                 >
                                     <Icon className="h-5 w-5" />
@@ -106,10 +106,10 @@ export function BottomNav() {
                                 className={cn(
                                     'flex flex-col items-center justify-center gap-1',
                                     'transition-colors duration-200',
-                                    'active:bg-gray-100',
+                                    'active:bg-neutral-100', // Updated
                                     isActive
-                                        ? 'text-blush'
-                                        : 'text-gray-600 hover:text-blush'
+                                        ? 'text-primary' // Shopee red (#d0011b)
+                                        : 'text-neutral-500 hover:text-primary' // Updated
                                 )}
                             >
                                 <Icon className="h-5 w-5" />

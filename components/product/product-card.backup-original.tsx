@@ -43,13 +43,13 @@ const formatLocation = (location: string) => {
 // Skeleton langsung di file ini
 function ProductCardSkeleton() {
     return (
-        <div className="bg-white border border-neutral-200 rounded-[3px] overflow-hidden animate-pulse">
-            <div className="aspect-square bg-neutral-200" />
+        <div className="bg-white border border-gray-200 rounded-[3px] overflow-hidden animate-pulse">
+            <div className="aspect-square bg-gray-200" />
             <div className="p-1.5 space-y-0.5">
-                <div className="h-8 bg-neutral-200 rounded w-3/4" />
-                <div className="h-3 bg-neutral-200 rounded w-1/2" />
-                <div className="h-3 bg-neutral-200 rounded w-1/4" />
-                <div className="h-4 bg-neutral-200 rounded w-1/3" />
+                <div className="h-8 bg-gray-200 rounded w-3/4" />
+                <div className="h-3 bg-gray-200 rounded w-1/2" />
+                <div className="h-3 bg-gray-200 rounded w-1/4" />
+                <div className="h-4 bg-gray-200 rounded w-1/3" />
             </div>
         </div>
     )
@@ -112,33 +112,33 @@ export function ProductCard({
                     />
 
                     {/* Badge Kategori - kiri atas (diperbesar) */}
-                    <span className="bg-primary text-white text-micro font-bold uppercase px-1.5 py-0.5 rounded-br-[2px]">
+                    <span className="bg-[#d0011b] text-white text-[10px] font-bold uppercase px-1.5 py-0.5 rounded-br-[2px]">
                         {product.category}
                     </span>
 
                     {/* Viewer Count - kanan atas (diperbesar, sejajar) 
-                    <div className="absolute top-1.5 right-1.5 flex items-center gap-2 bg-primary text-white rounded-[2px] px-1.5 py-0.5">
+                    <div className="absolute top-1.5 right-1.5 flex items-center gap-2 bg-[#d0011b] text-white rounded-[2px] px-1.5 py-0.5">
                         <Eye className="h-2.5 w-2.5" />
-                        <span className="text-caption font-medium">{viewCount.toLocaleString('id-ID')}</span>
+                        <span className="text-[11px] font-medium">{viewCount.toLocaleString('id-ID')}</span>
                     </div>*/}
                 </div>
 
                 {/* Content Section - FIXED SPACING */}
                 <div className="p-1.5 space-y-1">
                     {/* Title - FIXED HEIGHT 2 lines max */}
-                    <h4 className="font-bold text-neutral-900 text-large sm:text-base truncate whitespace-nowrap">
+                    <h3 className="font-bold text-neutral-900 text-[16px] sm:text-[14px] leading-tight line-clamp-2 h-8">
                         {product.name}
-                    </h4>
+                    </h3>
 
                     {/* Location - SINGLE LINE */}
                     <div className="flex items-center gap-1">
                         <MapPin className="h-2 w-2 text-neutral-500 flex-shrink-0" />
                         <div className="flex-1 min-w-0">
-                            <div className="text-caption text-neutral-500 truncate">
+                            <div className="text-[11px] text-neutral-500 truncate">
                                 {city}
                             </div>
                             {district !== '-' && (
-                                <div className="text-caption text-neutral-500 truncate pl-0.5">
+                                <div className="text-[11px] text-neutral-500 truncate pl-0.5">
                                     {district}
                                 </div>
                             )}
@@ -146,17 +146,17 @@ export function ProductCard({
                     </div>
 
                     {/* Price Label */}
-                    <div className="text-caption text-neutral-500">
+                    <div className="text-[11px] text-neutral-500">
                         Harga mulai
                     </div>
 
                     {/* Price */}
                     <div className="flex items-baseline">
-                        <span className="text-primary font-bold text-large sm:text-base leading-none">
+                        <span className="text-[#d0011b] font-bold text-[16px] sm:text-[14px] leading-none">
                             Rp{formatPrice(displayPrice)}
                         </span>
                         {product.price_unit && (
-                            <span className="text-neutral-500 text-micro ml-0.5">
+                            <span className="text-neutral-500 text-[10px] ml-0.5">
                                 /{product.price_unit}
                             </span>
                         )}
@@ -190,4 +190,3 @@ export function ProductGrid({
 
 // Export skeleton juga
 export { ProductCardSkeleton }
-
