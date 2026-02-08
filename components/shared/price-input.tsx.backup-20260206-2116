@@ -1,9 +1,9 @@
-﻿// components/shared/price-input.tsx - FIXED VERSION
+// components\shared\price-input.tsx
 "use client"
 
 import { Input } from "@/components/ui/input"
 import { cn } from "@/lib/utils"
-import { useEffect, useState, useMemo } from "react"
+import { useEffect, useState } from "react"
 
 interface PriceInputProps {
   value: number | null
@@ -34,14 +34,10 @@ export function PriceInput({
     return raw ? parseInt(raw, 10) : null
   }
 
-  // Get initial display value
-  const initialDisplayValue = useMemo(() => formatToDisplay(value), [value])
-
   // Update display value ketika value prop berubah
   useEffect(() => {
-    setDisplayValue(initialDisplayValue)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initialDisplayValue])
+    setDisplayValue(formatToDisplay(value))
+  }, [value])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value

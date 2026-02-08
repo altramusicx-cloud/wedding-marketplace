@@ -1,7 +1,6 @@
-﻿// components/shared/image-lightbox.tsx - FIXED VERSION
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect } from "react"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut, Download } from "lucide-react"
@@ -29,34 +28,12 @@ export function ImageLightbox({
 
     // Reset state ketika buka lightbox baru
     useEffect(() => {
-    if (isOpen) {
-        setCurrentIndex(initialIndex)
-        setZoomLevel(1)
-        setPosition({ x: 0, y: 0 })
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-}, [isOpen, initialIndex])
-
-    // Deklarasi fungsi-fungsi handler DULU sebelum useEffect
-    const handleNext = useCallback(() => {
-        setCurrentIndex((prev) => (prev + 1) % images.length)
-        setZoomLevel(1)
-        setPosition({ x: 0, y: 0 })
-    }, [images.length])
-
-    const handlePrev = useCallback(() => {
-        setCurrentIndex((prev) => (prev - 1 + images.length) % images.length)
-        setZoomLevel(1)
-        setPosition({ x: 0, y: 0 })
-    }, [images.length])
-
-    const handleZoomIn = useCallback(() => {
-        setZoomLevel((prev) => Math.min(prev + 0.25, 3))
-    }, [])
-
-    const handleZoomOut = useCallback(() => {
-        setZoomLevel((prev) => Math.max(prev - 0.25, 0.5))
-    }, [])
+        if (isOpen) {
+            setCurrentIndex(initialIndex)
+            setZoomLevel(1)
+            setPosition({ x: 0, y: 0 })
+        }
+    }, [isOpen, initialIndex])
 
     // Navigasi dengan keyboard
     useEffect(() => {
@@ -89,7 +66,27 @@ export function ImageLightbox({
 
         window.addEventListener("keydown", handleKeyDown)
         return () => window.removeEventListener("keydown", handleKeyDown)
-    }, [isOpen, handleNext, handlePrev, handleZoomIn, handleZoomOut, onClose])
+    }, [isOpen, currentIndex])
+
+    const handleNext = () => {
+        setCurrentIndex((prev) => (prev + 1) % images.length)
+        setZoomLevel(1)
+        setPosition({ x: 0, y: 0 })
+    }
+
+    const handlePrev = () => {
+        setCurrentIndex((prev) => (prev - 1 + images.length) % images.length)
+        setZoomLevel(1)
+        setPosition({ x: 0, y: 0 })
+    }
+
+    const handleZoomIn = () => {
+        setZoomLevel((prev) => Math.min(prev + 0.25, 3))
+    }
+
+    const handleZoomOut = () => {
+        setZoomLevel((prev) => Math.max(prev - 0.25, 0.5))
+    }
 
     const handleResetZoom = () => {
         setZoomLevel(1)
@@ -276,7 +273,7 @@ export function ImageLightbox({
                     {/* Zoom Instructions */}
                     {zoomLevel > 1 && (
                         <p className="text-center text-xs text-neutral-300 mt-2">
-                            📱 Klik & drag untuk geser gambar | ESC untuk tutup
+                            ?? Klik & drag untuk geser gambar | ESC untuk tutup
                         </p>
                     )}
                 </div>

@@ -52,7 +52,7 @@ export function Header() {
 
     return (
         <>
-            <header className="sticky top-0 z-50 w-full bg-[#d0011b] border-b border-[#b00116]">
+            <header className="sticky top-0 z-50 w-full bg-primary border-b border-primary-dark">
                 <Container size="xl" className="py-0">
                     {/* HEADER HEIGHT: Mobile tipis (h-12), Desktop normal (h-16) */}
                     <div className="flex h-12 lg:h-16 items-center justify-between gap-3">
@@ -119,7 +119,7 @@ export function Header() {
                                     <Link href="/notifications">
                                         <Bell className="h-4 w-4 text-white" />
                                         {hasNotifications && (
-                                            <span className="absolute -top-1 -right-1 h-4 w-4 bg-white text-[#d0011b] text-[10px] font-bold rounded-full flex items-center justify-center">
+                                            <span className="absolute -top-1 -right-1 h-4 w-4 bg-white text-primary text-[10px] font-bold rounded-full flex items-center justify-center">
                                                 3
                                             </span>
                                         )}
