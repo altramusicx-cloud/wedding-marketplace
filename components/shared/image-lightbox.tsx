@@ -34,7 +34,7 @@ export function ImageLightbox({
         setZoomLevel(1)
         setPosition({ x: 0, y: 0 })
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
 }, [isOpen, initialIndex])
 
     // Deklarasi fungsi-fungsi handler DULU sebelum useEffect

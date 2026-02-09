@@ -40,7 +40,7 @@ export function PriceInput({
   // Update display value ketika value prop berubah
   useEffect(() => {
     setDisplayValue(initialDisplayValue)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [initialDisplayValue])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
