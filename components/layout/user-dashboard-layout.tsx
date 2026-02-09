@@ -1,4 +1,4 @@
-// File: components/layout/user-dashboard-layout.tsx (UPDATE LOADING UI)
+// File: components/layout/user-dashboard-layout.tsx
 'use client'
 
 import { useAuthState } from "@/hooks/use-auth-state"
@@ -8,7 +8,7 @@ import { DashboardSidebar } from "@/components/layout/dashboard-sidebar"
 import { UserBottomNav } from "@/components/layout/user-bottom-nav"
 import { cn } from "@/lib/utils"
 import type { UserProfile } from "@/hooks/use-auth-state"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { ModeToggle } from "@/components/layout/mode-toggle"
 
 interface UserDashboardLayoutProps {
@@ -29,6 +29,7 @@ export function UserDashboardLayout({
     serverIsVendor
 }: UserDashboardLayoutProps) {
     const { dashboardMode, isLoading } = useAuthState()
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false)
 
     useEffect(() => {
         console.log('🔵 UserDashboardLayout rendering at /dashboard', {
@@ -38,18 +39,22 @@ export function UserDashboardLayout({
         })
     }, [isLoading, dashboardMode, serverIsVendor])
 
-    // === SIMPLE: /dashboard SELALU render user layout ===
-
     return (
         <div className="min-h-screen bg-neutral-50">
-            <DashboardHeader variant="user" />
+            <DashboardHeader
+                variant="user"
+                onMenuClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                isSidebarOpen={isSidebarOpen}
+            />
 
             <div className="flex min-h-[calc(100vh-64px)]">
-                <aside className="hidden lg:block w-64 bg-white border-r border-neutral-200">
-                    <DashboardSidebar variant="user" />
-                </aside>
+                <DashboardSidebar
+                    variant="user"
+                    isMobileOpen={isSidebarOpen}
+                    onClose={() => setIsSidebarOpen(false)}
+                />
 
-                <main className="flex-1">
+                <main className="flex-1 lg:ml-60"> {/* ml-60 untuk offset sidebar desktop */}
                     <DashboardContainer className={cn("py-6", className)}>
                         {/* Welcome header */}
                         <div className="mb-6">
@@ -72,25 +77,8 @@ export function UserDashboardLayout({
                             )}
                         </div>
 
-                        {/* Loading indicator */}
-                        {isLoading && (
-                            <div className="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
-                                <div className="flex items-center">
-                                    <div className="h-3 w-3 bg-blue-400 rounded-full animate-pulse mr-3"></div>
-                                    <p className="text-sm text-blue-700">
-                                        Menyiapkan dashboard Anda...
-                                    </p>
-                                </div>
-                            </div>
-                        )}
-
                         {/* Main content */}
-                        <div className={cn(
-                            "transition-opacity duration-300",
-                            isLoading ? "opacity-70" : "opacity-100"
-                        )}>
-                            {children}
-                        </div>
+                        {children}
                     </DashboardContainer>
                 </main>
             </div>

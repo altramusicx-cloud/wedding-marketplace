@@ -1,4 +1,4 @@
-// File: components/layout/vendor-dashboard-layout.tsx (FINAL FIX)
+// File: components/layout/vendor-dashboard-layout.tsx
 'use client'
 
 import { useAuthState } from "@/hooks/use-auth-state"
@@ -9,7 +9,7 @@ import { VendorBottomNav } from "@/components/layout/vendor-bottom-nav"
 import { ModeToggle } from "@/components/layout/mode-toggle"
 import { cn } from "@/lib/utils"
 import type { UserProfile } from "@/hooks/use-auth-state"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 
 interface VendorDashboardLayoutProps {
     children: React.ReactNode
@@ -26,7 +26,15 @@ export function VendorDashboardLayout({
     serverProfile,
     serverIsVendor
 }: VendorDashboardLayoutProps) {
-    const { dashboardMode, isLoading } = useAuthState()
+    const { dashboardMode, isLoading, setDashboardMode, isVendor } = useAuthState()
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+
+    // Set dashboardMode to 'vendor' when this layout mounts
+    useEffect(() => {
+        if (isVendor) {
+            setDashboardMode('vendor')
+        }
+    }, [isVendor, setDashboardMode])
 
     // Log untuk debugging
     useEffect(() => {
@@ -37,23 +45,23 @@ export function VendorDashboardLayout({
         })
     }, [isLoading, dashboardMode, serverIsVendor])
 
-    // === FIX: /dashboard/vendor SELALU render vendor layout ===
-    // Karena route ini khusus untuk vendor dashboard
-    // Tidak perlu check dashboardMode di sini
-
     return (
         <div className="min-h-screen bg-white">
             <DashboardHeader
                 variant="vendor"
                 showModeToggle={true}
+                onMenuClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                isSidebarOpen={isSidebarOpen}
             />
 
             <div className="flex min-h-[calc(100vh-64px)]">
-                <aside className="hidden lg:block w-72 bg-white border-r border-neutral-200">
-                    <DashboardSidebar variant="vendor" />
-                </aside>
+                <DashboardSidebar
+                    variant="vendor"
+                    isMobileOpen={isSidebarOpen}
+                    onClose={() => setIsSidebarOpen(false)}
+                />
 
-                <main className="flex-1">
+                <main className="flex-1 lg:ml-60">
                     <DashboardContainer className={cn("py-6", className)}>
                         {/* Welcome header untuk vendor */}
                         <div className="mb-6">
@@ -79,25 +87,8 @@ export function VendorDashboardLayout({
                             </div>
                         </div>
 
-                        {/* Loading indicator (only show briefly) */}
-                        {isLoading && (
-                            <div className="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200 animate-pulse">
-                                <div className="flex items-center">
-                                    <div className="h-3 w-3 bg-blue-400 rounded-full animate-bounce mr-3"></div>
-                                    <p className="text-sm text-blue-700">
-                                        Menyelesaikan autentikasi...
-                                    </p>
-                                </div>
-                            </div>
-                        )}
-
                         {/* Main content */}
-                        <div className={cn(
-                            "transition-opacity duration-300",
-                            isLoading ? "opacity-50" : "opacity-100"
-                        )}>
-                            {children}
-                        </div>
+                        {children}
                     </DashboardContainer>
                 </main>
             </div>

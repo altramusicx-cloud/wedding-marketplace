@@ -3,27 +3,27 @@
 
 import { useAuthState } from "@/hooks/use-auth-state"
 import { ModeToggle } from "@/components/layout/mode-toggle"
-import { Bell, User, Menu } from "lucide-react"
+import { Bell, User, Menu, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { useMediaQuery } from "@/hooks/use-media-query"
 import { cn } from "@/lib/utils"
-import { useState } from "react"
 
 interface DashboardHeaderProps {
     variant?: 'user' | 'vendor'
     showModeToggle?: boolean
     onMenuClick?: () => void
+    isSidebarOpen?: boolean
 }
 
 export function DashboardHeader({
     variant = 'user',
     showModeToggle = false,
-    onMenuClick
+    onMenuClick,
+    isSidebarOpen = false
 }: DashboardHeaderProps) {
     const { profile, dashboardMode } = useAuthState()
     const isMobile = useMediaQuery('(max-width: 1024px)') // lg breakpoint
-    const [hasNotifications] = useState(true) // Mock data
 
     const getTitle = () => {
         if (variant === 'vendor') return 'Dashboard Vendor'
@@ -50,8 +50,13 @@ export function DashboardHeader({
                         size="icon"
                         onClick={onMenuClick}
                         className="mr-2 lg:hidden"
+                        aria-label={isSidebarOpen ? "Close menu" : "Open menu"}
                     >
-                        <Menu className="h-5 w-5" />
+                        {isSidebarOpen ? (
+                            <X className="h-5 w-5" />
+                        ) : (
+                            <Menu className="h-5 w-5" />
+                        )}
                     </Button>
                 )}
 
@@ -70,9 +75,9 @@ export function DashboardHeader({
 
                 {/* Right Side */}
                 <div className="flex items-center gap-2 sm:gap-4">
-                    {/* Mode Toggle (hanya untuk vendor di desktop) */}
-                    {showModeToggle && profile?.is_vendor && !isMobile && (
-                        <div className="hidden lg:block">
+                    {/* Mode Toggle (untuk vendor) */}
+                    {profile?.is_vendor && (
+                        <div className={isMobile ? "lg:hidden" : "hidden lg:block"}>
                             <ModeToggle currentMode={dashboardMode} />
                         </div>
                     )}
@@ -85,11 +90,9 @@ export function DashboardHeader({
                         aria-label="Notifikasi"
                     >
                         <Bell className="h-5 w-5" />
-                        {hasNotifications && (
-                            <span className="absolute -top-1 -right-1 h-4 w-4 bg-primary text-white text-xs rounded-full flex items-center justify-center">
-                                3
-                            </span>
-                        )}
+                        <span className="absolute -top-1 -right-1 h-4 w-4 bg-primary text-white text-xs rounded-full flex items-center justify-center">
+                            3
+                        </span>
                     </Button>
 
                     {/* User Profile */}
@@ -111,13 +114,6 @@ export function DashboardHeader({
                             </p>
                         </div>
                     </div>
-
-                    {/* Mobile Mode Toggle (jika vendor) */}
-                    {showModeToggle && profile?.is_vendor && isMobile && (
-                        <div className="lg:hidden">
-                            <ModeToggle currentMode={dashboardMode} />
-                        </div>
-                    )}
                 </div>
             </div>
         </header>

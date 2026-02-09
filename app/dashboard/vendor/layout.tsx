@@ -15,28 +15,49 @@ export default async function VendorDashboardLayoutServer({
         const { data: { session } } = await supabase.auth.getSession()
 
         if (!session) {
+            console.log('🔴 No session, redirect to login')
             redirect('/login')
         }
 
+        console.log('🔍 Vendor layout - Session user ID:', session.user.id)
+
         // 2. Get profile
-        const { data: profile } = await supabase
+        const { data: profile, error } = await supabase
             .from('profiles')
             .select('id, email, full_name, whatsapp_number, is_vendor, is_admin, avatar_url')
             .eq('id', session.user.id)
             .single()
 
-        if (!profile) {
-            redirect('/login')
-        }
-
-        // 3. HANYA VENDOR yang boleh akses /dashboard/vendor
-        if (!profile.is_vendor) {
-            console.log('🔴 Non-vendor mencoba akses vendor dashboard, redirect ke /dashboard')
+        if (error) {
+            console.error('🔴 Profile fetch error:', error)
             redirect('/dashboard')
         }
 
-        // 4. Admin redirect
+        if (!profile) {
+            console.log('🔴 Profile not found')
+            redirect('/login')
+        }
+
+        // DEBUG LOG - TAMBAHKAN INI
+        console.log('🔍 Vendor layout profile check:', {
+            profileId: profile.id,
+            full_name: profile.full_name,
+            email: profile.email,
+            is_vendor: profile.is_vendor,
+            is_admin: profile.is_admin,
+            rawData: profile
+        })
+
+        // 3. Semua user boleh akses vendor dashboard (Shopee style)
+        console.log('🟢 User akses vendor dashboard:', {
+            email: profile.email,
+            is_vendor: profile.is_vendor,
+            message: 'Semua user boleh akses, is_vendor hanya untuk konten berbeda'
+        })
+
+        // 4. Admin redirect (tetap ada)
         if (profile.is_admin) {
+            console.log('🔴 Admin user, redirect to /admin')
             redirect('/admin')
         }
 
@@ -51,7 +72,7 @@ export default async function VendorDashboardLayoutServer({
             avatar_url: profile.avatar_url || undefined
         }
 
-        console.log('🟢 /dashboard/vendor LAYOUT: Rendering VENDOR dashboard')
+        console.log('🟢 /dashboard/vendor LAYOUT: Rendering VENDOR dashboard for:', profile.email)
 
         // 6. /dashboard/vendor → HANYA VendorDashboardLayout
         return (
