@@ -1,11 +1,10 @@
-﻿// types/index.ts - Centralized type exports
+// types/index.ts - Centralized type exports
 // Re-export types from individual files
 
 // Product types
 export type { Product, ProductCard, ProductFormData, ProductImage } from './product'
 
 // User types
-// export type { User, Vendor } from './user'  // TEMPORARY COMMENT
 
 // API types  
 export type { ApiResponse } from './api'

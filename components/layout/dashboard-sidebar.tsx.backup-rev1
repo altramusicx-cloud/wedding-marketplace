@@ -33,8 +33,7 @@ export function DashboardSidebar({
     }, [])
 
     // Pastikan hanya render jika sesuai mode
-    if (variant === 'vendor' && !isVendor) {
-        console.warn('Non-vendor user trying to access vendor sidebar')
+    if (variant === 'vendor' && (!isVendor || dashboardMode !== 'vendor')) {
         return null
     }
 
@@ -58,9 +57,10 @@ export function DashboardSidebar({
     // Desktop Sidebar - FIXED WIDTH 60px
     const desktopSidebar = (
         <aside className={cn(
-            "hidden lg:flex flex-col h-[calc(100vh-64px)] bg-white static z-30 w-60", // HAPUS border-r
-            "overflow-y-auto"
+            "hidden lg:flex flex-col h-full border-r bg-white fixed left-0 top-0 bottom-0 z-40 w-60", // w-60 untuk compact
+            "overflow-y-auto shadow-sm"
         )}>
+            {/* User Info */}
             {profile && (
                 <div className="p-5 border-b">
                     <div className="flex items-center gap-3">

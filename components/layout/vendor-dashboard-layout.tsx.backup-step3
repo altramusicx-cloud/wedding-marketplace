@@ -2,10 +2,11 @@
 'use client'
 
 import { useAuthState } from "@/hooks/use-auth-state"
-import { DashboardContentContainer } from "@/components/layout/dashboard-container" // ✅ CHANGED
+import { DashboardContainer } from "@/components/layout/dashboard-container"
 import { DashboardHeader } from "@/components/layout/dashboard-header"
 import { DashboardSidebar } from "@/components/layout/dashboard-sidebar"
 import { VendorBottomNav } from "@/components/layout/vendor-bottom-nav"
+import { ModeToggle } from "@/components/layout/mode-toggle"
 import { cn } from "@/lib/utils"
 import type { UserProfile } from "@/hooks/use-auth-state"
 import { useEffect, useState } from "react"
@@ -48,6 +49,7 @@ export function VendorDashboardLayout({
         <div className="min-h-screen bg-white">
             <DashboardHeader
                 variant="vendor"
+                showModeToggle={true}
                 onMenuClick={() => setIsSidebarOpen(!isSidebarOpen)}
                 isSidebarOpen={isSidebarOpen}
             />
@@ -59,8 +61,8 @@ export function VendorDashboardLayout({
                     onClose={() => setIsSidebarOpen(false)}
                 />
 
-                <main className="flex-1">
-                    <DashboardContentContainer className={cn("py-6", className)}> {/* ✅ CHANGED */}
+                <main className="flex-1 lg:ml-60">
+                    <DashboardContainer className={cn("py-6", className)}>
                         {/* Welcome header untuk vendor */}
                         <div className="mb-6">
                             <h1 className="text-2xl font-bold text-neutral-900">
@@ -70,12 +72,24 @@ export function VendorDashboardLayout({
                                 Selamat datang, {serverProfile?.full_name || 'Vendor'}! Kelola bisnis wedding Anda.
                             </p>
 
-                            {/* ✅ REMOVED: Mode indicator section (whole block) */}
+                            {/* Mode indicator */}
+                            <div className="flex items-center gap-4 mt-4">
+                                <div className={cn(
+                                    "px-3 py-1.5 rounded-lg text-sm font-medium",
+                                    dashboardMode === 'vendor'
+                                        ? "bg-primary/10 text-primary border border-primary/20"
+                                        : "bg-blue-100 text-blue-700 border border-blue-200"
+                                )}>
+                                    {dashboardMode === 'vendor' ? 'Vendor Mode' : 'User Mode'}
+                                </div>
+
+                                <ModeToggle currentMode={dashboardMode} />
+                            </div>
                         </div>
 
                         {/* Main content */}
                         {children}
-                    </DashboardContentContainer>
+                    </DashboardContainer>
                 </main>
             </div>
 
