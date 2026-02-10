@@ -48,12 +48,6 @@ export default async function VendorDashboardLayoutServer({
             rawData: profile
         })
 
-        // 3. Semua user boleh akses vendor dashboard (Shopee style)
-        console.log('🟢 User akses vendor dashboard:', {
-            email: profile.email,
-            is_vendor: profile.is_vendor,
-            message: 'Semua user boleh akses, is_vendor hanya untuk konten berbeda'
-        })
 
         // 4. Admin redirect (tetap ada)
         if (profile.is_admin) {

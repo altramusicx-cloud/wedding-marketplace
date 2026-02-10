@@ -1,7 +1,11 @@
-// File: app/dashboard/vendor/page.tsx
+'use client'
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { PlusCircle, Package, Eye, MessageSquare, TrendingUp, Users } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
+import { ModeToggle } from "@/components/dashboard/mode-toggle"
+import { ModeCard } from "@/components/dashboard/mode-card"
+import { PlusCircle, Package, Eye, MessageSquare, TrendingUp, Users, ShoppingBag } from "lucide-react"
 import Link from "next/link"
 
 export default function VendorDashboardPage() {
@@ -22,18 +26,23 @@ export default function VendorDashboardPage() {
 
     return (
         <div className="space-y-6">
-            {/* Header */}
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                <div>
-                    <h1 className="text-3xl font-bold text-charcoal">Dashboard Vendor</h1>
-                    <p className="text-neutral-600">Kelola produk dan pantau performa Anda</p>
+            {/* Modern Dashboard Switching Section */}
+
+            <div className="mb-6">
+                <div className="flex items-center justify-between mb-3">
+
+
+                    <Badge variant="outline" className="text-xs">
+                        <ShoppingBag className="h-3 w-3 mr-1" />
+                        Mode Vendor
+                    </Badge>
                 </div>
-                <Button asChild className="bg-primary hover:bg-primary/90 text-charcoal">
-                    <Link href="/dashboard/vendor/products/new">
-                        <PlusCircle className="mr-2 h-4 w-4" />
-                        Tambah Produk
-                    </Link>
-                </Button>
+
+                {/* Compact Switcher */}
+                <div>
+                    <ModeCard currentMode="vendor" />
+
+                </div>
             </div>
 
             {/* Stats Cards */}
@@ -69,7 +78,7 @@ export default function VendorDashboardPage() {
                                 <div key={product.id} className="flex items-center justify-between p-3 border rounded-lg hover:bg-neutral-50">
                                     <div className="flex items-center gap-3">
                                         <div className={`h-3 w-3 rounded-full ${product.status === 'active' ? 'bg-green-500' :
-                                                product.status === 'pending' ? 'bg-yellow-500' : 'bg-neutral-500'
+                                            product.status === 'pending' ? 'bg-yellow-500' : 'bg-neutral-500'
                                             }`} />
                                         <div>
                                             <p className="font-medium">{product.name}</p>

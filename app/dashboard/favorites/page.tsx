@@ -1,7 +1,7 @@
 // File: app/dashboard/favorites/page.tsx
 export default function FavoritesPage() {
     return (
-        <div className="p-6">
+        <div>
             <h1 className="text-2xl font-bold mb-4">Favorit Saya</h1>
             <p className="text-neutral-600">
                 Halaman favorit - akan diisi dengan produk favorit user (Day 3)

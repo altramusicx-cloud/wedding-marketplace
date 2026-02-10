@@ -53,7 +53,8 @@ export function UserDashboardLayout({
                     onClose={() => setIsSidebarOpen(false)}
                 />
 
-                <main className="flex-1">
+
+                <main className="flex-1 px-4 sm:pl-6 lg:pl-60">
                     <DashboardContentContainer className={cn("py-6", className)}> {/* ✅ CHANGED */}
                         {/* Welcome header */}
                         <div className="mb-6">

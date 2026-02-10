@@ -1,4 +1,4 @@
-// components\layout\dashboard-sidebar.tsx
+// File: components/layout/dashboard-sidebar.tsx
 'use client'
 
 import { usePathname, useRouter } from "next/navigation"
@@ -8,7 +8,6 @@ import { cn } from "@/lib/utils"
 import { useAuthState } from "@/hooks/use-auth-state"
 import { Button } from "@/components/ui/button"
 import { LogOut, X } from "lucide-react"
-import { useState, useEffect } from "react"
 
 interface DashboardSidebarProps {
     variant?: 'user' | 'vendor'
@@ -25,19 +24,9 @@ export function DashboardSidebar({
 }: DashboardSidebarProps) {
     const pathname = usePathname()
     const router = useRouter()
-    const { profile, signOut, dashboardMode, isVendor } = useAuthState()
-    const [isClient, setIsClient] = useState(false)
+    const { profile, signOut } = useAuthState()
 
-    useEffect(() => {
-        setIsClient(true)
-    }, [])
-
-    // Pastikan hanya render jika sesuai mode
-    if (variant === 'vendor' && !isVendor) {
-        console.warn('Non-vendor user trying to access vendor sidebar')
-        return null
-    }
-
+    // Langsung tentukan nav items berdasarkan variant (Unified Mode)
     const navItems: NavItem[] = variant === 'vendor' ? vendorNavItems : userNavItems
 
     const filteredItems = navItems.filter(item => {
@@ -55,12 +44,13 @@ export function DashboardSidebar({
         router.push('/')
     }
 
-    // Desktop Sidebar - FIXED WIDTH 60px
+    // Desktop Sidebar - FIXED POSITION (benar-benar statis)
     const desktopSidebar = (
         <aside className={cn(
-            "hidden lg:flex flex-col h-[calc(100vh-64px)] bg-white static z-30 w-60", // HAPUS border-r
+            "hidden lg:flex flex-col h-[calc(100vh-64px)] bg-white fixed left-0 top-16 z-30 w-60 border-r border-neutral-200",
             "overflow-y-auto"
         )}>
+            {/* User Info */}
             {profile && (
                 <div className="p-5 border-b">
                     <div className="flex items-center gap-3">
@@ -158,7 +148,7 @@ export function DashboardSidebar({
     )
 
     // Mobile Sidebar - Overlay
-    const mobileSidebar = isClient && (
+    const mobileSidebar = (
         <>
             {/* Overlay */}
             {isMobileOpen && (

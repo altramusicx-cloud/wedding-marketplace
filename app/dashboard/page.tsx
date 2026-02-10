@@ -1,11 +1,12 @@
-﻿// File: app/dashboard/page.tsx (FINAL - RINGKASAN DI STATS GRID)
-'use client'
+﻿'use client'
 
 import { useAuthState } from '@/hooks/use-auth-state'
 import { UserDashboardLayout } from '@/components/layout/user-dashboard-layout'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
+import { Badge } from "@/components/ui/badge"
+import { ModeToggle } from "@/components/dashboard/mode-toggle"
+import { ModeCard } from "@/components/dashboard/mode-card"
 import {
   Heart,
   MessageSquare,
@@ -19,7 +20,8 @@ import {
   Eye,
   CheckCircle2,
   Clock,
-  BarChart3
+  BarChart3,
+  User
 } from 'lucide-react'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
@@ -154,6 +156,25 @@ export default function DashboardPage() {
       serverProfile={profile!}
       serverIsVendor={!!profile?.is_vendor}
     >
+      {/* Modern Dashboard Switching Section - SIMPLIFIED */}
+
+      <div className="mb-6">
+        <div className="flex items-center justify-between mb-3">
+
+          <Badge variant="outline" className="text-xs">
+            <User className="h-3 w-3 mr-1" />
+            Mode User
+          </Badge>
+        </div>
+
+        {/* Compact Switcher */}
+        <div >
+          <ModeCard currentMode="user" />
+
+        </div>
+      </div>
+
+
       {/* Main Content - Design Tokens Spacing */}
       <div className="space-y-6">
 
