@@ -1,44 +1,45 @@
-// components/product/sticky-bottom-bar.tsx
-"use client"
+// components/product/sticky-bottom-bar.tsx - FIXED
+'use client'
 
-import { MessageCircle } from "lucide-react"
-import { FavoritesButton } from "./favorites-button"
-import { ContactButton } from "./contact-button"
+import { MessageCircle } from 'lucide-react'
+import { formatWhatsAppUrl } from '@/lib/utils/format-whatsapp'
 
 interface StickyBottomBarProps {
-    vendorId: string
     vendorWhatsApp: string
-    productId: string
     productName: string
     vendorName: string
+    productId: string
+    vendorId: string
 }
 
 export function StickyBottomBar({
-    vendorId,
     vendorWhatsApp,
-    productId,
     productName,
-    vendorName
+    vendorName,
+    productId,
+    vendorId
 }: StickyBottomBarProps) {
+    const whatsappUrl = formatWhatsAppUrl(vendorWhatsApp,
+        `Halo ${vendorName}, saya tertarik dengan produk ${productName} yang ada di Wedding Marketplace. Bisa info detail lebih lanjut?`
+    )
+
     return (
-        <div className="fixed bottom-15 left-0 right-0 bg-white border-t border-[#E5E5E5] shadow-[0_-2px_10px_rgba(0,0,0,0.1)] z-[50] p-1 lg:hidden">
-            <div className="flex items-center gap-2">
+        <div className="lg:hidden">
+            {/* ✅ SPACER - Tinggi = bottom nav (h-16) + gap (1rem) + tombol */}
+            <div className="h-[88px]" aria-hidden="true" />
 
-
-                {/* Contact Button - WhatsApp Shopee Style */}
-                <ContactButton
-                    vendorId={vendorId}
-                    vendorWhatsApp={vendorWhatsApp}
-                    productId={productId}
-                    productName={productName}
-                    vendorName={vendorName}
-                    variant="large"
-                    className="flex-1 h-11 bg-[#EE4D2D] hover:bg-[#D73211] text-white font-medium text-[14px] rounded-[3px]"
-                />
+            {/* ✅ FIXED BOTTOM BAR - Posisi tepat di atas bottom nav */}
+            <div className="fixed bottom-16 left-0 right-0 z-[60] px-4 pb-2 bg-gradient-to-t from-white via-white to-transparent pt-4">
+                <a
+                    href={whatsappUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center gap-2 w-full bg-primary hover:bg-primary-dark text-white rounded-lg py-3.5 px-4 font-semibold transition-colors shadow-lg active:scale-[0.98]"
+                >
+                    <MessageCircle className="h-5 w-5" />
+                    <span>Hubungi via WhatsApp</span>
+                </a>
             </div>
-
-            {/* Safe area untuk iPhone notch */}
-            <div className="h-4 lg:hidden" />
         </div>
     )
 }

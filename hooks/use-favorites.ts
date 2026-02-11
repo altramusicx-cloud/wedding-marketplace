@@ -38,12 +38,36 @@ export function useFavorites() {
         }
     }, [user, supabase])
 
-    // Initial load
+    // Initial load + real-time subscription
     useEffect(() => {
-        if (!authLoading) {
-            loadFavorites()
+        if (!user) {
+            setFavorites([])
+            setIsLoading(false)
+            return
         }
-    }, [authLoading, loadFavorites])
+
+        loadFavorites()
+
+        // Subscribe to real-time changes
+        const channel = supabase
+            .channel('favorites-changes')
+            .on('postgres_changes', {
+                event: '*', // INSERT, DELETE
+                schema: 'public',
+                table: 'favorites',
+                filter: `user_id=eq.${user.id}`
+            }, (payload) => {
+                console.log('Favorites real-time change:', payload)
+
+                // Reload favorites on any change
+                loadFavorites()
+            })
+            .subscribe()
+
+        return () => {
+            supabase.removeChannel(channel)
+        }
+    }, [user, supabase, loadFavorites])
 
     // Check if product is favorited
     const isFavorited = useCallback((productId: string) => {
