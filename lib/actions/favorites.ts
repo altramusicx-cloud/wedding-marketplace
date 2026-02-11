@@ -5,6 +5,28 @@ import { createClient } from "@/lib/supabase/server"
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 
+// Type untuk getFavoriteProductsWithDetails
+interface FavoriteWithDetails {
+    product_id: string
+    created_at: string
+    products: {
+        id: string
+        name: string
+        description: string
+        category: string
+        location: string
+        price_from: number | null
+        price_to: number | null
+        thumbnail_url: string | null
+        status: string
+        vendor: {
+            id: string
+            full_name: string
+            avatar_url: string | null
+        } | null
+    } | null
+}
+
 export async function toggleFavorite(productId: string) {
     const supabase = await createClient()
 
@@ -91,4 +113,61 @@ export async function checkIsFavorited(productId: string) {
         .single()
 
     return !!data
+}
+
+// ================ TAMBAH DI SINI ================
+export async function getFavoriteProducts() {
+    const supabase = await createClient()
+
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return []
+
+    try {
+        // 1. Get favorite product IDs
+        const { data: favorites, error: favError } = await supabase
+            .from('favorites')
+            .select('product_id')
+            .eq('user_id', user.id)
+
+        if (favError) throw favError
+
+        if (!favorites.length) return []
+
+        const productIds = favorites.map(fav => fav.product_id)
+
+        // 2. Get product details (SAMA PERSIS dengan home page!)
+        const { data: products, error: prodError } = await supabase
+            .from('products')
+            .select(`
+        id,
+        name,
+        slug,
+        description,
+        category,
+        location,
+        price_from,
+        price_to,
+        price_unit,
+        thumbnail_url,
+        created_at,
+        is_featured,
+        is_active,
+        status,
+        profiles:vendor_id (
+          full_name,
+          avatar_url
+        )
+      `)
+            .in('id', productIds)
+            .eq('status', 'approved')
+            .eq('is_active', true)
+            .order('created_at', { ascending: false })
+
+        if (prodError) throw prodError
+
+        return products || []
+    } catch (error) {
+        console.error('Error in getFavoriteProducts:', error)
+        return []
+    }
 }

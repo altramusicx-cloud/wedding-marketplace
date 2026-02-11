@@ -156,11 +156,17 @@ export default function DashboardPage() {
       serverProfile={profile!}
       serverIsVendor={!!profile?.is_vendor}
     >
-      {/* Modern Dashboard Switching Section - SIMPLIFIED */}
-
+      {/* Compact Mode Switcher */}
       <div className="mb-6">
         <div className="flex items-center justify-between mb-3">
-
+          <div>
+            <h1 className="text-xl sm:text-2xl font-bold text-neutral-900">
+              Dashboard Saya
+            </h1>
+            <p className="text-sm text-neutral-600">
+              Selamat datang, {profile?.full_name || 'User'}!
+            </p>
+          </div>
           <Badge variant="outline" className="text-xs">
             <User className="h-3 w-3 mr-1" />
             Mode User
@@ -168,9 +174,11 @@ export default function DashboardPage() {
         </div>
 
         {/* Compact Switcher */}
-        <div >
+        <div className="p-3 bg-white rounded-lg border border-neutral-200">
           <ModeCard currentMode="user" />
-
+          <p className="text-xs text-neutral-500 mt-2 text-center">
+            Pilih "Toko Saya" untuk kelola produk dan penjualan
+          </p>
         </div>
       </div>
 

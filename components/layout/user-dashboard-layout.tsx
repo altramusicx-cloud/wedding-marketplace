@@ -56,17 +56,6 @@ export function UserDashboardLayout({
 
                 <main className="flex-1 px-4 sm:pl-6 lg:pl-60">
                     <DashboardContentContainer className={cn("py-6", className)}> {/* ✅ CHANGED */}
-                        {/* Welcome header */}
-                        <div className="mb-6">
-                            <h1 className="text-2xl font-bold text-neutral-900">
-                                Dashboard Saya
-                            </h1>
-                            <p className="text-neutral-600 mt-1">
-                                Selamat datang, {serverProfile?.full_name || 'User'}!
-                            </p>
-
-                            {/* ✅ REMOVED: ModeToggle dari content */}
-                        </div>
 
                         {/* Main content */}
                         {children}
